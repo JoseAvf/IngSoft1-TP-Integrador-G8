@@ -1,0 +1,6 @@
+@CuerpoSano.WebApi_HostAddress = http://localhost:5003
+
+GET {{CuerpoSano.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
