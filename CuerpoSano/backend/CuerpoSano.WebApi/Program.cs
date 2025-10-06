@@ -1,4 +1,4 @@
-using CuerpoSano.Application.Interfaces.PersistenceInterfaces;
+﻿using CuerpoSano.Application.Interfaces.PersistenceInterfaces;
 using CuerpoSano.Application.Interfaces.ServicesInterfaces;
 using CuerpoSano.Application.Services;
 using CuerpoSano.Infrastructure.Persistence;
@@ -15,9 +15,11 @@ builder.Services.AddDbContext<CuerpoSanoDbContext>(options =>
 
 // Repositorios
 builder.Services.AddScoped<IMiembroRepository, MiembroRepository>();
+builder.Services.AddScoped<IMembresiaRepository, MembresiaRepository>();
 
 // Servicios
 builder.Services.AddScoped<IMiembroService, MiembroService>();
+builder.Services.AddScoped<IMembresiaService,  MembresiaService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -33,4 +35,5 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+app.Logger.LogInformation("✅ CuerpoSano Web API iniciada correctamente en {Environment}", app.Environment.EnvironmentName);
 app.Run();
