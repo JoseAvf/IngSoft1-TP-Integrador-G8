@@ -46,9 +46,9 @@ namespace CuerpoSano.Application.Services
             return miembro;
         }
 
-        public async Task<Miembro> UpdateAsync(int id, string nombre, string direccion, string correo, int telefono, int membresiaId)
+        public async Task<Miembro> UpdateAsync(Miembro miembro)
         {
-            var newMember = await _miembroRepository.UpdateAsync(id, nombre, direccion, correo, telefono, membresiaId);
+            var newMember = await _miembroRepository.UpdateAsync(miembro);
             return newMember; 
         }
 

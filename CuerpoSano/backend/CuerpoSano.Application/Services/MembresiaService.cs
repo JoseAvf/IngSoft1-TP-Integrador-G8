@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CuerpoSano.Application.Services
 {
-    public class MembresiaService : IMembresiaService 
+    public class MembresiaService : IMembresiaService    
     {
         private readonly IMembresiaRepository _repo;
         public MembresiaService(IMembresiaRepository repo)
@@ -34,6 +34,21 @@ namespace CuerpoSano.Application.Services
             await _repo.AddAsync(membresia);
             await _repo.SaveChangesAsync();
             return membresia;
+        }
+
+        public async Task<Membresia?> UpdateAsync(Membresia membresia)
+        {
+            var newMembresia = await _repo.UpdateAsync(membresia);
+            return newMembresia;
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var membresia = await _repo.GetByIdAsync(id);
+            if (membresia == null) return false;
+            await _repo.DeleteAsync(membresia);
+            await _repo.SaveChangesAsync();
+            return true;
         }
     }
 

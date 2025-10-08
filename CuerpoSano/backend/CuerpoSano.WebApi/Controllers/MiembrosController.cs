@@ -39,7 +39,7 @@ namespace CuerpoSano.WebApi.Controllers
             return CreatedAtAction(nameof(GetById), new { id = nuevo.Id }, nuevo);
         }
 
-     /*   [HttpPut("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Miembro miembro)
         {
             if (id != miembro.Id) return BadRequest("El ID no coincide");
@@ -47,10 +47,10 @@ namespace CuerpoSano.WebApi.Controllers
             var existente = await _miembroService.GetByIdAsync(id);
             if (existente == null) return NotFound();
 
-            var updateMiembro = await _miembroService.UpdateAsync();
+            var updateMiembro = await _miembroService.UpdateAsync(miembro);
 
-
-        }*/
+            return Ok(updateMiembro);
+        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
