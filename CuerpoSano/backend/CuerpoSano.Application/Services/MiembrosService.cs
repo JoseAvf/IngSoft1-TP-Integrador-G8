@@ -34,7 +34,7 @@ namespace CuerpoSano.Application.Services
             miembro.Carnet = new Carnet
             {
                 CodigoBarra = Guid.NewGuid().ToString("N"),
-                Fecha_Emision = DateTime.Now
+                FechaEmision = DateTime.Now
             };
 
             // Calcular costo con descuentos
@@ -46,9 +46,10 @@ namespace CuerpoSano.Application.Services
             return miembro;
         }
 
-        public async Task UpdateAsync(Miembro miembro)
+        public async Task<Miembro> UpdateAsync(int id, string nombre, string direccion, string correo, int telefono, int membresiaId)
         {
-            await _miembroRepository.SaveChangesAsync();
+            var newMember = await _miembroRepository.UpdateAsync(id, nombre, direccion, correo, telefono, membresiaId);
+            return newMember; 
         }
 
         public async Task<bool> DeleteAsync(int id)

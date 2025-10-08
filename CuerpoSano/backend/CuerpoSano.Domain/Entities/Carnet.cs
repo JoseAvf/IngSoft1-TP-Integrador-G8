@@ -4,9 +4,9 @@ namespace CuerpoSano.Domain.Entities
     {
         public int Id { get; set; }
         public string CodigoBarra { get; set; } = null!;
-        public DateTime Fecha_Emision { get; set; }
+        public DateTime FechaEmision { get; set; }
 
-        public int Id_Miembro { get; set; }
-        public Miembro Miembro { get; set; } = null;
+        public int MiembroId { get; set; }
+        public Miembro Miembro { get; set; } = null!;
     }
 }

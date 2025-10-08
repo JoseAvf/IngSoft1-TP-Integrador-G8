@@ -14,6 +14,7 @@ namespace CuerpoSano.Application.Interfaces.PersistenceInterfaces
         Task<Miembro?> GetByDniAsync(string dni);
         Task AddAsync(Miembro miembro);
         Task DeleteAsync(Miembro miembro);
+        Task<Miembro?> UpdateAsync(int id, string nombre, string direccion, string correo, int telefono, int membresiaId);
         Task SaveChangesAsync();
 
     }

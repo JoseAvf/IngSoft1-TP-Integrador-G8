@@ -9,8 +9,11 @@ namespace CuerpoSano.Application.Interfaces.ServicesInterfaces
 {
     public interface IMembresiaService
     {
-        Task<Membresia> CreateAsync(Membresia membresia);
         Task<IEnumerable<Membresia>> GetAllAsync();
         Task<Membresia?> GetByIdAsync(int id);
+        Task<Membresia> CreateAsync(Membresia membresia);
+        Task DeleteAsync(Membresia membresia);
+        Task<Membresia?> UpdateAsync(int id, string tipo, DateTime fechaEmision, DateTime fechaVencimiento, float costo);
+        Task SaveChangesAsync();
     }
 }

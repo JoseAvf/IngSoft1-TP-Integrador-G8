@@ -43,11 +43,27 @@ namespace CuerpoSano.Infrastructure.Repositories.Implementations
             await _context.Miembros.AddAsync(miembro);
         }
 
-        public async Task DeleteAsync(Miembro miembro)  
+        public async Task DeleteAsync(Miembro miembro)
         {
-             _context.Miembros.Remove(miembro); 
-
+            _context.Miembros.Remove(miembro);
         }
+
+        public async Task<Miembro?> UpdateAsync(int id, string nombre, string direccion, string correo, int telefono, int membresiaId)
+        {
+            var existingMiembro = await _context.Miembros.FindAsync(id);
+            if (existingMiembro == null) return null;
+
+            existingMiembro.Nombre = nombre;
+            existingMiembro.Direccion = direccion;
+            existingMiembro.Correo = correo;
+            existingMiembro.Telefono = telefono; 
+            existingMiembro.MembresiaId = membresiaId;
+
+            _context.Miembros.Update(existingMiembro);
+            await _context.SaveChangesAsync();
+            return existingMiembro;
+        }
+
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();

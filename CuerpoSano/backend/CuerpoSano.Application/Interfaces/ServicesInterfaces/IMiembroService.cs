@@ -13,7 +13,7 @@ namespace CuerpoSano.Application.Interfaces.ServicesInterfaces
         Task<Miembro?> GetByIdAsync(int id);
         Task<Miembro> CreateMiembroAsync(Miembro miembro, bool esEstudiante);
         Task<bool> DeleteAsync(int id);
-        Task UpdateAsync(Miembro miembro);
+        Task<Miembro> UpdateAsync(Miembro miembro);
 
     }
 }

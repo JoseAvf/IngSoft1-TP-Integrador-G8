@@ -29,8 +29,8 @@ namespace CuerpoSano.Application.Services
 
         public async Task<Membresia> CreateAsync(Membresia membresia)
         {
-            membresia.Fecha_Emision = DateTime.Now;
-            membresia.Fecha_Venc = DateTime.Now.AddMonths(1);
+            membresia.FechaEmision = DateTime.Now;
+            membresia.FechaVencimiento = DateTime.Now.AddMonths(1);
             await _repo.AddAsync(membresia);
             await _repo.SaveChangesAsync();
             return membresia;
