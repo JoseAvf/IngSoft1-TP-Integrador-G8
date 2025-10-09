@@ -26,6 +26,13 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Aplicar migraciones automáticamente al iniciar
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<CuerpoSanoDbContext>();
+    db.Database.Migrate(); // Aplica todas las migraciones pendientes
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -35,5 +42,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-app.Logger.LogInformation("✅ CuerpoSano Web API iniciada correctamente en {Environment}", app.Environment.EnvironmentName);
+
+app.Logger.LogInformation(
+    "✅ CuerpoSano Web API iniciada correctamente en {Environment}",
+    app.Environment.EnvironmentName
+);
+
 app.Run();
