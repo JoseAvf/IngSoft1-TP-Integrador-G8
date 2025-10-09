@@ -20,38 +20,9 @@
 <body>
   <h1>🏋️‍♂️ CuerpoSano - Admin </h1>
 
-  <section id="miembros-section">
-    <h2>Miembros</h2>
-    <div>
-      <form id="miembro-form">
-        <input type="hidden" id="miembro-id" />
-        <div class="row">
-          <input id="miembro-nombre" placeholder="Nombre completo" required />
-          <input id="miembro-dni" placeholder="DNI" />
-        </div>
-        <div class="row">
-          <input id="miembro-telefono" placeholder="Teléfono" />
-          <input id="miembro-correo" placeholder="Correo" />
-          <input id="miembro-correo" placeholder="Fecha de nacimiento" />
-          <input id="miembro-correo" placeholder="Direccion" />
-        </div>
-        <div class="row">
-          <select id="miembro-membresia">
-            <option value="">Seleccionar membresía</option>
-          </select>
-          <button type="submit">Guardar Miembro</button>
-        </div>
-      </form>
-    </div>
-
-    <table id="miembros-table">
-      <thead><tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Membresía</th><th>Acciones</th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </section>
-
-  <section id="membresias-section">
+<section id="membresias-section">
     <h2>Membresías</h2>
+    <link rel="stylesheet" href="style.css">
     <form id="membresia-form">
       <input type="hidden" id="membresia-id" />
       <div class="row">
@@ -206,12 +177,3 @@
       const res = await fetch(API_BASE + '/api/miembros/' + id, { method:'DELETE' });
       if(res.ok) await renderMiembros(); else alert('Error al eliminar');
     };
-
-    // Inicializar
-    (async function init(){
-      await renderMembresias();
-      await renderMiembros();
-    })();
-  </script>
-</body>
-</html>
