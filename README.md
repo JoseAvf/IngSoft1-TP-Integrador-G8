@@ -13,8 +13,8 @@ Este incremento representa el **núcleo funcional del sistema**, sirviendo de ci
 Contiene las **entidades principales** y sus relaciones:
 
 - `Miembro` → Datos personales, vínculo 1:1 con Membresía y Carnet.  
-- `Membresia` → Tipo, costo, fechas de inicio y vencimiento.  
-- `Carnet` → Generado automáticamente con un código de barras o GUID único.  
+- `Membresia` → Tipo, costo, fechas de fechas de emisión, vencimiento y posible pausa.  
+- `Carnet` → Generado automáticamente con un código de barras/GUID único.  
 - `Persona` → Clase abstracta base de `Miembro` y `Entrenador`.
 
 **Relaciones principales:**
@@ -31,16 +31,24 @@ Implementa la **lógica de negocio y casos de uso** principales.
   - `IMiembroRepository`, `IMembresiaRepository`
 
 - **Servicios:**
-  - `MiembroService`: alta, modificación y vinculación de membresías.
-  - `MembresiaService`: gestión de membresías y cálculo de costos con descuentos.
+  - `MiembroService`: 
+    - Alta de miembros con validación de DNI único.
+    - Generación automática de carnet.
+    - Vinculación y actualización de membresías.
+  - `MembresiaService`: 
+    - Gestión de membresías.
+    - Cálculo de costos con descuentos por edad y estudiante.
+    - Gestión de pausas.
+    - Sincronización de `MembresiaId` en el miembro.
 
 ---
 
 ### 🏗️ Capa de Infraestructura (CuerpoSano.Infrastructure)
 Encargada de la persistencia de datos con Entity Framework Core (Code First).
 
-- CuerpoSanoDbContext — define DbSet para cada entidad.
-- Configurations/ — contiene configuraciones específicas (clave foránea, restricciones, relaciones).
+- CuerpoSanoDbContext — define DbSet para cada entidad y relaciones: 
+  - Al eliminar un Miembro, se borran automáticamente su Carnet y Membresia.
+  - Al eliminar una Membresia, el miembro queda intacto, y en memoria se puede setear Membresia y MembresiaId a null.
 - Repositories/ — implementaciones concretas (MiembroRepository, MembresiaRepository).
 
 ---
@@ -57,11 +65,14 @@ Endpoints principales:
 | Método | Ruta | Descripción |
 |--------------|--------------|--------------|
 | GET | /api/miembros | Listar todos los miembros |
-| POST | /api/miembros | Crear un nuevo miembro |
+| POST | /api/miembros | Crear un nuevo miembro(con carnet generado automáticamente |
 | PUT |  /api/miembros/{id} | Modificar datos del miembro |
-| DELETE | /api/miembros/{id} | Eliminar miembro |
+| DELETE | /api/miembros/{id} | Eliminar miembro (borra carnet y membresía asociada) |
 | GET | /api/membresias | Listar membresías |
-| POST | /api/membresias | Crear membresía nueva |
+| POST | /api/membresias | Crear membresía nueva para un miembro |
+| DELETE | /api/membresias/{id} | Eliminar membresía (setea MembresiaId y Membresia en el miembro a null) |
+
+> 💡 Nota: Se usan DTOs separados para Request y Response para evitar ciclos de serialización y exponer solo datos necesarios.
 
 ---
 
@@ -72,18 +83,20 @@ El sistema aplica descuentos automáticos según condiciones del socio:
 - 🎓 Estudiantes → 10%
 - 💰 Combinables entre sí.
 
-El cálculo se aplica al registrar o renovar la membresía.
+El cálculo se aplica al crear  o renovar la membresía.
 
 --- 
 
 ### 🧾 Resultado del incremento
 Al finalizar el Incremento 1, el sistema permite:
 
-✅ Registrar miembros con validación de DNI único. 
-✅ Asociar una membresía a cada miembro. 
-✅ Generar un carnet con código único. 
-✅ Calcular costos ajustados por descuentos. 
+✅ Registrar miembros con validación de DNI único.
+✅ Asociar una membresía a cada miembro.
+✅ Generar un carnet con código único automáticamente.
+✅ Calcular costos ajustados por descuentos.
+✅ Permitir pausar membresías hasta 30 días.
 ✅ Persistir toda la información en SQL Server mediante EF Core.
+✅ Borrar miembros y membresías con reglas de cascada correctas.
 
 ---
 
@@ -92,7 +105,7 @@ Sigue estos pasos para preparar tu entorno y ejecutar el sistema:
 
 1️⃣ Clonar el repositorio
 ```
-git clone https://github.com/JoseAvf/IngenieriaenSoftware-TrabajoPracticoIntegrador.git
+git clone https://github.com/JoseAvf/IngSoft1-TP-Integrador-G8.git
 ```
 
 2️⃣ Configurar la base de datos
@@ -104,24 +117,18 @@ Editá appsettings.json en CuerpoSano.WebApi:
 }
 ```
 
-3️⃣ Aplicar las migraciones
-Desde la carpeta CuerpoSano.Infrastructure, ejecutar:
+3️⃣ Ejecutar la API
 ```
-dotnet ef database update --startup-project ../CuerpoSano.WebApi --context CuerpoSanoDbContext
+cd ../CuerpoSano.WebApi
+dotnet run
 ```
-
-Esto creará la base de datos inicial con las tablas:
+✅ Al iniciar, la aplicación aplicará automáticamente todas las migraciones pendientes y creará la base de datos si no existe,  con las tablas: 
 - Miembros
 - Membresias
 - Carnets
 - Personas
 
-4️⃣ Ejecutar la API
-```
-cd ../CuerpoSano.WebApi
-dotnet run
-```
-
+4️⃣ Probar los endpoints
 La API se ejecutará en:
 
 🔗 http://localhost:5000  o  https://localhost:7000
