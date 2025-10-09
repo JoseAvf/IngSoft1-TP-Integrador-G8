@@ -1,6 +1,8 @@
-﻿using CuerpoSano.Application.Interfaces.PersistenceInterfaces;
+﻿using CuerpoSano.Application.DTOs.Request;
+using CuerpoSano.Application.Interfaces.PersistenceInterfaces;
 using CuerpoSano.Application.Interfaces.ServicesInterfaces;
 using CuerpoSano.Domain.Entities;
+using MediatR;
 
 namespace CuerpoSano.Application.Services
 {
@@ -23,12 +25,24 @@ namespace CuerpoSano.Application.Services
             return await _miembroRepository.GetByIdAsync(id);
         }
 
-        public async Task<Miembro> CreateMiembroAsync(Miembro miembro, bool esEstudiante)
+        public async Task<Miembro> CreateMiembroAsync(MiembroCreateRequest request, bool esEstudiante)
         {
             // Validación de DNI único
-            var existente = await _miembroRepository.GetByDniAsync(miembro.DNI);
+            var existente = await _miembroRepository.GetByDniAsync(request.DNI);
             if (existente != null)
                 throw new InvalidOperationException("El DNI ya está registrado");
+
+            var miembro = new Miembro
+            {
+                Nombre = request.Nombre,
+                DNI = request.DNI,
+                Direccion = request.Direccion,
+                FechaNacimiento = request.FechaNacimiento,
+                Telefono = request.Telefono,
+                Correo = request.Correo
+                // No seteamos Carnet ni Membresia aquí
+            };
+
 
             // Generar carnet
             miembro.Carnet = new Carnet
@@ -37,8 +51,7 @@ namespace CuerpoSano.Application.Services
                 FechaEmision = DateTime.Now
             };
 
-            // Calcular costo con descuentos
-            miembro.Membresia.Costo = CalcularCostoFinal(miembro.Membresia, miembro.FechaNacimiento, esEstudiante);
+            //miembro.Membresia.Costo = CalcularCostoFinal(miembro.Membresia, miembro.FechaNacimiento, esEstudiante); //Calcular costo con descuentos
 
             await _miembroRepository.AddAsync(miembro);
             await _miembroRepository.SaveChangesAsync();

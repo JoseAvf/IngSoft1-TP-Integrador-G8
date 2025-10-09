@@ -11,8 +11,9 @@ namespace CuerpoSano.Application.Interfaces.ServicesInterfaces
     {
         Task<IEnumerable<Membresia>> GetAllAsync();
         Task<Membresia?> GetByIdAsync(int id);
-        Task<Membresia> CreateAsync(Membresia membresia);
+        Task<Membresia> CreateAsync(Membresia membresia, DateTime fechaNacimiento, bool esEstudiante);
         Task<Membresia?> UpdateAsync(Membresia membresia);
         Task<bool> DeleteAsync(int id);
+        Task<Membresia> PausarMembresiaAsync(int id, DateTime inicioPausa);
     }
 }

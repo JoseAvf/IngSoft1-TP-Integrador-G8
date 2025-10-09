@@ -16,6 +16,5 @@ namespace CuerpoSano.Application.Interfaces.PersistenceInterfaces
         Task<Miembro> UpdateAsync(Miembro miembro);
         Task DeleteAsync(Miembro miembro);
         Task SaveChangesAsync();
-
     }
 }

@@ -1,4 +1,5 @@
-﻿using CuerpoSano.Domain.Entities;
+﻿using CuerpoSano.Application.DTOs.Request;
+using CuerpoSano.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace CuerpoSano.Application.Interfaces.ServicesInterfaces
     {
         Task<IEnumerable<Miembro>> GetAllAsync();
         Task<Miembro?> GetByIdAsync(int id);
-        Task<Miembro> CreateMiembroAsync(Miembro miembro, bool esEstudiante);
+        Task<Miembro> CreateMiembroAsync(MiembroCreateRequest miembro, bool esEstudiante);
         Task<Miembro> UpdateAsync(Miembro miembro);
         Task<bool> DeleteAsync(int id);
 

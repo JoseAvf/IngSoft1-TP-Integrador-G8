@@ -1,7 +1,10 @@
-﻿using CuerpoSano.Application.Interfaces.ServicesInterfaces;
+﻿using CuerpoSano.Application.DTOs.Request;
+using CuerpoSano.Application.DTOs.Response;
+using CuerpoSano.Application.Interfaces.ServicesInterfaces;
 using CuerpoSano.Application.Services;
 using CuerpoSano.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using CuerpoSano.Application.Mappers;
 
 namespace CuerpoSano.WebApi.Controllers
 {
@@ -9,51 +12,76 @@ namespace CuerpoSano.WebApi.Controllers
     [Route("api/[controller]")]
     public class MembresiasController : ControllerBase
     {
-        private readonly MembresiaService _membresiaService;
-        public MembresiasController(MembresiaService service)
+        private readonly IMembresiaService _membresiaService;
+        private readonly IMiembroService _miembroService;
+
+        public MembresiasController(IMembresiaService membresiaService, IMiembroService miembroService)
         {
-            _membresiaService = service;
+            _membresiaService = membresiaService;
+            _miembroService = miembroService;
         }
 
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Membresia>>> GetAll()
+        public async Task<ActionResult<IEnumerable<MembresiaCreateResponse>>> GetAll()
         {
-            return Ok(await _membresiaService.GetAllAsync());
+            var membresias = await _membresiaService.GetAllAsync();
+            return Ok(membresias.Select(m => m.ToCreateResponse()));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Miembro>> GetById(int id)
+        public async Task<ActionResult<MembresiaCreateResponse>> GetById(int id)
         {
-            var miembro = await _membresiaService.GetByIdAsync(id);
-            if (miembro == null)
-                return NotFound();
-
-            return Ok(miembro);
+            var membresia = await _membresiaService.GetByIdAsync(id);
+            if (membresia == null) return NotFound();
+            return Ok(membresia.ToCreateResponse());
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Membresia>> Create(Membresia membresia)
-        {
-            var creada = await _membresiaService.CreateAsync(membresia);
 
-            return CreatedAtAction(nameof(GetAll), 
-                new { id = creada.Id }, 
-                creada);
+        [HttpPost]
+        public async Task<ActionResult<MembresiaCreateResponse>> Create([FromBody] MembresiaCreateRequest request) //se crea correctamente
+        {
+            // Traer la fecha de nacimiento del miembro para calcular descuentos
+            var miembro = await _miembroService.GetByIdAsync(request.MiembroId);
+            if (miembro == null) return NotFound($"Miembro con ID {request.MiembroId} no encontrado.");
+
+            var membresia = new Membresia
+            {
+                MiembroId = request.MiembroId,
+                Tipo = request.Tipo,
+                Costo = request.CostoBase
+            };
+
+            var nuevaMembresia = await _membresiaService.CreateAsync( 
+                membresia,
+                miembro.FechaNacimiento,
+                request.EsEstudiante
+            );
+
+            return CreatedAtAction(nameof(GetById), new { id = nuevaMembresia.Id }, nuevaMembresia.ToCreateResponse()); 
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult> Update([FromBody] Membresia membresia)
+        public async Task<ActionResult> Update([FromBody] Membresia membresia) //corregir que no pide el obj membresia completo, solo los datos que se quieran actualizar;
         {
             await _membresiaService.UpdateAsync(membresia);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id) //borra bien
         {
             var eliminado = await _membresiaService.DeleteAsync(id);
             if (!eliminado) return NotFound();
             return NoContent();
         }
+
+        [HttpPut("pausar/{id}")] //se añaden los datos de membresia pausada correctamente
+        public async Task<ActionResult<MembresiaCreateResponse>> Pausar(int id, [FromQuery] DateTime inicioPausa)
+        {
+            var membresia = await _membresiaService.PausarMembresiaAsync(id, inicioPausa); 
+            return Ok(membresia.ToCreateResponse());
+        }
+
     }
 }

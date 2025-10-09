@@ -1,4 +1,7 @@
-﻿using CuerpoSano.Application.Interfaces.ServicesInterfaces;
+﻿using CuerpoSano.Application.DTOs.Request;
+using CuerpoSano.Application.DTOs.Response;
+using CuerpoSano.Application.Interfaces.ServicesInterfaces;
+using CuerpoSano.Application.Mappers;
 using CuerpoSano.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,27 +19,27 @@ namespace CuerpoSano.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Miembro>>> GetAll()
+        public async Task<ActionResult<IEnumerable<MiembroDetalleResponse>>> GetAll()
         {
             var miembros = await _miembroService.GetAllAsync();
-            return Ok(miembros);
+            return Ok(miembros.Select(m => m.ToDetalleResponse()));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Miembro>> GetById(int id)
+        public async Task<ActionResult<MiembroDetalleResponse>> GetById(int id)
         {
             var miembro = await _miembroService.GetByIdAsync(id);
             if (miembro == null)
                 return NotFound();
 
-            return Ok(miembro);
+            return Ok(miembro.ToDetalleResponse());
         }
 
         [HttpPost]
-        public async Task<ActionResult<Miembro>> Create([FromBody] Miembro miembro, [FromQuery] bool esEstudiante)
+        public async Task<ActionResult<MiembroCreateResponse>> Create([FromBody] MiembroCreateRequest request, [FromQuery] bool esEstudiante)
         {
-            var nuevo = await _miembroService.CreateMiembroAsync(miembro, esEstudiante);
-            return CreatedAtAction(nameof(GetById), new { id = nuevo.Id }, nuevo);
+            var nuevo = await _miembroService.CreateMiembroAsync(request, esEstudiante);
+            return CreatedAtAction(nameof(GetById), new { id = nuevo.Id }, nuevo.ToCreateResponse());
         }
 
         [HttpPut("{id}")]

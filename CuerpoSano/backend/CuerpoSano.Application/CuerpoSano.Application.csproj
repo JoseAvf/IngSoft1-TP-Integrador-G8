@@ -13,11 +13,8 @@
 
   <ItemGroup>
     <Folder Include="DTOs\EntitiesDTOs\" />
-    <Folder Include="DTOs\Response\" />
-    <Folder Include="DTOs\Request\" />
     <Folder Include="Validators\" />
     <Folder Include="Helpers\" />
-    <Folder Include="Mappers\" />
   </ItemGroup>
 
   <PropertyGroup>
