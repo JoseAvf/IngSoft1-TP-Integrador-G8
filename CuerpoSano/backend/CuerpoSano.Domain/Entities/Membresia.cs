@@ -14,6 +14,6 @@ namespace CuerpoSano.Domain.Entities
 
         // Relación con miembro
         public int MiembroId { get; set; }
-        public Miembro? Miembro { get; set; } // 1:1 inversa
+        public Miembro Miembro { get; set; } = null!;// 1:1 inversa
     }
 }
