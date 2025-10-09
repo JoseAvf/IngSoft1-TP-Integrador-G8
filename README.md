@@ -153,14 +153,14 @@ backend/
     ├── Controllers/
     └── Program.cs
 ```
+---
 🧩 Próximos pasos (Iteración 2)
-
 En el siguiente incremento se agregará:
 - Gestión de clases y entrenadores.
 - Asignación de miembros a clases (con cupos).
 - Control de asistencia y penalizaciones por inasistencias.
-
+---
 👨‍💻 Autores
 - Grupo 8
-- Proyecto Académico para Ingeniería de Software — Trabajo Práctico Integrador
-
+- Proyecto Académico para Ingeniería de Software 1 — Trabajo Práctico Integrador
+---
