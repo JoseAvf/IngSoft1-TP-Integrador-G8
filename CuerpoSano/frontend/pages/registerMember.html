@@ -1,0 +1,50 @@
+<h2>Registrar Nuevo Miembro</h2>
+<form id="memberForm">
+    <fieldset>
+        <legend>Datos personales</legend>
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required>
+        <label>DNI:</label>
+        <input type="text" name="dni" required>
+        <label>Dirección:</label>
+        <input type="text" name="direccion" required>
+        <label>Teléfono:</label>
+        <input type="tel" name="telefono" required>
+        <label>Fecha de nacimiento:</label>
+        <input type="date" name="fechaNacimiento" required>
+    </fieldset>
+    <fieldset>
+        <legend>Membresía</legend>
+        <div class="membership-select">
+            <input type="text" id="membresiaTipo" placeholder="Seleccionar tipo..." readonly>
+            <input type="hidden" name="membresiaId" id="membresiaId">
+            <button type="button" id="btnSelectMembership">Elegir Membresía</button>
+        </div>
+        <div id="membershipSummary" class="summary-box">
+            <p>💰 Costo base: <span id="costoBase">-</span></p>
+            <p>🎓 Descuento aplicado: <span id="descuento">%0</span></p>
+            <p><strong>Total a pagar: <span id="totalPagar">-</span></strong></p>
+        </div>
+    </fieldset>
+    <button type="submit">Registrar Miembro</button>
+    <div id="memberFormResult"></div>
+</form>
+<!-- Modal para seleccionar membresía -->
+<div id="membershipModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Seleccionar tipo de membresía</h3>
+        <table id="membershipTable">
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Duración</th>
+                    <th>Costo</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+

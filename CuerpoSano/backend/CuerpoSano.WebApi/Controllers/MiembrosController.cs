@@ -36,9 +36,9 @@ namespace CuerpoSano.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<MiembroCreateResponse>> Create([FromBody] MiembroCreateRequest request, [FromQuery] bool esEstudiante)
+        public async Task<ActionResult<MiembroCreateResponse>> Create([FromBody] MiembroCreateRequest request)
         {
-            var nuevo = await _miembroService.CreateMiembroAsync(request, esEstudiante);
+            var nuevo = await _miembroService.CreateMiembroAsync(request);
             return CreatedAtAction(nameof(GetById), new { id = nuevo.Id }, nuevo.ToCreateResponse());
         }
 

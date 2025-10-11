@@ -25,7 +25,7 @@ namespace CuerpoSano.Application.Services
             return await _miembroRepository.GetByIdAsync(id);
         }
 
-        public async Task<Miembro> CreateMiembroAsync(MiembroCreateRequest request, bool esEstudiante)
+        public async Task<Miembro> CreateMiembroAsync(MiembroCreateRequest request)
         {
             // Validación de DNI único
             var existente = await _miembroRepository.GetByDniAsync(request.DNI);
@@ -43,15 +43,12 @@ namespace CuerpoSano.Application.Services
                 // No seteamos Carnet ni Membresia aquí
             };
 
-
             // Generar carnet
             miembro.Carnet = new Carnet
             {
                 CodigoBarra = Guid.NewGuid().ToString("N"),
                 FechaEmision = DateTime.Now
             };
-
-            //miembro.Membresia.Costo = CalcularCostoFinal(miembro.Membresia, miembro.FechaNacimiento, esEstudiante); //Calcular costo con descuentos
 
             await _miembroRepository.AddAsync(miembro);
             await _miembroRepository.SaveChangesAsync();
@@ -72,19 +69,6 @@ namespace CuerpoSano.Application.Services
             await _miembroRepository.DeleteAsync(miembro);
             await _miembroRepository.SaveChangesAsync();
             return true;
-        }
-
-
-        private decimal CalcularCostoFinal(Membresia membresia, DateTime fechaNacimiento, bool esEstudiante)
-        {
-            int edad = DateTime.Now.Year - fechaNacimiento.Year;
-            if (fechaNacimiento > DateTime.Now.AddYears(-edad)) edad--;
-
-            decimal descuento = 0;
-            if (edad >= 65) descuento += 0.2m;
-            if (esEstudiante) descuento += 0.1m;
-
-            return membresia.Costo * (1 - descuento);
         }
     }
 }

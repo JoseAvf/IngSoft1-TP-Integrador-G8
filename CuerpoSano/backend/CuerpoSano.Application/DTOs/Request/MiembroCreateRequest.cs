@@ -14,6 +14,7 @@ namespace CuerpoSano.Application.DTOs.Request
         public DateTime FechaNacimiento { get; set; }
         public int Telefono { get; set; }
         public string Correo { get; set; } = null!;
+        public bool esEstudiante { get; set; }
         // Nota: No incluimos Membresia ni Carnet acá
     }
 

@@ -22,6 +22,7 @@ namespace CuerpoSano.Application.Mappers
                 Telefono = miembro.Telefono,
                 Correo = miembro.Correo,
                 CodigoCarnet = miembro.Carnet?.CodigoBarra ?? string.Empty,
+                tipoMembresia = miembro.Membresia?.Tipo ?? string.Empty,
                 FechaEmision = miembro.Carnet?.FechaEmision.Date ?? DateTime.MinValue
             };
         }

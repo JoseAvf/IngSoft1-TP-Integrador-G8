@@ -61,8 +61,8 @@ namespace CuerpoSano.Application.Services
             if (fechaNacimiento.Date > DateTime.Now.AddYears(-edad)) edad--; 
 
             decimal descuento = 0; // Porcentaje de descuento
-            if (edad >= 65) descuento += 0.3m;
-            if (esEstudiante) descuento += 0.2m;
+            if (edad >= 65) descuento += 0.2m;
+            if (esEstudiante) descuento += 0.1m;
 
             // Calcular costo final
             membresia.Costo = membresia.Costo * (1 - descuento);
