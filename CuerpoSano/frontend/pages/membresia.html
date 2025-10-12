@@ -1,75 +1,83 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CuerpoSano - Admin </title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; max-width: 1000px; margin: auto; }
-    h2 { margin-top: 30px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background:#f4f4f4; }
-    form > * { display:block; margin:8px 0; }
-    .row { display:flex; gap:8px; }
-    .row > * { flex:1; }
-    button { padding:6px 10px; }
-  </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CuerpoSano - Admin </title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h2 {
+            margin-top: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #f4f4f4;
+        }
+
+        form > * {
+            display: block;
+            margin: 8px 0;
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+        }
+
+            .row > * {
+                flex: 1;
+            }
+
+        button {
+            padding: 6px 10px;
+        }
+    </style>
 </head>
 <body>
-  <h1>🏋️‍♂️ CuerpoSano - Admin </h1>
+    <h1>🏋️‍♂️ CuerpoSano - Admin </h1>
 
-  <section id="miembros-section">
-    <h2>Miembros</h2>
-    <div>
-      <form id="miembro-form">
-        <input type="hidden" id="miembro-id" />
-        <div class="row">
-          <input id="miembro-nombre" placeholder="Nombre completo" required />
-          <input id="miembro-dni" placeholder="DNI" />
-        </div>
-        <div class="row">
-          <input id="miembro-telefono" placeholder="Teléfono" />
-          <input id="miembro-correo" placeholder="Correo" />
-        </div>
-        <div class="row">
-          <select id="miembro-membresia">
-            <option value="">Seleccionar membresía</option>
-          </select>
-          <button type="submit">Guardar Miembro</button>
-        </div>
-      </form>
-    </div>
+    <section id="membresias-section">
+        <h2>Membresías</h2>
+        <link rel="stylesheet" href="style.css">
+        <form id="membresia-form">
+            <input type="hidden" id="membresia-id" />
+            <div class="row">
+                <input id="membresia-tipo" placeholder="Tipo (Ej: Mensual)" required />
+                <input id="membresia-costo" placeholder="Costo" type="number" step="0.01" required />
+            </div>
+            <div class="row">
+                <input id="membresia-fecha-emision" placeholder="Fecha emisión (YYYY-MM-DD)" />
+                <input id="membresia-fecha-venc" placeholder="Fecha vencimiento (YYYY-MM-DD)" />
+            </div>
+            <button type="submit">Guardar Membresía</button>
+        </form>
 
-    <table id="miembros-table">
-      <thead><tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Membresía</th><th>Acciones</th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </section>
+        <table id="membresias-table">
+            <thead><tr><th>ID</th><th>Tipo</th><th>Costo</th><th>Acciones</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </section>
 
-  <section id="membresias-section">
-    <h2>Membresías</h2>
-    <form id="membresia-form">
-      <input type="hidden" id="membresia-id" />
-      <div class="row">
-        <input id="membresia-tipo" placeholder="Tipo (Ej: Mensual)" required />
-        <input id="membresia-costo" placeholder="Costo" type="number" step="0.01" required />
-      </div>
-      <div class="row">
-        <input id="membresia-fecha-emision" placeholder="Fecha emisión (YYYY-MM-DD)" />
-        <input id="membresia-fecha-venc" placeholder="Fecha vencimiento (YYYY-MM-DD)" />
-      </div>
-      <button type="submit">Guardar Membresía</button>
-    </form>
-
-    <table id="membresias-table">
-      <thead><tr><th>ID</th><th>Tipo</th><th>Costo</th><th>Acciones</th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </section>
-
-  <script>
+    <script>
     const API_BASE = location.origin; // ajusta si tu API está en otro host/puerto, ej: http://localhost:5000
 
     // -- UTIL --
@@ -204,12 +212,3 @@
       const res = await fetch(API_BASE + '/api/miembros/' + id, { method:'DELETE' });
       if(res.ok) await renderMiembros(); else alert('Error al eliminar');
     };
-
-    // Inicializar
-    (async function init(){
-      await renderMembresias();
-      await renderMiembros();
-    })();
-  </script>
-</body>
-</html>
