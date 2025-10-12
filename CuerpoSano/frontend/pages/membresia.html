@@ -1,0 +1,214 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CuerpoSano - Admin </title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h2 {
+            margin-top: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #f4f4f4;
+        }
+
+        form > * {
+            display: block;
+            margin: 8px 0;
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+        }
+
+            .row > * {
+                flex: 1;
+            }
+
+        button {
+            padding: 6px 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🏋️‍♂️ CuerpoSano - Admin </h1>
+
+    <section id="membresias-section">
+        <h2>Membresías</h2>
+        <link rel="stylesheet" href="style.css">
+        <form id="membresia-form">
+            <input type="hidden" id="membresia-id" />
+            <div class="row">
+                <input id="membresia-tipo" placeholder="Tipo (Ej: Mensual)" required />
+                <input id="membresia-costo" placeholder="Costo" type="number" step="0.01" required />
+            </div>
+            <div class="row">
+                <input id="membresia-fecha-emision" placeholder="Fecha emisión (YYYY-MM-DD)" />
+                <input id="membresia-fecha-venc" placeholder="Fecha vencimiento (YYYY-MM-DD)" />
+            </div>
+            <button type="submit">Guardar Membresía</button>
+        </form>
+
+        <table id="membresias-table">
+            <thead><tr><th>ID</th><th>Tipo</th><th>Costo</th><th>Acciones</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <script>
+    const API_BASE = location.origin; // ajusta si tu API está en otro host/puerto, ej: http://localhost:5000
+
+    // -- UTIL --
+    function qs(sel) { return document.querySelector(sel); }
+    function qsa(sel) { return document.querySelectorAll(sel); }
+
+    // -- Membresias: cargar y listar --
+    async function fetchMembresias() {
+      const res = await fetch(API_BASE + '/api/membresias');
+      if(!res.ok) return [];
+      return await res.json();
+    }
+
+    async function renderMembresias() {
+      const rows = qs('#membresias-table tbody');
+      rows.innerHTML = '<tr><td colspan="4">Cargando...</td></tr>';
+      const list = await fetchMembresias();
+      rows.innerHTML = list.length ? list.map(m => `
+        <tr>
+          <td>${m.id}</td>
+          <td>${m.tipo}</td>
+          <td>${m.costo}</td>
+          <td>
+            <button onclick="editMembresia(${m.id})">Editar</button>
+            <button onclick="deleteMembresia(${m.id})">Eliminar</button>
+          </td>
+        </tr>`).join('') : '<tr><td colspan="4">No hay membresías</td></tr>';
+
+      // llenar select de membresias en formulario de miembro
+      const sel = qs('#miembro-membresia');
+      sel.innerHTML = '<option value="">Seleccionar membresía</option>' + list.map(m => `<option value="${m.id}">${m.tipo} - ${m.costo}</option>`).join('');
+    }
+
+    // -- Miembros: listar --
+    async function fetchMiembros() {
+      const res = await fetch(API_BASE + '/api/miembros');
+      if(!res.ok) return [];
+      return await res.json();
+    }
+
+    async function renderMiembros() {
+      const rows = qs('#miembros-table tbody');
+      rows.innerHTML = '<tr><td colspan="5">Cargando...</td></tr>';
+      const list = await fetchMiembros();
+      rows.innerHTML = list.length ? list.map(m => `
+        <tr>
+          <td>${m.id}</td>
+          <td>${m.nombre || ''}</td>
+          <td>${m.correo || ''}</td>
+          <td>${m.id_membresia || ''}</td>
+          <td>
+            <button onclick="editMiembro(${m.id})">Editar</button>
+            <button onclick="deleteMiembro(${m.id})">Eliminar</button>
+          </td>
+        </tr>`).join('') : '<tr><td colspan="5">No hay miembros</td></tr>';
+    }
+
+    // -- Formularios: membresia --
+    qs('#membresia-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = qs('#membresia-id').value;
+      const payload = {
+        tipo: qs('#membresia-tipo').value,
+        costo: parseFloat(qs('#membresia-costo').value) || 0,
+        fecha_emision: qs('#membresia-fecha-emision').value || null,
+        fecha_venc: qs('#membresia-fecha-venc').value || null
+      };
+      const method = id ? 'PUT' : 'POST';
+      const url = id ? API_BASE + '/api/membresias/' + id : API_BASE + '/api/membresias';
+      const res = await fetch(url, {
+        method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+      });
+      if(res.ok) {
+        qs('#membresia-form').reset(); qs('#membresia-id').value = '';
+        await renderMembresias(); await renderMiembros();
+      } else {
+        alert('Error en guardar membresía');
+      }
+    });
+
+    window.editMembresia = async (id) => {
+      const res = await fetch(API_BASE + '/api/membresias/' + id);
+      if(!res.ok) return alert('No encontrado');
+      const m = await res.json();
+      qs('#membresia-id').value = m.id;
+      qs('#membresia-tipo').value = m.tipo || '';
+      qs('#membresia-costo').value = m.costo || '';
+      qs('#membresia-fecha-emision').value = m.fecha_emision || '';
+      qs('#membresia-fecha-venc').value = m.fecha_venc || '';
+    };
+
+    window.deleteMembresia = async (id) => {
+      if(!confirm('Eliminar membresía?')) return;
+      const res = await fetch(API_BASE + '/api/membresias/' + id, {method:'DELETE'});
+      if(res.ok) { await renderMembresias(); await renderMiembros(); } else alert('Error al eliminar');
+    };
+
+    // -- Formularios: miembro --
+    qs('#miembro-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = qs('#miembro-id').value;
+      const payload = {
+        nombre: qs('#miembro-nombre').value,
+        dni: qs('#miembro-dni').value,
+        telefono: qs('#miembro-telefono').value,
+        correo: qs('#miembro-correo').value,
+        id_membresia: qs('#miembro-membresia').value || null
+      };
+      const method = id ? 'PUT' : 'POST';
+      const url = id ? API_BASE + '/api/miembros/' + id : API_BASE + '/api/miembros';
+      const res = await fetch(url, { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      if(res.ok) {
+        qs('#miembro-form').reset(); qs('#miembro-id').value = '';
+        await renderMiembros();
+      } else alert('Error en guardar miembro');
+    });
+
+    window.editMiembro = async (id) => {
+      const res = await fetch(API_BASE + '/api/miembros/' + id);
+      if(!res.ok) return alert('No encontrado');
+      const m = await res.json();
+      qs('#miembro-id').value = m.id;
+      qs('#miembro-nombre').value = m.nombre || '';
+      qs('#miembro-dni').value = m.dni || '';
+      qs('#miembro-telefono').value = m.telefono || '';
+      qs('#miembro-correo').value = m.correo || '';
+      qs('#miembro-membresia').value = m.id_membresia || '';
+    };
+
+    window.deleteMiembro = async (id) => {
+      if(!confirm('Eliminar miembro?')) return;
+      const res = await fetch(API_BASE + '/api/miembros/' + id, { method:'DELETE' });
+      if(res.ok) await renderMiembros(); else alert('Error al eliminar');
+    };
