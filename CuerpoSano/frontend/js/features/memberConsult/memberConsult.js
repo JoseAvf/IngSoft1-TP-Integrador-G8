@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <p><strong>Fecha de Emisión:</strong> ${formatDate(member.fechaEmisionMembresia)}</p>
             <p><strong>Fecha de Vencimiento:</strong> ${formatDate(member.fechaVencimientoMembresia)}</p>
             <p><strong>Costo:</strong> ${member.costoMembresia != null ? `$${member.costoMembresia}` : "-"}</p>
-            <p><strong>Estado:</strong> ${member.estaPausada ? "Pausada" : "Activa"}</p>
+            <p><strong>Estado:</strong> ${member.tipoMembresia ? (member.estaPausada ? "Pausada" : "Activa") : "-"}</p>
         </section>
     `;
     }

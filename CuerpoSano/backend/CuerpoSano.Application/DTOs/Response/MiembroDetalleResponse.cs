@@ -22,6 +22,7 @@ namespace CuerpoSano.Application.DTOs.Response
         public DateTime FechaEmisionCarnet { get; set; }
 
         // Datos de la membresía (1:1)
+        public int? MembresiaId { get; set; }
         public string? TipoMembresia { get; set; }
         public DateTime? FechaEmisionMembresia { get; set; }
         public DateTime? FechaVencimientoMembresia { get; set; }

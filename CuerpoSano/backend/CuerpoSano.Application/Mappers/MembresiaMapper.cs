@@ -24,6 +24,29 @@ namespace CuerpoSano.Application.Mappers
                 FechaPausaFin = membresia.FechaPausaFin
             };
         }
-    }
 
+        public static MembresiaDetalleResponse ToDetalleResponse(this Membresia membresia)
+        {
+            return new MembresiaDetalleResponse
+            {
+                // Datos de la membresía
+                Id = membresia.Id,
+                Tipo = membresia.Tipo,
+                FechaEmision = membresia.FechaEmision,
+                FechaVencimiento = membresia.FechaVencimiento,
+                Costo = membresia.Costo,
+                FechaPausaInicio = membresia.FechaPausaInicio,
+                FechaPausaFin = membresia.FechaPausaFin,
+
+                // Datos del miembro
+                IdMiembro = membresia.Miembro.Id,
+                Nombre = membresia.Miembro.Nombre,
+                DNI = membresia.Miembro.DNI,
+                Direccion = membresia.Miembro.Direccion,
+                FechaNacimiento = membresia.Miembro.FechaNacimiento,
+                Telefono = membresia.Miembro.Telefono,
+                Correo = membresia.Miembro.Correo
+            };
+        }
+    }
 }

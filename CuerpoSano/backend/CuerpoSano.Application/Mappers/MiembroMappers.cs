@@ -44,6 +44,7 @@ namespace CuerpoSano.Application.Mappers
                 FechaEmisionCarnet = (DateTime)(miembro.Carnet?.FechaEmision),
 
                 // Membresía (puede ser null)
+                MembresiaId = miembro.Membresia?.Id,
                 TipoMembresia = miembro.Membresia?.Tipo,
                 FechaEmisionMembresia = miembro.Membresia?.FechaEmision,
                 FechaVencimientoMembresia = miembro.Membresia?.FechaVencimiento,

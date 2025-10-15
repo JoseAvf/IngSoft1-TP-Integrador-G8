@@ -16,11 +16,14 @@ namespace CuerpoSano.Infrastructure.Repositories.Implementations
         public MembresiaRepository(CuerpoSanoDbContext context) => _context = context;
 
         public async Task<IEnumerable<Membresia>> GetAllAsync() =>
-            await _context.Membresias.ToListAsync();
+            await _context.Membresias
+                .Include(m => m.Miembro)
+                .ToListAsync();
 
         public async Task<Membresia?> GetByIdAsync(int id)
         {
             return await _context.Membresias
+                .Include(m => m.Miembro)
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
 
