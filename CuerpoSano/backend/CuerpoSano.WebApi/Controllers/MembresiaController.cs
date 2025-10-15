@@ -37,7 +37,6 @@ namespace CuerpoSano.WebApi.Controllers
             return Ok(membresia.ToCreateResponse());
         }
 
-
         [HttpPost]
         public async Task<ActionResult<MembresiaCreateResponse>> Create([FromBody] MembresiaCreateRequest request) //se crea correctamente
         {

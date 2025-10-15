@@ -2,7 +2,6 @@
 import { MembershipsAPI } from "../../api/memberships.js";
 import { setupMembershipSelector } from "./membershipSelector.js";
 import { calcularDescuentos } from "./costCalculator.js";
-import { loadMemberList } from "../../features/members/memberList.js";
 
 export function setupMemberForm() {
     const form = document.getElementById("memberForm");
@@ -86,8 +85,6 @@ export function setupMemberForm() {
             descuentoSpan.textContent = "%0";
             totalPagarSpan.textContent = "-";
             membresiaSeleccionada = null;
-
-            await loadMemberList();
 
         } catch (err) {
             alert("Error al registrar miembro o membresía: " + err.message);

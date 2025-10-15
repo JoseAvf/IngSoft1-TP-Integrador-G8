@@ -25,6 +25,11 @@ namespace CuerpoSano.Application.Services
             return await _miembroRepository.GetByIdAsync(id);
         }
 
+        public async Task<Miembro?> GetByDniAsync(string dni) 
+        {
+            return await _miembroRepository.GetByDniAsync(dni);
+        }
+
         public async Task<Miembro> CreateMiembroAsync(MiembroCreateRequest request)
         {
             // Validación de DNI único
