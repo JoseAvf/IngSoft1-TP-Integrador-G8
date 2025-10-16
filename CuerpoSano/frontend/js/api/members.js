@@ -2,6 +2,16 @@
 import { API_BASE_URL } from "./config.js";
 
 export const MembersAPI = {
+
+    async getByDni(dni) {
+        const response = await fetch(`${API_BASE_URL}/Miembros/${dni}`);
+        if (response.status === 404) {
+            return null; // miembro no encontrado
+        }
+        if (!response.ok) throw new Error("Error al obtener miembro");
+        return await response.json();
+    },
+
     async getAll() {
         const response = await fetch(`${API_BASE_URL}/Miembros`);
         if (!response.ok) throw new Error("Error al obtener miembros");

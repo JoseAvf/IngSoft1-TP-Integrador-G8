@@ -1,10 +1,14 @@
 ﻿import { MembersAPI } from "../../api/members.js";
 import { MembershipsAPI } from "../../api/memberships.js";
-import { setupMembershipSelector } from "./membershipSelector.js";
-import { calcularDescuentos } from "./costCalculator.js";
+import { setupMembershipSelector } from "../memberRegistration/membershipSelector.js";
+import { calcularDescuentos } from "../memberRegistration/costCalculator.js";
 
-export function setupMemberForm() {
-    const form = document.getElementById("memberForm");
+document.addEventListener("DOMContentLoaded", async () => {
+    await membershipRegistration();
+});
+
+export async function membershipRegistration() {
+    const form = document.getElementById("membershipForm");
     const btnSelectMembership = document.getElementById("btnSelectMembership");
 
     const inputTipo = document.getElementById("membresiaTipo");
@@ -12,16 +16,21 @@ export function setupMemberForm() {
     const costoBaseSpan = document.getElementById("costoBase");
     const descuentoSpan = document.getElementById("descuento");
     const totalPagarSpan = document.getElementById("totalPagar");
+    
 
     let membresiaSeleccionada = null;
 
     // Configuramos el selector de membresía
-    const membershipSelector = setupMembershipSelector((membresia) => {
+    const membershipSelector = setupMembershipSelector(async (membresia) => {
         membresiaSeleccionada = membresia;
+
+        const miembro = await MembersAPI.getByDni(form.dni.value);
+
+        if (!miembro) throw new Error("Miembro no encontrado");
 
         // Calculamos descuentos basados en edad/estudiante
         const miembroTemp = {
-            fechaNacimiento: form.fechaNacimiento.value,
+            fechaNacimiento: miembro.fechaNacimiento,
             esEstudiante: form.querySelector('input[name="esEstudiante"]')?.checked || false,
         };
         const { descuento, total } = calcularDescuentos(miembroTemp, membresia);
@@ -34,15 +43,33 @@ export function setupMemberForm() {
         totalPagarSpan.textContent = `$${total.toFixed(2)}`;
     });
 
-    btnSelectMembership.addEventListener("click", () => {
-        if (!form.fechaNacimiento.value) {
-            alert("Primero ingrese la fecha de nacimiento para calcular descuentos.");
+    btnSelectMembership.addEventListener("click", async () => {
+        const dni = form.dni.value.trim();
+
+        if (!dni) {
+            alert("⚠️ Primero ingrese el DNI del miembro a asignar la membresía.");
             return;
         }
-        membershipSelector.open();
+
+        try {
+            // Verificar si el miembro existe
+            const miembro = await MembersAPI.getByDni(dni);
+
+            if (!miembro) {
+                alert("❌ No se encontró ningún miembro con ese DNI. Por favor registre al miembro primero.");
+                return;
+            }
+
+            // Si el miembro existe, abrimos el modal normalmente
+            membershipSelector.open();
+
+        } catch (error) {
+            console.error("Error al buscar el miembro:", error);
+            alert("Ocurrió un error al verificar el miembro. Intente nuevamente.");
+        }
     });
 
-    // Evento submit: crear miembro y membresía
+
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -51,31 +78,19 @@ export function setupMemberForm() {
             return;
         }
 
+        const miembro = await MembersAPI.getByDni(form.dni.value);
+
         try {
-            // Datos del miembro
-            const nuevoMiembroData = {
-                nombre: form.nombre.value.trim(),
-                dni: form.dni.value.trim(),
-                direccion: form.direccion.value.trim(),
-                telefono: parseInt(form.telefono.value.trim()),
-                fechaNacimiento: form.fechaNacimiento.value,
-                correo: form.correo.value.trim(),
-                esEstudiante: form.querySelector('input[name="esEstudiante"]').checked
-            };
-
-            // Crear miembro
-            const miembroCreado = await MembersAPI.create(nuevoMiembroData);
-
             // Crear membresía asociada
             const nuevaMembresia = await MembershipsAPI.create({
-                MiembroId: miembroCreado.id,
+                MiembroId: miembro.id,
                 Tipo: membresiaSeleccionada.tipo,
                 CostoBase: membresiaSeleccionada.costo,
                 EsEstudiante: form.querySelector('input[name="esEstudiante"]').checked
             });
 
             // Mostrar mensaje de éxito
-            alert(`✅ Miembro "${miembroCreado.nombre}" registrado con membresía "${nuevaMembresia.tipo}", con costo de $${nuevaMembresia.costo}.`);
+            alert(`✅ Miembro "${miembro.nombre}" registrado con membresía "${nuevaMembresia.tipo}", con costo de $${nuevaMembresia.costo}.`);
 
             // Reset formulario y resumen
             form.reset();

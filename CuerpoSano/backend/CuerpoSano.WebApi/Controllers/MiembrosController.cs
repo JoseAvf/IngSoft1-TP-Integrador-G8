@@ -25,7 +25,18 @@ namespace CuerpoSano.WebApi.Controllers
             return Ok(miembros.Select(m => m.ToDetalleResponse()));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{dni}")]
+        public async Task<ActionResult<MiembroDetalleResponse>> GetByDni(string dni)
+        {
+            var miembro = await _miembroService.GetByDniAsync(dni); 
+            if (miembro == null)
+                return NotFound();
+
+            return Ok(miembro.ToDetalleResponse());
+        }
+
+
+        [HttpGet("id/{id}")]
         public async Task<ActionResult<MiembroDetalleResponse>> GetById(int id)
         {
             var miembro = await _miembroService.GetByIdAsync(id);

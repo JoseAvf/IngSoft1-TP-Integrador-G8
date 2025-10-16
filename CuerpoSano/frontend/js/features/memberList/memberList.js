@@ -1,6 +1,11 @@
 
 import { MembersAPI } from "../../api/members.js";
 
+document.addEventListener("DOMContentLoaded", async () => {
+
+    await loadMemberList(); //carga la lista de miembros existentes
+}); 
+
 export async function loadMemberList() {
     const tableBody = document.querySelector("#membersTable tbody");
     const messageBox = document.getElementById("membersMessage");
@@ -52,12 +57,6 @@ export async function loadMemberList() {
         messageBox.textContent = "❌ Error al cargar miembros.";
     }
 }
-
-// 🔔 Escuchar evento de membresía creada
-window.addEventListener("membershipCreated", async (e) => {
-    console.log("Nueva membresía creada:", e.detail);
-    await loadMemberList();
-});
 
 async function deleteMember(id) {
     try {

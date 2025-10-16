@@ -12,6 +12,7 @@ namespace CuerpoSano.Application.Interfaces.ServicesInterfaces
     {
         Task<IEnumerable<Miembro>> GetAllAsync();
         Task<Miembro?> GetByIdAsync(int id);
+        Task<Miembro?> GetByDniAsync(string dni);
         Task<Miembro> CreateMiembroAsync(MiembroCreateRequest miembro);
         Task<Miembro> UpdateAsync(Miembro miembro);
         Task<bool> DeleteAsync(int id);

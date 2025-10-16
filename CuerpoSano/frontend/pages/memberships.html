@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
@@ -16,7 +16,7 @@
             <label>
                 Duraci�n (meses): <input type="number" name="mesesDuracion" required />
             </label>
-            <label>ID del miembro: <input type="number" name="miembroId" required /></label>
+            <label>DNI del miembro: <input type="number" name="miembroId" required /></label>
             <button type="submit">Registrar Membres�a</button>
         </form>
         <p id="membershipFormResult"></p>
@@ -40,5 +40,73 @@
         </table>
     </section>
     <script type="module" src="../js/pages/memberships.js"></script>
+</body>
+</html>-->
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CuerpoSano | Gestión de Miembros</title>
+    <link rel="stylesheet" href="../css/base/style.css" />
+</head>
+<body>
+    <header class="main-header">
+        <a href="./index.html" class="logo-link">
+            <h1>🏋️‍♂️ CuerpoSano — Sistema de Gestión de Gimnasio</h1>
+        </a>
+        <nav class="user-nav">
+            <span id="userRole">👤 Empleado</span>
+            <button id="logoutBtn">Cerrar Sesión</button>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <h2>Gestión de Membresias</h2>
+        <p>Seleccioná la acción que deseás realizar:</p>
+
+        <div class="cards">
+            <div class="card">
+                <h3>🆕 Registrar Nueva Membresía</h3>
+                <p>Registrar una nueva membresía a un miembro.</p>
+                <a href="./register-membership.html" class="btn">Registrar</a>
+            </div>
+
+            <div class="card">
+                <h3>🔍 Consultar Membresías</h3>
+                <p>Buscar y visualizar información detallada de una membresía.</p>
+                <a href="./consult-membership.html" class="btn">Consultar</a>
+            </div>
+
+            <div class="card">
+                <h3>📋 Listado de Membresías</h3>
+                <p>Ver todos las membresias registradas y sus datos principales.</p>
+                <a href="./list-memberships.html" class="btn">Ver Listado</a>
+            </div>
+        </div>
+
+        <!-- 🔙 Botón para volver -->
+        <div class="back-container">
+            <a href="./index.html" class="btn-back">⬅️ Volver al menú principal</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+        // Simulación de sesión
+        const userRole = localStorage.getItem('userRole') || 'Empleado';
+        document.getElementById('userRole').textContent = `👤 ${userRole}`;
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('userRole');
+            alert('Sesión cerrada correctamente');
+            window.location.href = 'login.html';
+        });
+    </script>
 </body>
 </html>
