@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pagos - CuerpoSano</title>
+  <link rel="stylesheet" href="../css/pages/secondIteration.css">
+</head>
+<body>
+  <header>
+    <h1>Gestión de Pagos</h1>
+    <nav><a href="index.html">← Volver al inicio</a></nav>
+  </header>
+
+  <section class="form-section">
+    <h2>Registrar pago</h2>
+    <form id="paymentForm">
+      <label>ID Miembro:</label><input type="text" required />
+      <label>Monto:</label><input type="number" required />
+      <label>Fecha:</label><input type="date" required />
+      <button type="submit">Registrar Pago</button>
+    </form>
+  </section>
+
+  <section class="list-section">
+    <h2>Historial de Pagos</h2>
+    <table id="paymentTable">
+      <thead><tr><th>ID Miembro</th><th>Monto</th><th>Fecha</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <script src="../js/payments.js"></script>
+</body>
+</html>
+    <footer>
+        <p>© 2025 CuerpoSano</p>
+    </footer>

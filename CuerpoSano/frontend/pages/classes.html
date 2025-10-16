@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clases - CuerpoSano</title>
+  <link rel="stylesheet" href="../css/pages/secondIteration.css">
+</head>
+<body>
+  <header>
+    <h1>Gestión de Clases</h1>
+    <nav><a href="index.html">← Volver al inicio</a></nav>
+  </header>
+
+  <section class="form-section">
+    <h2>Registrar nueva clase</h2>
+    <form id="classForm">
+      <label>Nombre:</label><input type="text" required />
+      <label>Tipo:</label><input type="text" required />
+      <label>Horario:</label><input type="time" required />
+      <label>Entrenador:</label><input type="text" required />
+      <button type="submit">Registrar Clase</button>
+    </form>
+  </section>
+
+  <section class="list-section">
+    <h2>Clases disponibles</h2>
+    <table id="classTable">
+      <thead><tr><th>Nombre</th><th>Tipo</th><th>Horario</th><th>Entrenador</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <script src="../js/classes.js"></script>
+</body>
+</html>
+    <footer>
+        <p>© 2025 CuerpoSano</p>
+    </footer>

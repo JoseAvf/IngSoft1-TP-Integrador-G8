@@ -1,6 +1,23 @@
-<h2>Registrar Nuevo Miembro</h2>
-<form id="memberForm">
-    <fieldset>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrar Nuevo Miembro | CuerpoSano</title>
+  <link rel="stylesheet" href="../css/pages/index.css">
+  <link rel="stylesheet" href="../css/pages/registermember.css">
+</head>
+<body>
+  <header class="main-header">
+    <h1>📝 Registrar Nuevo Miembro</h1>
+    <nav>
+      <a href="./index.html" class="btn">← Volver al inicio</a>
+    </nav>
+  </header>
+
+  <main>
+    <form id="memberForm">
+      <fieldset>
         <legend>Datos personales</legend>
         <label>Nombre:</label>
         <input type="text" name="nombre" required>
@@ -12,39 +29,113 @@
         <input type="tel" name="telefono" required>
         <label>Fecha de nacimiento:</label>
         <input type="date" name="fechaNacimiento" required>
-    </fieldset>
-    <fieldset>
+      </fieldset>
+
+      <fieldset>
         <legend>Membresía</legend>
         <div class="membership-select">
-            <input type="text" id="membresiaTipo" placeholder="Seleccionar tipo..." readonly>
-            <input type="hidden" name="membresiaId" id="membresiaId">
-            <button type="button" id="btnSelectMembership">Elegir Membresía</button>
+          <input type="text" id="membresiaTipo" placeholder="Seleccionar tipo..." readonly>
+          <input type="hidden" name="membresiaId" id="membresiaId">
+          <button type="button" id="btnSelectMembership">Elegir Membresía</button>
         </div>
         <div id="membershipSummary" class="summary-box">
-            <p>💰 Costo base: <span id="costoBase">-</span></p>
-            <p>🎓 Descuento aplicado: <span id="descuento">%0</span></p>
-            <p><strong>Total a pagar: <span id="totalPagar">-</span></strong></p>
+          <p>💰 Costo base: <span id="costoBase">-</span></p>
+          <p>🎓 Descuento aplicado: <span id="descuento">%0</span></p>
+          <p><strong>Total a pagar: <span id="totalPagar">-</span></strong></p>
         </div>
-    </fieldset>
-    <button type="submit">Registrar Miembro</button>
-    <div id="memberFormResult"></div>
-</form>
-<!-- Modal para seleccionar membresía -->
-<div id="membershipModal" class="modal">
+      </fieldset>
+
+      <button type="submit">Registrar Miembro</button>
+      <div id="memberFormResult"></div>
+    </form>
+  </main>
+
+  <!-- Modal para seleccionar membresía -->
+  <div id="membershipModal" class="modal">
     <div class="modal-content">
-        <span class="close">&times;</span>
-        <h3>Seleccionar tipo de membresía</h3>
-        <table id="membershipTable">
-            <thead>
-                <tr>
-                    <th>Tipo</th>
-                    <th>Duración</th>
-                    <th>Costo</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+      <span class="close">&times;</span>
+      <h3>Seleccionar tipo de membresía</h3>
+      <table id="membershipTable">
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Duración</th>
+            <th>Costo</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Mensual</td>
+            <td>30 días</td>
+            <td>$20.000</td>
+            <td><button class="selectBtn" data-tipo="Mensual" data-costo="20000">Seleccionar</button></td>
+          </tr>
+          <tr>
+            <td>Trimestral</td>
+            <td>90 días</td>
+            <td>$50.000</td>
+            <td><button class="selectBtn" data-tipo="Trimestral" data-costo="50000">Seleccionar</button></td>
+          </tr>
+          <tr>
+            <td>Anual</td>
+            <td>365 días</td>
+            <td>$150.000</td>
+            <td><button class="selectBtn" data-tipo="Anual" data-costo="150000">Seleccionar</button></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-</div>
+  </div>
+
+  <script>
+    // --- Lógica del modal ---
+    const modal = document.getElementById("membershipModal");
+    const btnSelect = document.getElementById("btnSelectMembership");
+    const closeBtn = document.querySelector(".close");
+    const costoBase = document.getElementById("costoBase");
+    const descuento = document.getElementById("descuento");
+    const totalPagar = document.getElementById("totalPagar");
+
+    btnSelect.onclick = () => modal.style.display = "block";
+    closeBtn.onclick = () => modal.style.display = "none";
+    window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
+
+    // Seleccionar membresía
+    document.querySelectorAll(".selectBtn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const tipo = e.target.dataset.tipo;
+        const costo = parseInt(e.target.dataset.costo);
+        document.getElementById("membresiaTipo").value = tipo;
+        document.getElementById("membresiaId").value = tipo.toLowerCase();
+        costoBase.textContent = `$${costo.toLocaleString()}`;
+        modal.style.display = "none";
+
+        // Descuento automático (simulado)
+        const edad = 27; // Ejemplo, luego se calcula con la fecha de nacimiento
+        let desc = 0;
+        if (edad >= 65) desc += 0.2;
+        const esEstudiante = Math.random() < 0.5;
+        if (esEstudiante) desc += 0.1;
+
+        const total = costo - (costo * desc);
+        descuento.textContent = `${(desc * 100).toFixed(0)}%`;
+        totalPagar.textContent = `$${total.toLocaleString()}`;
+      });
+    });
+
+    // --- Envío del formulario ---
+    document.getElementById("memberForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      document.getElementById("memberFormResult").textContent =
+        "✅ Miembro registrado correctamente (simulado)";
+      e.target.reset();
+      costoBase.textContent = "-";
+      descuento.textContent = "%0";
+      totalPagar.textContent = "-";
+    });
+  </script>
+</body>
+</html>
+
 

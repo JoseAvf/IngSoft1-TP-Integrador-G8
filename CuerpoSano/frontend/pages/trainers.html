@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entrenadores - CuerpoSano</title>
+  <link rel="stylesheet" href="../css/pages/secondIteration.css">
+</head>
+<body>
+  <header>
+    <h1>Gestión de Entrenadores</h1>
+    <nav><a href="index.html">← Volver al inicio</a></nav>
+  </header>
+
+  <section class="form-section">
+    <h2>Registrar nuevo entrenador</h2>
+    <form id="trainerForm">
+      <label>Nombre:</label><input type="text" required />
+      <label>Especialidad:</label><input type="text" required />
+      <label>Teléfono:</label><input type="tel" required />
+      <button type="submit">Registrar Entrenador</button>
+    </form>
+  </section>
+
+  <section class="list-section">
+    <h2>Lista de Entrenadores</h2>
+    <table id="trainerTable">
+      <thead><tr><th>Nombre</th><th>Especialidad</th><th>Teléfono</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <script src="../js/trainers.js"></script>
+</body>
+</html>
+    <footer>
+        <p>© 2025 CuerpoSano</p>
+    </footer>
