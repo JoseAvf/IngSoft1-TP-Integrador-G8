@@ -4,16 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CuerpoSano | Panel Principal</title>
-  <link rel="stylesheet" href="../css/pages/index.css" />
+  <link rel="stylesheet" href="../css/base/style.css" />
 </head>
 <body>
-  <header class="main-header">
-    <h1>🏋️‍♂️ CuerpoSano — Sistema de Gestión de Gimnasio</h1>
-    <nav class="user-nav">
-      <span id="userRole">👤 Empleado</span>
-      <button id="logoutBtn">Cerrar Sesión</button>
-    </nav>
-  </header>
+    <header class="main-header">
+        <a href="./index.html" class="logo-link">
+            <h1>🏋️‍♂️ CuerpoSano — Sistema de Gestión de Gimnasio</h1>
+        </a>
+        <nav class="user-nav">
+            <span id="userRole">👤 Empleado</span>
+            <button id="logoutBtn">Cerrar Sesión</button>
+        </nav>
+    </header>
 
   <main class="dashboard-container">
     <aside class="sidebar">
@@ -21,7 +23,7 @@
       <ul>
         <li><a href="./members.html">👥 Gestión de Miembros</a></li>
         <li><a href="./memberships.html">💳 Gestión de Membresías</a></li>
-        <li><a href="./registermember.html">📝 Registro Rápido</a></li>
+        <li><a href="./register-member.html">📝 Registro Rápido</a></li>
         <li><a href="#">📅 Clases y Actividades (Próximamente)</a></li>
         <li><a href="#">🏋️‍♀️ Entrenadores (Próximamente)</a></li>
         <li><a href="#">📈 Reportes y Estadísticas (Próximamente)</a></li>
@@ -39,17 +41,17 @@
         <div class="card">
           <h3>👥 Miembros</h3>
           <p>Registrar, modificar o eliminar miembros activos.</p>
-          <a href="pages/members.html" class="btn">Ir a Miembros</a>
+          <a href="./members.html" class="btn">Ir a Miembros</a>
         </div>
         <div class="card">
           <h3>💳 Membresías</h3>
           <p>Gestionar tipos de membresías, costos y descuentos.</p>
-          <a href="pages/memberships.html" class="btn">Ir a Membresías</a>
+          <a href="./memberships.html" class="btn">Ir a Membresías</a>
         </div>
         <div class="card">
           <h3>📝 Registro rápido</h3>
           <p>Dar de alta un nuevo miembro con membresía incluida.</p>
-          <a href="pages/registermember.html" class="btn">Registrar</a>
+          <a href="./register-member.html" class="btn">Registrar</a>
         </div>
       </div>
     </section>

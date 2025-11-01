@@ -1,128 +1,226 @@
-﻿/* 🎯 Estilo general */
+﻿/* ===== Estilo general ===== */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(180deg, #f6f9fc, #e9eef3);
-    color: #333;
+    font-family: "Segoe UI", sans-serif;
     margin: 0;
-    padding: 0;
-    min-height: 100vh;
+    background-color: #f6f7fb;
+    color: #333;
 }
 
-/* 🏋️‍♂️ Encabezado */
-header {
-    background-color: #0f62fe;
-    color: white;
-    padding: 1.2rem;
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-}
-
-    header h1 {
-        margin: 0;
-        font-size: 1.8rem;
-        font-weight: 600;
-        letter-spacing: 1px;
-    }
-
-/* 📦 Contenedor principal */
-main {
-    max-width: 1100px;
-    margin: 2rem auto;
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 2rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* 📋 Formularios */
-form {
-    display: grid;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-label {
-    font-weight: 600;
-    color: #222;
-}
-
-input, select {
-    padding: 0.6rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: border 0.2s ease;
-}
-
-    input:focus, select:focus {
-        border-color: #0f62fe;
-        outline: none;
-    }
-
-/* 🎛️ Botones */
-button {
-    background-color: #0f62fe;
-    color: white;
-    border: none;
-    padding: 0.8rem 1.2rem;
-    font-size: 1rem;
-    border-radius: 6px;
+.logo-link {
+    text-decoration: none; /* quita subrayado */
+    color: white; /* mismo color que el header */
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
-    button:hover {
-        background-color: #0043ce;
+    .logo-link h1 {
+        margin: 0;
+        font-size: 1.4rem;
+        transition: color 0.2s;
     }
 
-/* 🧾 Tablas */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-}
+    .logo-link:hover h1 {
+        color: #bbdefb; /* un azul más claro al pasar el mouse */
+    }
 
-thead {
-    background-color: #0f62fe;
+.main-header {
+    background-color: #1976d2;
     color: white;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-th, td {
-    padding: 0.8rem;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+    .main-header h1 {
+        font-size: 1.4rem;
+        margin: 0;
+    }
+
+.user-nav {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
-tr:nth-child(even) {
-    background-color: #f5f7fa;
+    .user-nav button {
+        background-color: #fff;
+        color: #1976d2;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 12px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+.dashboard-container {
+    display: flex;
+    height: calc(100vh - 80px);
 }
 
-/* 🧱 Tarjetas o secciones */
-.section-card {
-    background-color: #f9fbfd;
-    border-left: 4px solid #0f62fe;
-    padding: 1rem 1.5rem;
-    margin-bottom: 1.5rem;
-    border-radius: 8px;
+/* ===== Menú lateral ===== */
+.sidebar {
+    width: 260px;
+    background-color: #263238;
+    color: white;
+    padding: 20px;
 }
 
-    .section-card h2 {
+    .sidebar h2 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+
+        .sidebar ul li {
+            margin: 12px 0;
+        }
+
+    .sidebar a {
+        color: white;
+        text-decoration: none;
+        padding: 8px 12px;
+        display: block;
+        border-radius: 6px;
+        transition: background 0.2s;
+    }
+
+        .sidebar a:hover {
+            background-color: #455a64;
+        }
+
+/* ===== Contenido principal ===== */
+.main-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+    .main-content h2 {
+        font-size: 1.6rem;
+        margin-bottom: 10px;
+    }
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    width: 280px;
+    flex: 1;
+}
+
+    .card h3 {
         margin-top: 0;
-        color: #0f62fe;
     }
 
-/* 📱 Responsive */
-@media (max-width: 768px) {
-    main {
-        margin: 1rem;
-        padding: 1.5rem;
+/* ===== Estilo general de botones ===== */
+.btn,
+button {
+    background-color: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s ease;
+}
+
+    .btn:hover,
+    button:hover {
+        background-color: #1259a7;
+        transform: translateY(-1px);
     }
 
-    header h1 {
-        font-size: 1.5rem;
+    .btn:disabled,
+    button:disabled {
+        background-color: #9e9e9e;
+        cursor: not-allowed;
     }
 
-    button {
-        width: 100%;
+/* Variante secundaria (por ejemplo, botón eliminar) */
+.btn-danger {
+    background-color: #e53935;
+}
+
+    .btn-danger:hover {
+        background-color: #b71c1c;
     }
+
+/* Variante clara (para botones sobre fondos oscuros o secundarios) */
+.btn-light {
+    background-color: #fff;
+    color: #1976d2;
+    border: 1px solid #1976d2;
+}
+
+    .btn-light:hover {
+        background-color: #e3f2fd;
+    }
+
+.btn-back {
+    display: inline-block;
+    background-color: #1976d2;
+    color: white;
+    text-decoration: none;
+    padding: 10px 16px;
+    margin-top: 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+    .btn-back:hover {
+        background-color: #1259a7;
+    }
+
+/* ===== Estilo uniforme para enlaces con clase .btn ===== */
+a.btn {
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+    background-color: #1976d2;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.1s ease;
+}
+
+    a.btn:hover {
+        background-color: #1259a7;
+        transform: translateY(-1px);
+    }
+
+/* Versión clara (si la querés usar en fondos oscuros o secundarios) */
+a.btn-light {
+    background-color: #fff;
+    color: #1976d2;
+    border: 1px solid #1976d2;
+}
+
+    a.btn-light:hover {
+        background-color: #e3f2fd;
+    }
+
+
+
+/* ===== Footer ===== */
+.footer {
+    background-color: #e0e0e0;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.9rem;
 }

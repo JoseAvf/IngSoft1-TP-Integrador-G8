@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CuerpoSano | Gestión de Miembros</title>
+    <link rel="stylesheet" href="../css/base/style.css" />
+    <link rel="stylesheet" href="../css/pages/memberships.css" />
+</head>
+<body>
+    <header class="main-header">
+        <a href="./index.html" class="logo-link">
+            <h1>🏋️‍♂️ CuerpoSano — Sistema de Gestión de Gimnasio</h1>
+        </a>
+        <nav class="user-nav">
+            <span id="userRole">👤 Empleado</span>
+            <button id="logoutBtn">Cerrar Sesión</button>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <section class="list-section">
+            <h2>Listado de membresías</h2>
+            <p id="membershipsMessage"></p>
+            <div class="table-wrapper">
+                <table id="membershipsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Titular</th>
+                            <th>DNI</th>
+                            <th>Tipo</th>
+                            <th>Costo Final</th>
+                            <th>Emision</th>
+                            <th>Vencimiento</th>
+                            <th>Inicio de Pausa</th>
+                            <th>Fin de Pausa</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 🔙 Botón para volver -->
+        <div class="back-container">
+            <a href="./memberships.html" class="btn-back">⬅️ Volver atrás</a>
+        </div>
+    </main>
+
+
+    <footer class="footer">
+        <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
+    </footer>
+    <script type="module" src="../js/features/membershipList/membershipList.js"></script>
+    <script>
+            // Simulación de sesión
+            const userRole = localStorage.getItem('userRole') || 'Empleado';
+            document.getElementById('userRole').textContent = `👤 ${userRole}`;
+
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                localStorage.removeItem('userRole');
+            alert('Sesión cerrada correctamente');
+            window.location.href = 'login.html';
+            });
+    </script>
+</body>
+</html>

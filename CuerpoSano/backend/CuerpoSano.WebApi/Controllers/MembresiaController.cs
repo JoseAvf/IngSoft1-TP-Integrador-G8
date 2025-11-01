@@ -23,20 +23,19 @@ namespace CuerpoSano.WebApi.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MembresiaCreateResponse>>> GetAll()
+        public async Task<ActionResult<IEnumerable<MembresiaDetalleResponse>>> GetAll()
         {
             var membresias = await _membresiaService.GetAllAsync();
-            return Ok(membresias.Select(m => m.ToCreateResponse()));
+            return Ok(membresias.Select(m => m.ToDetalleResponse()));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<MembresiaCreateResponse>> GetById(int id)
+        public async Task<ActionResult<MembresiaDetalleResponse>> GetById(int id)
         {
             var membresia = await _membresiaService.GetByIdAsync(id);
             if (membresia == null) return NotFound();
-            return Ok(membresia.ToCreateResponse());
+            return Ok(membresia.ToDetalleResponse());
         }
-
 
         [HttpPost]
         public async Task<ActionResult<MembresiaCreateResponse>> Create([FromBody] MembresiaCreateRequest request) //se crea correctamente

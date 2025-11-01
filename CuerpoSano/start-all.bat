@@ -37,7 +37,7 @@ cd ..
 REM 5) Abrir el navegador automáticamente en la página de miembros
 timeout /t 3 /nobreak >nul
 echo 🌐 Abriendo navegador...
-start http://localhost:8080/pages/members.html
+start http://localhost:8080/pages/index.html
 
 start https://localhost:7238/swagger
 
