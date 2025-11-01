@@ -39,16 +39,21 @@ namespace CuerpoSano.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] EntrenadorCreateRequest req)
         {
-            var ent = new Entrenador
+            try
             {
-                Nombre = req.Nombre,
-                DNI = req.DNI,
-                Direccion = req.Direccion,
-                FechaNacimiento = req.FechaNacimiento,
-                Telefono = req.Telefono,
-            };
-            var creado = await _service.CreateAsync(ent);
-            return CreatedAtAction(nameof(GetById), new { id = creado.Id }, creado.ToResponse());
+                var ent = new Entrenador
+                {
+                    Nombre = req.Nombre,
+                    DNI = req.DNI,
+                    Direccion = req.Direccion,
+                    FechaNacimiento = req.FechaNacimiento,
+                    Telefono = req.Telefono,
+                };
+                var creado = await _service.CreateAsync(ent);
+                return CreatedAtAction(nameof(GetById), new { id = creado.Id }, creado.ToResponse());
+            }
+            catch (Exception ex)
+            { return BadRequest(ex.Message); }
         }
 
         [HttpPut("{id}")]

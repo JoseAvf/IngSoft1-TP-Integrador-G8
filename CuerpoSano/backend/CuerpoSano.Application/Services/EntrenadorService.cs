@@ -1,6 +1,7 @@
 ﻿using CuerpoSano.Application.Interfaces.PersistenceInterfaces;
 using CuerpoSano.Application.Interfaces.ServicesInterfaces;
 using CuerpoSano.Domain.Entities;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,10 @@ namespace CuerpoSano.Application.Services
 
         public async Task<Entrenador> CreateAsync(Entrenador entrenador)
         {
+            var existente = await _repo.GetByDniAsync(entrenador.DNI);
+            if (existente != null)
+                throw new InvalidOperationException("El DNI ya está registrado");
+
             // Crear el certificado automáticamente
             var certificado = new Certificado
             {

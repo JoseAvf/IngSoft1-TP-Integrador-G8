@@ -17,12 +17,15 @@ namespace CuerpoSano.Infrastructure.Repositories.Implementations
 
         public async Task<IEnumerable<Actividad>> GetAllAsync()
             => await _context.Actividades
-                .Include(c => c.Clases)
-                    .ThenInclude(e => e.Entrenador)
+                .Include(a => a.Clases)
+                    .ThenInclude(c => c.Entrenador)
                 .ToListAsync();
 
         public async Task<Actividad?> GetByIdAsync(int id)
-            => await _context.Actividades.FindAsync(id);
+            => await _context.Actividades
+                .Include(a => a.Clases)
+                    .ThenInclude(c => c.Entrenador)
+              .FirstOrDefaultAsync(a => a.Id == id);
 
         public async Task AddAsync(Actividad actividad) => await _context.Actividades.AddAsync(actividad);
         public async Task UpdateAsync(Actividad actividad) => _context.Actividades.Update(actividad);
