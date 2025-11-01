@@ -4,6 +4,7 @@ using CuerpoSano.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CuerpoSano.Infrastructure.Migrations
 {
     [DbContext(typeof(CuerpoSanoDbContext))]
-    partial class CuerpoSanoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251101175924_AjustesEntrenador")]
+    partial class AjustesEntrenador
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

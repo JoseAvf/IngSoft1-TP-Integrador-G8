@@ -4,6 +4,7 @@ using CuerpoSano.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CuerpoSano.Infrastructure.Migrations
 {
     [DbContext(typeof(CuerpoSanoDbContext))]
-    partial class CuerpoSanoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251101173248_iteracion2")]
+    partial class iteracion2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -261,6 +264,9 @@ namespace CuerpoSano.Infrastructure.Migrations
                     b.HasBaseType("CuerpoSano.Domain.Entities.Persona");
 
                     b.Property<int>("CertificadoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdCertificado")
                         .HasColumnType("int");
 
                     b.HasIndex("CertificadoId");

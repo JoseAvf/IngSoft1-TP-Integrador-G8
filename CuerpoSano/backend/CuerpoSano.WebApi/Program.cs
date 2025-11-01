@@ -16,10 +16,16 @@ builder.Services.AddDbContext<CuerpoSanoDbContext>(options =>
 // Repositorios
 builder.Services.AddScoped<IMiembroRepository, MiembroRepository>();
 builder.Services.AddScoped<IMembresiaRepository, MembresiaRepository>();
+builder.Services.AddScoped<IClaseRepository, ClaseRepository>();
+builder.Services.AddScoped<IClaseService, ClaseService>();
+builder.Services.AddScoped<IActividadRepository, ActividadRepository>();
 
 // Servicios
 builder.Services.AddScoped<IMiembroService, MiembroService>();
 builder.Services.AddScoped<IMembresiaService,  MembresiaService>();
+builder.Services.AddScoped<IActividadService, ActividadService>();
+builder.Services.AddScoped<IEntrenadorRepository, EntrenadorRepository>();
+builder.Services.AddScoped<IEntrenadorService, EntrenadorService>(); 
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
