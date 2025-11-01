@@ -20,7 +20,7 @@ namespace CuerpoSano.Application.Mappers
                 Direccion = entrenador.Direccion,
                 Telefono = entrenador.Telefono,
                 FechaNacimiento = entrenador.FechaNacimiento,
-                Clases = entrenador.Clases?.Select(c => c.ToResponseEntrenador()).ToList() ?? new List<ClaseEntrenadorResponse>(), 
+                Clases = entrenador.Clases?.Select(c => c.ToResponsePersona()).ToList() ?? new List<ClasePersonaResponse>(), 
                 CertificadoId = entrenador.CertificadoId
             };
         }

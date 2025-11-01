@@ -45,9 +45,9 @@ namespace CuerpoSano.Application.Mappers
             };
         }
 
-        public static ClaseEntrenadorResponse ToResponseEntrenador(this Clase clase)
+        public static ClasePersonaResponse ToResponsePersona(this Clase clase)
         {
-            return new ClaseEntrenadorResponse
+            return new ClasePersonaResponse
             {
                 Id = clase.Id,
                 Nombre = clase.Nombre,
@@ -69,9 +69,9 @@ namespace CuerpoSano.Application.Mappers
         {
             return clases.Select(c => c.ToResponseActividad());
         }
-        public static IEnumerable<ClaseEntrenadorResponse> ToResponseEntrenadorList(this IEnumerable<Clase> clases)
+        public static IEnumerable<ClasePersonaResponse> ToResponsePersonaList(this IEnumerable<Clase> clases)
         {
-            return clases.Select(c => c.ToResponseEntrenador());
+            return clases.Select(c => c.ToResponsePersona());
         }
     }
 

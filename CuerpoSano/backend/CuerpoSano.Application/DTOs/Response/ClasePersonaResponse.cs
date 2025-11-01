@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CuerpoSano.Application.DTOs.Response
 {
-    public class ClaseEntrenadorResponse
+    public class ClasePersonaResponse
     {
         public int Id { get; set; }
         public string Nombre { get; set; } = null!;

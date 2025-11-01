@@ -9,7 +9,7 @@
         public DateTime FechaNacimiento { get; set; }
         public int Telefono { get; set; }
         public int? CertificadoId { get; set; }
-        public List<ClaseEntrenadorResponse>? Clases { get; set; }
+        public List<ClasePersonaResponse>? Clases { get; set; }
 
     }
 }

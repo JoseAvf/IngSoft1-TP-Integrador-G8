@@ -73,7 +73,9 @@ namespace CuerpoSano.Infrastructure.Repositories.Implementations
         {
             return await _context.Clases
                 .Include(c => c.Miembros) //  importante para cargar la lista
-                     .ThenInclude(mc => mc.Miembro)
+                     .ThenInclude(mc => mc.Miembro).ThenInclude(m => m.Carnet)
+                .Include(c => c.Miembros)
+                    .ThenInclude(mc => mc.Miembro).ThenInclude(m => m.Membresia)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 

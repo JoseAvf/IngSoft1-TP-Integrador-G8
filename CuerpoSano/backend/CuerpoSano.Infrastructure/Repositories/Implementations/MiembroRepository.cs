@@ -19,6 +19,8 @@ namespace CuerpoSano.Infrastructure.Repositories.Implementations
             return await _context.Miembros
                 .Include(m => m.Membresia)
                 .Include(m => m.Carnet)
+                .Include(m => m.Clases)
+                    .ThenInclude(mc => mc.Clase).ThenInclude(c => c.Actividad)
                 .ToListAsync();
         }
 
@@ -27,6 +29,8 @@ namespace CuerpoSano.Infrastructure.Repositories.Implementations
             return await _context.Miembros
                 .Include(m => m.Membresia)
                 .Include(m => m.Carnet)
+                .Include(m => m.Clases)
+                    .ThenInclude(mc => mc.Clase).ThenInclude(c => c.Actividad)
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
 
@@ -35,6 +39,8 @@ namespace CuerpoSano.Infrastructure.Repositories.Implementations
             return await _context.Miembros
                 .Include(m => m.Membresia)
                 .Include(m => m.Carnet)
+                .Include(m => m.Clases)
+                    .ThenInclude(mc => mc.Clase).ThenInclude(c => c.Actividad)
                 .FirstOrDefaultAsync(m => m.DNI == dni);
         }
 

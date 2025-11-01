@@ -49,7 +49,9 @@ namespace CuerpoSano.Application.Mappers
                 FechaEmisionMembresia = miembro.Membresia?.FechaEmision,
                 FechaVencimientoMembresia = miembro.Membresia?.FechaVencimiento,
                 CostoMembresia = miembro.Membresia?.Costo,
-                EstaPausada = miembro.Membresia?.FechaPausaInicio != null
+                EstaPausada = miembro.Membresia?.FechaPausaInicio != null,
+
+                Clases = miembro.Clases?.Select(c => c.Clase.ToResponsePersona()).ToList() ?? new List<ClasePersonaResponse>(),
             };
         }
 
