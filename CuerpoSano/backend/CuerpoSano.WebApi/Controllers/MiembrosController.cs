@@ -80,5 +80,23 @@ namespace CuerpoSano.WebApi.Controllers
             if (!eliminado) return NotFound();
             return NoContent();
         }
+
+        [HttpPut("{dni}/asginar-entrenador")]
+        public async Task<IActionResult> AsignarEntrenador(string dni, [FromBody] int? entrenadorId)
+        {
+            var miembro = await _miembroService.GetByDniAsync(dni);
+            if (miembro == null)
+                return NotFound("Miembro no encontrado");
+
+            miembro.EntrenadorId = entrenadorId; // puede ser null para desasignar
+            await _miembroService.UpdateAsync(miembro);
+
+            return Ok(new
+            {
+                message = entrenadorId == null ?
+                "Entrenador desasignado" :
+                "Entrenador asignado correctamente"
+            });
+        }
     }
 }

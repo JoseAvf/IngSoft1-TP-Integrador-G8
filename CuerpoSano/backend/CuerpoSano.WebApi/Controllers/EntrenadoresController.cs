@@ -70,5 +70,21 @@ namespace CuerpoSano.WebApi.Controllers
             var ok = await _service.DeleteAsync(id);
             return ok ? NoContent() : NotFound();
         }
+
+        [HttpGet("{id}/miembros")]
+        public async Task<IActionResult> GetMiembrosAsignados(int id)
+        {
+            var entrenador = await _service.GetByIdAsync(id);
+            if (entrenador == null)
+                return NotFound($"No se encontró un entrenador con ID {id}");
+
+            var miembros = await _service.GetMiembrosByEntrenadorIdAsync(id);
+
+            if (!miembros.Any())
+                return Ok($"El entrenador con ID {id} no tiene miembros asignados.");
+
+            return Ok(miembros.Select(m => m.ToDetalleEntrenadorResponse()));
+        }
+
     }
 }

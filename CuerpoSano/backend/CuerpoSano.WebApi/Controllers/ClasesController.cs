@@ -35,21 +35,28 @@ namespace CuerpoSano.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ClaseCreateRequest request)
         {
-            var nueva = new Clase
+            try
             {
-                Nombre = request.Nombre,
-                HoraInicio = request.HoraInicio,
-                HoraFin = request.HoraFin,
-                Cupo = request.Cupo,
-                FechaCreacion = DateTime.UtcNow,
-                ActividadId = request.ActividadId,
-                EntrenadorId = request.EntrenadorId
-            };
+                var nueva = new Clase
+                {
+                    Nombre = request.Nombre,
+                    HoraInicio = request.HoraInicio,
+                    HoraFin = request.HoraFin,
+                    Cupo = request.Cupo,
+                    FechaCreacion = DateTime.UtcNow,
+                    ActividadId = request.ActividadId,
+                    EntrenadorId = request.EntrenadorId
+                };
 
-            var cread = await _claseService.CreateAsync(nueva);
-            var creado = await _claseService.GetByIdAsync(cread.Id); 
+                var cread = await _claseService.CreateAsync(nueva);
+                var creado = await _claseService.GetByIdAsync(cread.Id);
 
-            return CreatedAtAction(nameof(GetById), new { id = cread.Id }, cread.ToResponse());
+                return CreatedAtAction(nameof(GetById), new { id = cread.Id }, cread.ToResponse());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
@@ -74,8 +81,20 @@ namespace CuerpoSano.WebApi.Controllers
         [HttpPost("{id}/inscribir/{miembroId}")]
         public async Task<IActionResult> Inscribir(int id, int miembroId)
         {
-            var ok = await _claseService.InscribirMiembroAsync(id, miembroId);
-            return ok ? Ok("Miembro inscripto correctamente.") : BadRequest("No se pudo inscribir: cupo completo o datos inválidos.");
+
+            try
+            {
+                var ok = await _claseService.InscribirMiembroAsync(id, miembroId);
+                if (!ok)
+                    return BadRequest("No se pudo inscribir: cupo completo o datos inválidos.");
+
+                return Ok("Miembro inscripto correctamente.");
+            }
+            catch (Exception ex)
+            {
+                // Captura la excepción que lanzamos por RF-26
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("{id}/desinscribir/{miembroId}")]
@@ -93,5 +112,14 @@ namespace CuerpoSano.WebApi.Controllers
 
             return Ok(miembros.Select(m => m.ToDetalleResponse()));
         }
+
+        [HttpGet("{id}/asistencias")]
+        public async Task<IActionResult> GetAsistencias(int id)
+        {
+            var asistencias = await _claseService.GetAsistenciasDeClaseAsync(id);
+            if (asistencias == null) return NotFound("Clase no encontrada.");
+            return Ok(asistencias);
+        }
+
     }
 }

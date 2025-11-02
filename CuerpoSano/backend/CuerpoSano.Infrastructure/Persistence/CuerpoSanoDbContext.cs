@@ -102,6 +102,14 @@ namespace CuerpoSano.Infrastructure.Persistence
                 .HasForeignKey(a => a.EntrenadorId)
                  .OnDelete(DeleteBehavior.NoAction); // NO CASCADE
 
+            // 🔹 Entrenador (1:N) Miembro
+            modelBuilder.Entity<Miembro>()
+                .HasOne(m => m.Entrenador)
+                .WithMany(e => e.Miembros)
+                .HasForeignKey(m => m.EntrenadorId)
+                .OnDelete(DeleteBehavior.NoAction); // Si se elimina el entrenador, los miembros no quedan sin entrenador, pero los elimino manualmente
+
+
             //-------------------------
 
             // Configurar precisión del decimal Costo

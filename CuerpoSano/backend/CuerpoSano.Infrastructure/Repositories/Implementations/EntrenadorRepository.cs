@@ -34,8 +34,35 @@ namespace CuerpoSano.Infrastructure.Repositories.Implementations
 
         public async Task AddAsync(Entrenador entrenador) => await _context.Entrenadores.AddAsync(entrenador);
         public async Task UpdateAsync(Entrenador entrenador) => _context.Entrenadores.Update(entrenador);
-        public async Task DeleteAsync(Entrenador entrenador) => _context.Entrenadores.Remove(entrenador);
+        public async Task DeleteAsync(Entrenador entrenador)
+        {
+            var miembros = await _context.Miembros
+                .Where(m => m.EntrenadorId == entrenador.Id).ToListAsync();
+
+            foreach (var miembro in miembros) //desasigno el entrenador en cada miembro
+            {
+                miembro.EntrenadorId = null;
+                _context.Miembros.Update(miembro);
+            }
+            await _context.SaveChangesAsync(); 
+            _context.Entrenadores.Remove(entrenador);
+
+
+        }
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
+
+        public async Task<IEnumerable<Miembro>> GetMiembrosByEntrenadorIdAsync(int entrenadorId)
+        {
+            return await _context.Miembros
+                .Include(m => m.Membresia)
+                .Include(m => m.Carnet)
+                .Include(m => m.Clases)
+                    .ThenInclude(mc => mc.Clase)
+                    .ThenInclude(c => c.Actividad)
+                .Where(m => m.EntrenadorId == entrenadorId)
+                .ToListAsync();
+        }
+
 
     }
 }

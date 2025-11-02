@@ -15,6 +15,8 @@ namespace CuerpoSano.Application.Interfaces.ServicesInterfaces
         Task<Entrenador> CreateAsync(Entrenador entrenador);
         Task UpdateAsync(Entrenador entrenador);
         Task<bool> DeleteAsync(int id);
+        Task<IEnumerable<Miembro>> GetMiembrosByEntrenadorIdAsync(int entrenadorId);
+
 
     }
 }

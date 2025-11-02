@@ -1,4 +1,5 @@
 ﻿using CuerpoSano.Application.DTOs.Request;
+using CuerpoSano.Application.DTOs.Response;
 using CuerpoSano.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace CuerpoSano.Application.Interfaces.ServicesInterfaces
         Task<bool> DesinscribirMiembroAsync(int claseId, int miembroId);
         Task<int> CountInscriptosAsync(int claseId);
         Task<IEnumerable<Miembro>?> GetMiembrosDeClaseAsync(int claseId);
+        Task<ClaseAsistenciasResponse?> GetAsistenciasDeClaseAsync(int claseId);
 
 
     }

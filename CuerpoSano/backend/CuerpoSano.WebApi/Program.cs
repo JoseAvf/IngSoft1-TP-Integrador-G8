@@ -14,18 +14,20 @@ builder.Services.AddDbContext<CuerpoSanoDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Repositorios
-builder.Services.AddScoped<IMiembroRepository, MiembroRepository>();
-builder.Services.AddScoped<IMembresiaRepository, MembresiaRepository>();
-builder.Services.AddScoped<IClaseRepository, ClaseRepository>();
-builder.Services.AddScoped<IClaseService, ClaseService>();
 builder.Services.AddScoped<IActividadRepository, ActividadRepository>();
+builder.Services.AddScoped<IAsistenciaRepository, AsistenciaRepository>();
+builder.Services.AddScoped<IClaseRepository, ClaseRepository>();
+builder.Services.AddScoped<IEntrenadorRepository, EntrenadorRepository>();
+builder.Services.AddScoped<IMembresiaRepository, MembresiaRepository>();
+builder.Services.AddScoped<IMiembroRepository, MiembroRepository>();
 
 // Servicios
-builder.Services.AddScoped<IMiembroService, MiembroService>();
-builder.Services.AddScoped<IMembresiaService,  MembresiaService>();
 builder.Services.AddScoped<IActividadService, ActividadService>();
-builder.Services.AddScoped<IEntrenadorRepository, EntrenadorRepository>();
+builder.Services.AddScoped<IAsistenciaService, AsistenciaService>();
+builder.Services.AddScoped<IClaseService, ClaseService>();
 builder.Services.AddScoped<IEntrenadorService, EntrenadorService>(); 
+builder.Services.AddScoped<IMembresiaService,  MembresiaService>();
+builder.Services.AddScoped<IMiembroService, MiembroService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

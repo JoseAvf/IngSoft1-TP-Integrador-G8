@@ -22,6 +22,7 @@ namespace CuerpoSano.Application.Interfaces.PersistenceInterfaces
         Task AddMiembroClaseAsync(MiembroClase miembroClase);
         Task RemoveMiembroClaseAsync(int claseId, int miembroId);
         Task<Clase?> GetByIdWithMiembrosAsync(int id);
+        Task<Clase?> GetByIdWithAsistenciasAsync(int id);
 
     }
 }

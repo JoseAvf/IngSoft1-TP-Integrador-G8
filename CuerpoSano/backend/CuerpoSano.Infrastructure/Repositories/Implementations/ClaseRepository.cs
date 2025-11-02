@@ -79,6 +79,16 @@ namespace CuerpoSano.Infrastructure.Repositories.Implementations
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
+        public async Task<Clase?> GetByIdWithAsistenciasAsync(int id)
+        {
+            return await _context.Clases
+                .Include(c => c.Entrenador)
+                .Include(c => c.Asistencias)
+                    .ThenInclude(a => a.Miembro)      // Trae el Miembro de cada asistencia
+                .Include(c => c.Asistencias)
+                    .ThenInclude(a => a.Entrenador)   // Trae el Entrenador de cada asistencia
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
     }
 
 }

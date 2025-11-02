@@ -57,5 +57,11 @@ namespace CuerpoSano.Application.Services
             return true;
         }
 
+        public async Task<IEnumerable<Miembro>> GetMiembrosByEntrenadorIdAsync(int entrenadorId)
+        {
+            return await _repo.GetMiembrosByEntrenadorIdAsync(entrenadorId);
+        }
+
+
     }
 }

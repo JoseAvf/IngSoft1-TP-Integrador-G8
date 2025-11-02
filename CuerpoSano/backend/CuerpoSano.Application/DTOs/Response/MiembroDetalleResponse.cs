@@ -31,6 +31,10 @@ namespace CuerpoSano.Application.DTOs.Response
 
         //Datos de las clases en las que se inscribió:
         public List<ClasePersonaResponse>? Clases { get; set; }
+
+        // 🔹 Nuevo
+        public int? EntrenadorId { get; set; }
+        public string? EntrenadorNombre { get; set; }
     }
 
 }

@@ -15,6 +15,9 @@ namespace CuerpoSano.Domain.Entities
         public ICollection<Clase> Clases { get; set; } = new List<Clase>();
         public ICollection<Asistencia> Asistencias { get; set; } = new List<Asistencia>();
 
+        // 🔹 NUEVO: Relación 1:N con Miembros → RF38
+        public ICollection<Miembro> Miembros { get; set; } = new List<Miembro>();
+
 
     }
 }

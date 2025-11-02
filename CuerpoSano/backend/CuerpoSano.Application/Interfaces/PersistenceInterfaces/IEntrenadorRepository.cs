@@ -16,5 +16,7 @@ namespace CuerpoSano.Application.Interfaces.PersistenceInterfaces
         Task DeleteAsync(Entrenador entrenador);
         Task<IEnumerable<Entrenador>> GetAllAsync();
         Task SaveChangesAsync();
+        Task<IEnumerable<Miembro>> GetMiembrosByEntrenadorIdAsync(int entrenadorId);
+
     }
 }

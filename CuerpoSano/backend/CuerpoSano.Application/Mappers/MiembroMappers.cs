@@ -3,8 +3,10 @@ using CuerpoSano.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CuerpoSano.Application.Mappers
 {
@@ -51,10 +53,25 @@ namespace CuerpoSano.Application.Mappers
                 CostoMembresia = miembro.Membresia?.Costo,
                 EstaPausada = miembro.Membresia?.FechaPausaInicio != null,
 
+                //Entrenador (si está asignado)
+                EntrenadorId = miembro.EntrenadorId,
+                EntrenadorNombre = miembro.Entrenador?.Nombre ?? "No asignado",
+
                 Clases = miembro.Clases?.Select(c => c.Clase.ToResponsePersona()).ToList() ?? new List<ClasePersonaResponse>(),
             };
         }
-
+        public static MiembroDetalleEntrenadorResponse ToDetalleEntrenadorResponse(this Miembro miembro)
+        {
+            return new MiembroDetalleEntrenadorResponse
+            {
+                Id = miembro.Id,
+                Nombre = miembro.Nombre,
+                DNI = miembro.DNI,
+                Telefono = miembro.Telefono,
+                Correo = miembro.Correo,
+                CodigoCarnet = miembro.Carnet?.CodigoBarra, // Carnet (puede ser null)
+                TipoMembresia = miembro.Membresia?.Tipo, // Membresía (puede ser null)
+            };
+        }
     }
-
 }
