@@ -36,8 +36,12 @@
                     <label>Hora de Fin:</label>
                     <input type="time" name="horaFin" required>
 
+                    <label>Fecha de la Clase:</label>
+                    <input type="date" name="fecha" required>
+
+
                     <label>Cupo Máximo:</label>
-                    <input type="number" name="cupo" min="1" required>
+                    <input type="number" name="cupo" min="1" max="20" required>
 
                     <label>Actividad:</label>
                     <select name="actividadId" id="actividadSelect" required></select>
@@ -61,7 +65,7 @@
         <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
     </footer>
 
-    <script type="module" src="../js/pages/classes.js"></script>
+    <script type="module" src="../js/features/classes/classRegistration.js"></script>
     <script>
         // Simulación de sesión
         const userRole = localStorage.getItem('userRole') || 'Empleado';

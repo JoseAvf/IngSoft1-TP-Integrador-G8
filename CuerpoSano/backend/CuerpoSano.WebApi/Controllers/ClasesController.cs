@@ -60,12 +60,28 @@ namespace CuerpoSano.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Clase clase)
+        public async Task<IActionResult> Update(int id, [FromBody] ClaseUpdateRequest request)
         {
-            if (id != clase.Id) return BadRequest();
-            await _claseService.UpdateAsync(clase);
-            return NoContent();
+            try
+            {
+                var clase = await _claseService.GetByIdAsync(id);
+                if (clase == null)
+                    return NotFound($"No se encontró la clase con ID {id}");
+
+                // Actualizamos los campos
+                clase.Nombre = request.Nombre;
+                clase.HoraInicio = request.HoraInicio;
+                clase.HoraFin = request.HoraFin;
+                clase.Cupo = request.Cupo;
+                
+                await _claseService.UpdateAsync(clase);
+                return Ok(clase.ToResponse());
+            }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
         }
+    }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)

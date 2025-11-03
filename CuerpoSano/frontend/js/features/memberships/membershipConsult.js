@@ -13,6 +13,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const checkboxEstudiante = document.getElementById("editMembershipEstudiante");
     const btnCancel = document.getElementById("btnCancelMembershipEdit");
 
+    // Modales nuevos
+    const modalPause = document.getElementById("pauseMembershipModal");
+    const modalUnpause = document.getElementById("unpauseMembershipModal");
+    const btnConfirmPause = document.getElementById("btnConfirmPause");
+    const btnCancelPause = document.getElementById("btnCancelPause");
+    const btnConfirmUnpause = document.getElementById("btnConfirmUnpause");
+    const btnCancelUnpause = document.getElementById("btnCancelUnpause");
+
     let currentMembership = null;
 
     function showToast(message = "Actualizado con éxito ✅") {
@@ -82,6 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="membership-section-header">
                 <h4>💳 Membresía</h4>
                 <button id="btnEditMembership" class="btn-edit">✏️ Editar</button>
+                 <button id="btnPauseMembership" class="btn-edit btn-pause">⏸️ Pausar</button>
+                 <button id="btnUnpauseMembership" class="btn-edit btn-unpause">▶️ Despausar</button>
             </div>
             <p><strong>ID:</strong> ${membership.id || "-"}</p>
             <p><strong>Tipo:</strong> ${membership.tipo || "No asignada"}</p>
@@ -115,6 +125,16 @@ document.addEventListener("DOMContentLoaded", () => {
             checkboxEstudiante.checked = membership.esEstudiante || false;
             modal.classList.remove("hidden"); // ✅ mostrar modal
 
+        });
+
+        // Botón pausar
+        document.getElementById("btnPauseMembership").addEventListener("click", () => {
+            modalPause.classList.remove("hidden");
+        });
+
+        // Botón despausar
+        document.getElementById("btnUnpauseMembership").addEventListener("click", () => {
+            modalUnpause.classList.remove("hidden");
         });
     }
 
@@ -153,4 +173,41 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Error al actualizar la membresía");
         }
     });
+
+    // === Confirmar pausa ===
+    btnConfirmPause.addEventListener("click", async () => {
+        try {
+            const inicioPausa = new Date().toISOString();
+            await MembershipsAPI.pause(currentMembership.id, inicioPausa);
+            modalPause.classList.add("hidden");
+
+            const refreshed = await MembershipsAPI.getById(currentMembership.id);
+            currentMembership = refreshed;
+            displayMembership(refreshed);
+            showToast("Membresía pausada ✅");
+        } catch (err) {
+            console.error(err);
+            alert("Error al pausar membresía");
+        }
+    });
+
+    btnCancelPause.addEventListener("click", () => modalPause.classList.add("hidden"));
+
+    // === Confirmar despausa ===
+    btnConfirmUnpause.addEventListener("click", async () => {
+        try {
+            await MembershipsAPI.unpause(currentMembership.id);
+            modalUnpause.classList.add("hidden");
+
+            const refreshed = await MembershipsAPI.getById(currentMembership.id);
+            currentMembership = refreshed;
+            displayMembership(refreshed);
+            showToast("Membresía despausada ✅");
+        } catch (err) {
+            console.error(err);
+            alert("Error al despausar membresía");
+        }
+    });
+
+    btnCancelUnpause.addEventListener("click", () => modalUnpause.classList.add("hidden"));
 });

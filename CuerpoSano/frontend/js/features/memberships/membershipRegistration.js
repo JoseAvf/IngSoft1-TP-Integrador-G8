@@ -1,7 +1,7 @@
 ﻿import { MembersAPI } from "../../api/members.js";
 import { MembershipsAPI } from "../../api/memberships.js";
-import { setupMembershipSelector } from "../memberRegistration/membershipSelector.js";
-import { calcularDescuentos } from "../memberRegistration/costCalculator.js";
+import { setupMembershipSelector } from "../members/membershipSelector.js";
+import { calcularDescuentos } from "../members/costCalculator.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     await membershipRegistration();
@@ -16,33 +16,36 @@ export async function membershipRegistration() {
     const costoBaseSpan = document.getElementById("costoBase");
     const descuentoSpan = document.getElementById("descuento");
     const totalPagarSpan = document.getElementById("totalPagar");
-    
 
     let membresiaSeleccionada = null;
 
-    // Configuramos el selector de membresía
+    // Configuramos el selector, pero NO lo abrimos automáticamente
     const membershipSelector = setupMembershipSelector(async (membresia) => {
         membresiaSeleccionada = membresia;
 
-        const miembro = await MembersAPI.getByDni(form.dni.value);
+        const dni = form.dni.value.trim();
+        if (!dni) return alert("Ingrese el DNI antes de seleccionar una membresía.");
 
+        const miembro = await MembersAPI.getByDni(dni);
         if (!miembro) throw new Error("Miembro no encontrado");
 
-        // Calculamos descuentos basados en edad/estudiante
+        // Calculamos descuentos
         const miembroTemp = {
             fechaNacimiento: miembro.fechaNacimiento,
             esEstudiante: form.querySelector('input[name="esEstudiante"]')?.checked || false,
         };
+
         const { descuento, total } = calcularDescuentos(miembroTemp, membresia);
 
-        // Mostramos resumen
+        // Actualizamos el resumen
         inputTipo.value = membresia.tipo;
-        inputId.value = membresia.id;
+        inputId.value = membresia.id || "";
         costoBaseSpan.textContent = `$${membresia.costo}`;
         descuentoSpan.textContent = `${descuento}%`;
         totalPagarSpan.textContent = `$${total.toFixed(2)}`;
     });
 
+    // ✅ El modal se abrirá SOLO cuando el usuario haga clic en el botón
     btnSelectMembership.addEventListener("click", async () => {
         const dni = form.dni.value.trim();
 
@@ -52,7 +55,6 @@ export async function membershipRegistration() {
         }
 
         try {
-            // Verificar si el miembro existe
             const miembro = await MembersAPI.getByDni(dni);
 
             if (!miembro) {
@@ -60,7 +62,7 @@ export async function membershipRegistration() {
                 return;
             }
 
-            // Si el miembro existe, abrimos el modal normalmente
+            // Ahora sí, abrimos el modal al hacer clic
             membershipSelector.open();
 
         } catch (error) {
@@ -69,7 +71,7 @@ export async function membershipRegistration() {
         }
     });
 
-
+    // Envío del formulario
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -81,7 +83,6 @@ export async function membershipRegistration() {
         const miembro = await MembersAPI.getByDni(form.dni.value);
 
         try {
-            // Crear membresía asociada
             const nuevaMembresia = await MembershipsAPI.create({
                 MiembroId: miembro.id,
                 Tipo: membresiaSeleccionada.tipo,
@@ -89,10 +90,8 @@ export async function membershipRegistration() {
                 EsEstudiante: form.querySelector('input[name="esEstudiante"]').checked
             });
 
-            // Mostrar mensaje de éxito
             alert(`✅ Miembro "${miembro.nombre}" registrado con membresía "${nuevaMembresia.tipo}", con costo de $${nuevaMembresia.costo}.`);
 
-            // Reset formulario y resumen
             form.reset();
             inputTipo.value = "";
             inputId.value = "";
