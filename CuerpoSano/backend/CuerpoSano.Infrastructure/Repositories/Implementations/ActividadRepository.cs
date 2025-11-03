@@ -19,12 +19,16 @@ namespace CuerpoSano.Infrastructure.Repositories.Implementations
             => await _context.Actividades
                 .Include(a => a.Clases)
                     .ThenInclude(c => c.Entrenador)
+            .Include(e => e.Clases)
+                    .ThenInclude(c => c.Miembros)
                 .ToListAsync();
 
         public async Task<Actividad?> GetByIdAsync(int id)
             => await _context.Actividades
                 .Include(a => a.Clases)
                     .ThenInclude(c => c.Entrenador)
+            .Include(e => e.Clases)
+                    .ThenInclude(c => c.Miembros)
               .FirstOrDefaultAsync(a => a.Id == id);
 
         public async Task AddAsync(Actividad actividad) => await _context.Actividades.AddAsync(actividad);

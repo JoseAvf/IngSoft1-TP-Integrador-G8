@@ -68,6 +68,12 @@ namespace CuerpoSano.Application.Services
             var miembro = await _miembroRepository.GetByIdAsync(miembroId);
             if (miembro == null) return false;
 
+            if(miembro.Membresia?.FechaPausaInicio != null && miembro.Membresia.FechaPausaFin != null)
+            {
+                if (DateTime.UtcNow > miembro.Membresia.FechaPausaInicio && DateTime.UtcNow < miembro.Membresia.FechaPausaFin)
+                    throw new InvalidOperationException("El miembro se encuentra en pausa.");
+            }
+
             if (await _claseRepository.EstaInscriptoAsync(claseId, miembroId))
                 return false; // ya inscripto
 

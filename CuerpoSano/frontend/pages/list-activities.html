@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CuerpoSano | Listado de Actividades</title>
+    <link rel="stylesheet" href="../css/base/style.css" />
+    <link rel="stylesheet" href="../css/pages/activities.css" />
+</head>
+<body>
+    <header class="main-header">
+        <a href="./index.html" class="logo-link">
+            <h1>🏋️‍♂️ CuerpoSano — Sistema de Gestión de Gimnasio</h1>
+        </a>
+        <nav class="user-nav">
+            <span id="userRole">👤 Empleado</span>
+            <button id="logoutBtn">Cerrar Sesión</button>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <section class="list-section">
+            <h2>Listado de Actividades</h2>
+            <div class="table-wrapper">
+                <table id="activitiesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Activa</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 🔙 Botón para volver -->
+        <div class="back-container">
+            <a href="./activities.html" class="btn-back">⬅️ Volver atrás</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
+    </footer>
+
+    <!-- Modal para mostrar clases -->
+    <div id="classesModal" class="modal">
+        <div class="modal-content">
+            <span class="closeModal">&times;</span>
+            <h3>Clases de la Actividad</h3>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminar actividad -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="closeDeleteModal">&times;</span> <!-- cambiamos la clase -->
+            <h3>Confirmar eliminación</h3>
+            <p>¿Estás seguro que deseas eliminar esta actividad?</p>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                <button id="cancelDeleteBtn" style="padding:8px 15px;">Cancelar</button>
+                <button id="confirmDeleteBtn" style="padding:8px 15px; background-color:#d32f2f; color:white; border:none; border-radius:6px;">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="module" src="../js/features/activities/activityList.js"></script>
+    <script>
+        const userRole = localStorage.getItem('userRole') || 'Empleado';
+        document.getElementById('userRole').textContent = `👤 ${userRole}`;
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('userRole');
+            alert('Sesión cerrada correctamente');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>

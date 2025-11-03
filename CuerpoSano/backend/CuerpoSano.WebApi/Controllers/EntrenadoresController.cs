@@ -17,7 +17,7 @@ namespace CuerpoSano.WebApi.Controllers
         public async Task<IActionResult> GetAll()
         {
             var entrenadores = await _service.GetAllAsync();
-            return Ok(entrenadores.Select(e => e.ToResponse()));
+            return Ok(entrenadores.Select(e => e.ToDetalleResponse()));
         }
 
         [HttpGet("{id}")]
@@ -25,7 +25,7 @@ namespace CuerpoSano.WebApi.Controllers
         {
             var entrenador = await _service.GetByIdAsync(id);
             if (entrenador == null) return NotFound();
-            return Ok(entrenador.ToResponse());
+            return Ok(entrenador.ToDetalleResponse());
         }
 
         [HttpGet("dni/{dni}")]
@@ -33,7 +33,7 @@ namespace CuerpoSano.WebApi.Controllers
         {
             var entrenador = await _service.GetByDniAsync(dni);
             if (entrenador == null) return NotFound();
-            return Ok(entrenador.ToResponse());
+            return Ok(entrenador.ToDetalleResponse());
         }
 
         [HttpPost]

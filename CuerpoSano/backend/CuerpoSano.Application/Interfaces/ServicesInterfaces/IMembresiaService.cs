@@ -15,5 +15,6 @@ namespace CuerpoSano.Application.Interfaces.ServicesInterfaces
         Task<Membresia?> UpdateAsync(Membresia membresia);
         Task<bool> DeleteAsync(int id);
         Task<Membresia> PausarMembresiaAsync(int id, DateTime inicioPausa);
+        Task<Membresia> DespausarMembresiaAsync(int id);
     }
 }

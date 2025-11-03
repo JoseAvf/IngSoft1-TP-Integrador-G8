@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CuerpoSano | Registrar Entrenador</title>
+    <link rel="stylesheet" href="../css/pages/trainers.css" />
+    <link rel="stylesheet" href="../css/components/modal.css" />
+    <link rel="stylesheet" href="../css/base/style.css" />
+</head>
+<body>
+
+    <!-- Header unificado -->
+    <header class="main-header">
+        <a href="./index.html" class="logo-link">
+            <h1>🏋️‍♂️ CuerpoSano — Sistema de Gestión de Gimnasio</h1>
+        </a>
+        <nav class="user-nav">
+            <span id="userRole">👤 Empleado</span>
+            <button id="logoutBtn">Cerrar Sesión</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h2>Registrar Nuevo Entrenador</h2>
+            <form id="trainerForm">
+                <fieldset>
+                    <legend>Datos del entrenador</legend>
+
+                    <label>Nombre:</label>
+                    <input type="text" name="nombre" placeholder="Ej: Juan Pérez" required>
+
+                    <label>DNI:</label>
+                    <input type="text" name="dni" placeholder="Ej: 40123456" required>
+
+                    <label>Dirección:</label>
+                    <input type="text" name="direccion" placeholder="Ej: Calle Falsa 123" required>
+
+                    <label>Teléfono:</label>
+                    <input type="tel" name="telefono" placeholder="Ej: 1122334455" required>
+
+                    <label>Fecha de nacimiento:</label>
+                    <input type="date" name="fechaNacimiento" required>
+                </fieldset>
+
+                <button type="submit">Registrar Entrenador</button>
+                <div id="trainerFormResult"></div>
+            </form>
+        </section>
+
+        <!-- 🔙 Botón para volver -->
+        <div class="back-container">
+            <a href="./trainers.html" class="btn-back">⬅️ Volver atrás</a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
+    </footer>
+
+    <script type="module" src="../js/features/trainers/trainerRegistration.js"></script>
+    <script>
+        // Simulación de sesión
+        const userRole = localStorage.getItem('userRole') || 'Empleado';
+        document.getElementById('userRole').textContent = `👤 ${userRole}`;
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('userRole');
+            alert('Sesión cerrada correctamente');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>

@@ -25,6 +25,25 @@ namespace CuerpoSano.Application.Mappers
             };
         }
 
+        public static EntrenadorDetalleResponse ToDetalleResponse(this Entrenador entrenador)
+        {
+            return new EntrenadorDetalleResponse
+            {
+                Id = entrenador.Id,
+                Nombre = entrenador.Nombre,
+                DNI = entrenador.DNI,
+                Direccion = entrenador.Direccion,
+                Telefono = entrenador.Telefono,
+                FechaNacimiento = entrenador.FechaNacimiento,
+                Clases = entrenador.Clases?.Select(c => c.ToResponsePersona()).ToList() ?? new List<ClasePersonaResponse>(),
+                CertificadoId = entrenador.CertificadoId,
+                CodigoCertificado = entrenador.Certificado.CodCertificado,
+                Vigencia = entrenador.Certificado.Vigencia,
+                FechaEmision = entrenador.Certificado.FechaEmision,
+                FechaVencimiento = entrenador.Certificado.FechaVencimiento
+            };
+        }
+
         public static IEnumerable<EntrenadorResponse> ToResponseList(this IEnumerable<Entrenador> entrenadores)
         {
             return entrenadores.Select(e => e.ToResponse());

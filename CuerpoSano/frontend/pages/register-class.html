@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CuerpoSano | Registro de Clase</title>
+    <link rel="stylesheet" href="../css/base/style.css" />
+    <link rel="stylesheet" href="../css/pages/classes.css" />
+</head>
+<body>
+
+    <!-- Header unificado -->
+    <header class="main-header">
+        <a href="./index.html" class="logo-link">
+            <h1>🏋️‍♂️ CuerpoSano — Sistema de Gestión de Gimnasio</h1>
+        </a>
+        <nav class="user-nav">
+            <span id="userRole">👤 Empleado</span>
+            <button id="logoutBtn">Cerrar Sesión</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h2>Registrar Nueva Clase</h2>
+
+            <form id="classForm">
+                <fieldset>
+                    <legend>Datos de la clase</legend>
+                    <label>Nombre de la Clase:</label>
+                    <input type="text" name="nombre" required>
+
+                    <label>Hora de Inicio:</label>
+                    <input type="time" name="horaInicio" required>
+
+                    <label>Hora de Fin:</label>
+                    <input type="time" name="horaFin" required>
+
+                    <label>Cupo Máximo:</label>
+                    <input type="number" name="cupo" min="1" required>
+
+                    <label>Actividad:</label>
+                    <select name="actividadId" id="actividadSelect" required></select>
+
+                    <label>Entrenador:</label>
+                    <select name="entrenadorId" id="entrenadorSelect" required></select>
+                </fieldset>
+
+                <button type="submit">Registrar Clase</button>
+                <div id="classFormResult"></div>
+            </form>
+        </section>
+
+        <!-- 🔙 Botón para volver -->
+        <div class="back-container">
+            <a href="./classes.html" class="btn-back">⬅️ Volver atrás</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
+    </footer>
+
+    <script type="module" src="../js/pages/classes.js"></script>
+    <script>
+        // Simulación de sesión
+        const userRole = localStorage.getItem('userRole') || 'Empleado';
+        document.getElementById('userRole').textContent = `👤 ${userRole}`;
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+          localStorage.removeItem('userRole');
+          alert('Sesión cerrada correctamente');
+          window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>

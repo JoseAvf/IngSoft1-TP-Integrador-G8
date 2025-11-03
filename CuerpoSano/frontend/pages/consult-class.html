@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CuerpoSano | Gestión de Miembros</title>
+    <title>CuerpoSano | Consultar Clase</title>
     <link rel="stylesheet" href="../css/base/style.css" />
-    <link rel="stylesheet" href="../css/pages/memberships.css" />
+    <link rel="stylesheet" href="../css/pages/classes.css" />
 </head>
 <body>
     <header class="main-header">
@@ -19,29 +19,27 @@
     </header>
 
     <main class="main-content">
-        <h2>Consultar Membresía</h2>
+        <h2>Consultar Clase</h2>
         <div class="search-section">
-            <label for="memberDni">Ingrese el DNI del miembro asociado:</label>
-            <input type="text" id="memberDni" placeholder="Ej: 40123456">
+            <label for="classId">Ingrese el ID de la clase:</label>
+            <input type="number" id="classId" placeholder="Ej: 101">
             <button id="btnSearch">Buscar</button>
         </div>
 
-        <div id="membershipData" class="membership-data hidden"></div>
+        <div id="classData" class="class-data hidden"></div>
 
         <!-- 🔙 Botón para volver -->
         <div class="back-container">
-            <a href="./memberships.html" class="btn-back">⬅️ Volver atrás</a>
+            <a href="./classes.html" class="btn-back">⬅️ Volver atrás</a>
         </div>
     </main>
-
 
     <footer class="footer">
         <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
     </footer>
 
-    <script type="module" src="../js/features/memberships/membershipConsult.js"></script>
+    <script type="module" src="../js/features/classConsult.js"></script>
     <script>
-        // Simulación de sesión
         const userRole = localStorage.getItem('userRole') || 'Empleado';
         document.getElementById('userRole').textContent = `👤 ${userRole}`;
 

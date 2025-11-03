@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CuerpoSano | Gestión de Miembros</title>
+    <title>CuerpoSano | Listado de Clases</title>
     <link rel="stylesheet" href="../css/base/style.css" />
-    <link rel="stylesheet" href="../css/pages/memberships.css" />
+    <link rel="stylesheet" href="../css/pages/classes.css" />
 </head>
 <body>
     <header class="main-header">
@@ -20,21 +20,18 @@
 
     <main class="main-content">
         <section class="list-section">
-            <h2>Listado de membresías</h2>
-            <p id="membershipsMessage"></p>
+            <h2>Listado de Clases</h2>
             <div class="table-wrapper">
-                <table id="membershipsTable">
+                <table id="classesTable">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Titular</th>
-                            <th>DNI</th>
-                            <th>Tipo</th>
-                            <th>Costo Final</th>
-                            <th>Emision</th>
-                            <th>Vencimiento</th>
-                            <th>Inicio de Pausa</th>
-                            <th>Fin de Pausa</th>
+                            <th>Nombre</th>
+                            <th>Actividad</th>
+                            <th>Entrenador</th>
+                            <th>Hora Inicio</th>
+                            <th>Hora Fin</th>
+                            <th>Cupo</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -45,25 +42,24 @@
 
         <!-- 🔙 Botón para volver -->
         <div class="back-container">
-            <a href="./memberships.html" class="btn-back">⬅️ Volver atrás</a>
+            <a href="./classes.html" class="btn-back">⬅️ Volver atrás</a>
         </div>
     </main>
-
 
     <footer class="footer">
         <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
     </footer>
-    <script type="module" src="../js/features/memberships/membershipList.js"></script>
-    <script>
-            // Simulación de sesión
-            const userRole = localStorage.getItem('userRole') || 'Empleado';
-            document.getElementById('userRole').textContent = `👤 ${userRole}`;
 
-            document.getElementById('logoutBtn').addEventListener('click', () => {
-                localStorage.removeItem('userRole');
+    <script type="module" src="../js/features/classList.js"></script>
+    <script>
+        const userRole = localStorage.getItem('userRole') || 'Empleado';
+        document.getElementById('userRole').textContent = `👤 ${userRole}`;
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('userRole');
             alert('Sesión cerrada correctamente');
             window.location.href = 'login.html';
-            });
+        });
     </script>
 </body>
 </html>

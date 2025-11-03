@@ -81,7 +81,7 @@ namespace CuerpoSano.WebApi.Controllers
             return NoContent();
         }
 
-        [HttpPut("{dni}/asginar-entrenador")]
+        [HttpPut("{dni}/asignar-entrenador")]
         public async Task<IActionResult> AsignarEntrenador(string dni, [FromBody] int? entrenadorId)
         {
             var miembro = await _miembroService.GetByDniAsync(dni);

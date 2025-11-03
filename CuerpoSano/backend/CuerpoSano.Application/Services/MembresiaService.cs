@@ -118,6 +118,21 @@ namespace CuerpoSano.Application.Services
             return membresia;
         }
 
+        public async Task<Membresia> DespausarMembresiaAsync(int id)
+        { 
+            var membresia = await _membresiaRepository.GetByIdAsync(id);
+            if (membresia == null) throw new InvalidOperationException("Membresía no encontrada.");
+
+            membresia.FechaPausaInicio = null;
+            membresia.FechaPausaFin = null;
+
+            // Guardar cambios
+            await _membresiaRepository.UpdateAsync(membresia);
+            await _membresiaRepository.SaveChangesAsync();
+
+            return membresia;
+        }
+
     }
 
 }

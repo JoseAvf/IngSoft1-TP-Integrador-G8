@@ -78,8 +78,29 @@ namespace CuerpoSano.WebApi.Controllers
         [HttpPut("pausar/{id}")] //se añaden los datos de membresia pausada correctamente
         public async Task<ActionResult<MembresiaCreateResponse>> Pausar(int id, [FromQuery] DateTime inicioPausa)
         {
-            var membresia = await _membresiaService.PausarMembresiaAsync(id, inicioPausa); 
-            return Ok(membresia.ToCreateResponse());
+            try
+            {
+                var membresia = await _membresiaService.PausarMembresiaAsync(id, inicioPausa);
+                return Ok(membresia.ToCreateResponse());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("despausar/{id}")] //se puede despausar la membresia
+        public async Task<ActionResult<MembresiaCreateResponse>> Despausar(int id) 
+        {
+            try
+            {
+                var membresia = await _membresiaService.DespausarMembresiaAsync(id);  
+                return Ok(membresia.ToCreateResponse());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }
