@@ -60,13 +60,31 @@ namespace CuerpoSano.WebApi.Controllers
             return CreatedAtAction(nameof(GetById), new { id = nuevaMembresia.Id }, nuevaMembresia.ToCreateResponse()); 
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult> Update([FromBody] Membresia membresia) //corregir que no pide el obj membresia completo, solo los datos que se quieran actualizar;
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] MembresiaUpdateRequest request)
         {
-            await _membresiaService.UpdateAsync(membresia);
-            return NoContent();
-        }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
+            var membresia = await _membresiaService.GetByIdAsync(id);
+            if (membresia == null)
+                return NotFound($"No se encontró la membresía con ID {id}");
+
+            // Obtener el miembro asociado
+            var miembro = await _miembroService.GetByIdAsync(membresia.MiembroId);
+            if (miembro == null)
+                return NotFound($"No se encontró el miembro asociado a la membresía (ID: {membresia.MiembroId})");
+
+            // Actualizar usando el servicio (pasamos solo el nuevo tipo)
+            var membresiaActualizada = await _membresiaService.UpdateTipoAsync(
+                membresia,
+                request.Tipo,
+                miembro.FechaNacimiento,
+                request.EsEstudiante // Asumiendo que la entidad Miembro tiene este campo
+            );
+
+            return Ok(membresiaActualizada.ToCreateResponse());
+        }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id) //borra bien
         {

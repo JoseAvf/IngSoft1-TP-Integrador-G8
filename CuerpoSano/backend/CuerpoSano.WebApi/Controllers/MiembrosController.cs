@@ -61,16 +61,25 @@ namespace CuerpoSano.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Miembro miembro)
+        public async Task<IActionResult> Update(int id, [FromBody] MiembroUpdateRequest request)
         {
-            if (id != miembro.Id) return BadRequest("El ID no coincide");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             var existente = await _miembroService.GetByIdAsync(id);
-            if (existente == null) return NotFound();
+            if (existente == null)
+                return NotFound($"No se encontró el miembro con ID {id}");
 
-            var updateMiembro = await _miembroService.UpdateAsync(miembro);
+            // Actualizamos los campos
+            existente.Nombre = request.Nombre;
+            existente.Direccion = request.Direccion;
+            existente.Telefono = request.Telefono;
+            existente.Correo = request.Correo;
 
-            return Ok(updateMiembro);
+            // Guardamos los cambios
+            var updateMiembro = await _miembroService.UpdateAsync(existente);
+
+            return Ok(updateMiembro.ToDetalleResponse());
         }
 
         [HttpDelete("{id}")]

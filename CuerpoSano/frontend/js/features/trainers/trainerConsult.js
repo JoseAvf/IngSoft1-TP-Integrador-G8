@@ -6,6 +6,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputDni = document.getElementById("trainerDni");
     const trainerDataDiv = document.getElementById("trainerData");
 
+    const toast = document.getElementById("toast");
+
+    // Modal y formulario de edición
+    const modal = document.getElementById("editTrainerModal");
+    const form = document.getElementById("editTrainerForm");
+    const inputNombre = document.getElementById("editTrainerNombre");
+    const inputDireccion = document.getElementById("editTrainerDireccion");
+    const inputTelefono = document.getElementById("editTrainerTelefono");
+    const btnCancel = document.getElementById("btnCancelTrainerEdit");
+
+    let currentTrainer = null;
+
+    function showToast(message = "Actualizado con éxito ✅") {
+        toast.textContent = message;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3000);
+    }
+
+
     btnSearch.addEventListener("click", async () => {
         const dni = inputDni.value.trim(); // obtiene el DNI ingresado en forma de cadena
         if (!dni) {
@@ -32,6 +51,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function displayTrainer(trainer) {
+
+        currentTrainer = trainer; // importante para edición
+
         const container = trainerDataDiv;
         container.classList.remove("hidden");
 
@@ -39,7 +61,10 @@ document.addEventListener("DOMContentLoaded", () => {
         let html = `
         <h3>Información de ${trainer.nombre || "-"}</h3>
         <section class="trainer-section personal-info">
-            <h4>🧑 Datos Personales</h4>
+            <div class="trainer-section-header">
+                <h4>🧑 Datos Personales</h4>
+                <button id="btnEditTrainer" class="btn-edit">✏️ Editar</button>
+            </div>
             <p><strong>ID:</strong> ${trainer.id || "-"}</p>
             <p><strong>Nombre:</strong> ${trainer.nombre || "-"}</p>
             <p><strong>DNI:</strong> ${trainer.dni || "-"}</p>
@@ -173,5 +198,45 @@ document.addEventListener("DOMContentLoaded", () => {
         
         container.innerHTML = html;
 
+        // Botón de edición
+        const btnEdit = document.getElementById("btnEditTrainer");
+        btnEdit.addEventListener("click", () => {
+            inputNombre.value = currentTrainer.nombre || "";
+            inputDireccion.value = currentTrainer.direccion || "";
+            inputTelefono.value = currentTrainer.telefono || "";
+            modal.classList.add("active");
+
+        });
+
     }
+    // Cancelar edición
+    btnCancel.addEventListener("click", () => {
+        modal.classList.remove("active");
+
+    });
+
+    // Guardar cambios
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!currentTrainer) return;
+
+        const updatedData = {
+            nombre: inputNombre.value.trim(),
+            direccion: inputDireccion.value.trim(),
+            telefono: parseInt(inputTelefono.value)
+        };
+
+        try {
+            await TrainerAPI.update(currentTrainer.id, updatedData);
+            currentTrainer = { ...currentTrainer, ...updatedData };
+
+            modal.classList.remove("active");
+
+            displayTrainer(currentTrainer);
+            showToast("Entrenador actualizado ✅");
+        } catch (err) {
+            console.error(err);
+            alert("Error al actualizar el entrenador");
+        }
+    });
 });

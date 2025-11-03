@@ -39,6 +39,50 @@
         <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
     </footer>
 
+    <!-- Toast de confirmación -->
+    <div id="toast" class="toast">Actualizado con éxito ✅</div>
+
+    <!-- Modal de edición de miembro -->
+    <div id="editMemberModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>✏️ Editar Miembro</h3>
+            <form id="editMemberForm">
+                <label for="editNombre">Nombre:</label>
+                <input type="text" id="editNombre" required />
+
+                <label for="editDireccion">Dirección:</label>
+                <input type="text" id="editDireccion" required />
+
+                <label for="editTelefono">Teléfono:</label>
+                <input type="number" id="editTelefono" required />
+
+                <label for="editCorreo">Correo:</label>
+                <input type="email" id="editCorreo" required />
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-confirm">Guardar</button>
+                    <button type="button" id="btnCancelMemberEdit" class="btn-cancel">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de asignar entrenador -->
+    <div id="assignTrainerModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>🏋️‍♂️ Asignar Entrenador</h3>
+            <div id="trainerListContainer">
+                <!-- Aquí se cargan los entrenadores -->
+            </div>
+            <div class="modal-buttons">
+                <button type="button" id="btnConfirmTrainer" class="btn-confirm">Asignar</button>
+                <button type="button" id="btnCancelTrainer" class="btn-cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+
+
     <script type="module" src="../js/features/members/memberConsult.js"></script>
     <script>
         // Simulación de sesión

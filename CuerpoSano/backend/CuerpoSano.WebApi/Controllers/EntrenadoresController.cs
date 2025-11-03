@@ -1,8 +1,9 @@
-﻿using CuerpoSano.Application.Interfaces.ServicesInterfaces;
+﻿using CuerpoSano.Application.DTOs.Request;
+using CuerpoSano.Application.Interfaces.ServicesInterfaces;
+using CuerpoSano.Application.Mappers;
+using CuerpoSano.Application.Services;
 using CuerpoSano.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using CuerpoSano.Application.DTOs.Request;
-using CuerpoSano.Application.Mappers;
 
 namespace CuerpoSano.WebApi.Controllers
 {
@@ -57,11 +58,22 @@ namespace CuerpoSano.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Entrenador entrenador)
+        public async Task<IActionResult> Update(int id, [FromBody] EntrenadorUpdateRequest request)
         {
-            if (id != entrenador.Id) return BadRequest();
-            await _service.UpdateAsync(entrenador);
-            return NoContent();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var existente = await _service.GetByIdAsync(id);
+            if (existente == null)
+                return NotFound($"No se encontró el entrenador con ID {id}");
+
+            // Actualizamos los campos
+            existente.Nombre = request.Nombre;
+            existente.Direccion = request.Direccion;
+            existente.Telefono = request.Telefono;
+
+            await _service.UpdateAsync(existente);
+            return Ok(existente.ToDetalleResponse());
         }
 
         [HttpDelete("{id}")]

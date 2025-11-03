@@ -49,7 +49,7 @@ export const MembersAPI = {
             },
             body: JSON.stringify(memberData),
         });
-        if (!response.ok) throw new Error("Error al actualizar miembro");
+        if (!response.ok) throw new Error("Error al actualizar membresia");
         return await response.json();
     },
 

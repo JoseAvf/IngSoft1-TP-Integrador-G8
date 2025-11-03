@@ -56,18 +56,18 @@ namespace CuerpoSano.Infrastructure.Repositories.Implementations
 
         public async Task<Miembro> UpdateAsync(Miembro miembro)
         {
-            var existingMiembro = await GetByIdAsync(miembro.Id);
+           /* var existingMiembro = await GetByIdAsync(miembro.Id);
             if (existingMiembro == null) return null;
 
             existingMiembro.Nombre = miembro.Nombre;
             existingMiembro.Direccion = miembro.Direccion;
             existingMiembro.Correo = miembro.Correo;
             existingMiembro.Telefono = miembro.Telefono; 
-            existingMiembro.MembresiaId = miembro.MembresiaId;
+            existingMiembro.MembresiaId = miembro.MembresiaId;*/
 
-            _context.Miembros.Update(existingMiembro);
+            _context.Miembros.Update(miembro);
             await _context.SaveChangesAsync();
-            return existingMiembro;
+            return miembro;
         }
 
         public async Task DeleteAsync(Miembro miembro)

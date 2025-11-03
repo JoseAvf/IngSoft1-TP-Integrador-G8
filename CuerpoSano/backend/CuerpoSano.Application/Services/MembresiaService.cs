@@ -87,10 +87,54 @@ namespace CuerpoSano.Application.Services
             return membresia;
         }
 
-        public async Task<Membresia?> UpdateAsync(Membresia membresia)
+        public async Task<Membresia> UpdateTipoAsync(Membresia membresia, string nuevoTipo, DateTime fechaNacimiento, bool esEstudiante)
         {
-            var newMembresia = await _membresiaRepository.UpdateAsync(membresia);
-            return newMembresia;
+            // Validar nuevo tipo
+            var tiposValidos = new[] { "Diaria", "Semanal", "Mensual", "Anual" };
+            if (!tiposValidos.Contains(nuevoTipo))
+                throw new InvalidOperationException("Tipo de membresía inválido.");
+
+            // Asignar nuevo tipo y fecha de emisión ===
+            membresia.Tipo = nuevoTipo;
+            membresia.FechaEmision = DateTime.Now;
+
+            // Calcular nueva fecha de vencimiento
+            membresia.FechaVencimiento = nuevoTipo switch
+            {
+                "Diaria" => membresia.FechaEmision.AddDays(1),
+                "Semanal" => membresia.FechaEmision.AddDays(7),
+                "Mensual" => membresia.FechaEmision.AddMonths(1),
+                "Anual" => membresia.FechaEmision.AddYears(1),
+                _ => throw new InvalidOperationException("Tipo de membresía no reconocido.")
+            };
+
+            // ===  Obtener costo base según tipo ===
+            decimal costoBase = nuevoTipo switch
+            {
+                "Diaria" => 500m,
+                "Semanal" => 1500m,
+                "Mensual" => 5000m,
+                "Anual" => 50000m,
+                _ => throw new InvalidOperationException("Tipo de membresía no reconocido.")
+            };
+
+            // Recalcular descuentos
+            int edad = DateTime.Now.Year - fechaNacimiento.Year;
+            if (fechaNacimiento.Date > DateTime.Now.AddYears(-edad)) edad--;
+
+            decimal descuento = 0m;
+            if (edad >= 65) descuento += 0.20m;   // 20% para mayores de 65
+            if (esEstudiante) descuento += 0.10m;  // 10% para estudiantes
+
+            // === 6️⃣ Aplicar costo final con descuento ===
+            membresia.Costo = costoBase * (1 - descuento);
+
+            // === 7️⃣ Guardar cambios ===
+            await _membresiaRepository.UpdateAsync(membresia);
+            await _membresiaRepository.SaveChangesAsync();
+
+            return membresia;
+
         }
 
         public async Task<bool> DeleteAsync(int id)

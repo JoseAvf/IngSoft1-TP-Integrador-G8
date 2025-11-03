@@ -41,6 +41,32 @@
         <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
     </footer>
 
+    <!-- Toast de confirmación -->
+    <div id="toast" class="toast">Actualizado con éxito ✅</div>
+
+    <!-- Modal de edición de entrenador -->
+    <div id="editTrainerModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>✏️ Editar Entrenador</h3>
+            <form id="editTrainerForm">
+                <label for="editTrainerNombre">Nombre:</label>
+                <input type="text" id="editTrainerNombre" required />
+
+                <label for="editTrainerDireccion">Dirección:</label>
+                <input type="text" id="editTrainerDireccion" required />
+
+                <label for="editTrainerTelefono">Teléfono:</label>
+                <input type="number" id="editTrainerTelefono" required />
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-confirm">Guardar</button>
+                    <button type="button" id="btnCancelTrainerEdit" class="btn-cancel">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
     <!-- Script de la página -->
     <script type="module" src="../js/features/trainers/trainerConsult.js"></script>
     <script>

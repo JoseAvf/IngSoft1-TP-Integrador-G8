@@ -10,6 +10,15 @@ function setupActivityConsult() {
     const inputId = document.getElementById("activityId");
     const resultDiv = document.getElementById("activityData");
 
+    const modal = document.getElementById("editModal");
+    const form = document.getElementById("editActivityForm");
+    const inputNombre = document.getElementById("editNombre");
+    const selectActiva = document.getElementById("editActiva");
+    const btnCancel = document.getElementById("btnCancelEdit");
+
+    let currentActivity = null; // guardamos la actividad actual
+
+
     btnSearch.addEventListener("click", async () => {
         const id = parseInt(inputId.value.trim());
 
@@ -29,10 +38,19 @@ function setupActivityConsult() {
                 return;
             }
 
+            currentActivity = activity; // guardamos la actual
+
             // Contenedor principal
             let html = `
-                <h3>Actividad: ${activity.nombre}</h3>
-                <p>Estado: ${activity.activa ? "✅ Activa" : "❌ Inactiva"}</p>
+                 <div class="activity-header">
+                    <h3>Actividad: ${activity.nombre}</h3>
+                    <button id="btnEditActivity" class="btn-edit">✏️ Editar</button>
+                  </div>
+               <p>Estado:
+                    <span class="activity-status ${activity.activa ? "active" : "inactive"}">
+                      ${activity.activa ? "Activa" : "Inactiva"}
+                    </span>
+                  </p>
             `;
 
             if (activity.clases && activity.clases.length > 0) {
@@ -91,10 +109,64 @@ function setupActivityConsult() {
             resultDiv.innerHTML = html;
             resultDiv.classList.remove("hidden");
 
+            // 💡 Evento para abrir el modal
+            document.getElementById("btnEditActivity").addEventListener("click", () => {
+                inputNombre.value = currentActivity.nombre;
+                selectActiva.value = currentActivity.activa ? "true" : "false";
+                modal.classList.remove("hidden");
+            });
+
+
         } catch (err) {
             console.error(err);
             resultDiv.innerHTML = `<p style="color:red;">❌ Error al consultar la actividad: ${err.message}</p>`;
             resultDiv.classList.remove("hidden");
         }
     });
+
+    // 💾 Guardar cambios
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!currentActivity) return;
+
+        const updatedData = {
+            id: currentActivity.id,
+            nombre: inputNombre.value.trim(),
+            activa: selectActiva.value === "true"
+        };
+
+        try {
+            await ActivityAPI.update(currentActivity.id, updatedData);
+            showToast();
+
+            // reflejar cambios en pantalla
+            currentActivity.nombre = updatedData.nombre;
+            currentActivity.activa = updatedData.activa;
+
+            // refrescar info
+            document.getElementById("btnSearch").click();
+            modal.classList.add("hidden");
+
+        } catch (error) {
+            console.error(error);
+            alert("❌ Error al actualizar la actividad: " + error.message);
+        }
+    });
+
+    // ❌ Cerrar modal
+    btnCancel.addEventListener("click", () => {
+        modal.classList.add("hidden");
+    });
+
+    function showToast(message = "Actualizado con éxito ✅") {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+
+        setTimeout(() => {
+            toast.classList.remove("show");
+        }, 3000); // desaparece después de 3s
+    }
+
 }
+

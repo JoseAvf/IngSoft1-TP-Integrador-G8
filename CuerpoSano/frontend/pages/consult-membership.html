@@ -28,12 +28,44 @@
 
         <div id="membershipData" class="membership-data hidden"></div>
 
+        <!-- Modal de edición de membresía -->
+        <div id="editMembershipModal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Editar Membresía</h3>
+                <form id="editMembershipForm">
+                    <div class="form-group">
+                        <label for="editMembershipTipo">Tipo de Membresía:</label>
+                        <select id="editMembershipTipo" required>
+                            <option value="">Seleccione un tipo</option>
+                            <option value="Diaria">Diaria</option>
+                            <option value="Semanal">Semanal</option>
+                            <option value="Mensual">Mensual</option>
+                            <option value="Anual">Anual</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="editMembershipEstudiante">
+                            Es estudiante
+                        </label>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="submit" class="btn-save">Guardar</button>
+                        <button type="button" id="btnCancelMembershipEdit" class="btn-cancel">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
         <!-- 🔙 Botón para volver -->
         <div class="back-container">
             <a href="./memberships.html" class="btn-back">⬅️ Volver atrás</a>
         </div>
     </main>
 
+    <!-- Toast de confirmación -->
+    <div id="toast" class="toast">Actualizado con éxito ✅</div>
 
     <footer class="footer">
         <p>© 2025 CuerpoSano — Todos los derechos reservados</p>

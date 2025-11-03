@@ -45,11 +45,24 @@ namespace CuerpoSano.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Actividad actividad)
+        public async Task<IActionResult> Update(int id, [FromBody] ActividadUpdateRequest request)
         {
-            if (id != actividad.Id) return BadRequest();
-            await _service.UpdateAsync(actividad);
-            return NoContent();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // 1️⃣ Verificar existencia
+            var existente = await _service.GetByIdAsync(id);
+            if (existente == null)
+                return NotFound($"No se encontró la actividad con ID {id}");
+
+            // 2️⃣ Actualizar propiedades
+            existente.Nombre = request.Nombre;
+            existente.Activa = request.Activa;
+
+            // 3️⃣ Guardar cambios
+            await _service.UpdateAsync(existente);
+
+            return Ok(existente.ToResponse()); // o NoContent() si preferís no devolver el objeto
         }
 
         [HttpDelete("{id}")]

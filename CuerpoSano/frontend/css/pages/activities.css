@@ -161,7 +161,7 @@ main {
 /* Cuando tiene contenido */
 .activity-data {
     display: block; /* se muestra cuando quitás la clase hidden */
-    background-color: #ffffff;
+    background-color: #5daeff;
     padding: 20px 25px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
@@ -173,14 +173,13 @@ main {
 }
 
     .activity-data h3 {
-        margin-top: 0;
         color: #333333;
         font-size: 1.5rem;
         margin-bottom: 15px;
     }
 
     .activity-data p {
-        margin: 5px 0;
+        margin: 0 0 10px;
     }
 
     .activity-data strong {
@@ -287,5 +286,249 @@ main {
     #modalClassesTable td {
         padding: 8px 10px;
         font-size: 0.85rem;
+    }
+}
+
+/* ===== Encabezado de actividad con botón editar ===== */
+.activity-header {
+    display: flex;
+    justify-content: space-between; /* separa título y botón */
+    align-items: center;
+    margin-bottom: 10px;
+}
+/* ===== Badge de estado actividad ===== */
+.activity-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: white;
+    min-width: 70px;
+    text-align: center;
+}
+
+    /* Estado activo: verde */
+    .activity-status.active {
+        background-color: #4caf50; /* verde */
+    }
+
+    /* Estado inactivo: rojo */
+    .activity-status.inactive {
+        background-color: #e53935; /* rojo */
+    }
+
+/* Opcional: pequeño ajuste en mobile */
+@media (max-width: 480px) {
+    .activity-status {
+        font-size: 0.85rem;
+        padding: 3px 10px;
+    }
+}
+
+
+
+/* ===== Botón editar actividad ===== */
+.btn-edit {
+    display: inline-block;
+    background-color: #1976d2;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+    .btn-edit:hover {
+        background-color: #1259a7;
+    }
+
+    .btn-edit:active {
+        transform: scale(0.98);
+    }
+
+/* ===== Modal edición de actividad ===== */
+#editModal {
+    display: none; /* por defecto oculto */
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    background-color: rgba(0,0,0,0.5);
+    padding-top: 50px;
+}
+
+    #editModal:not(.hidden) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #editModal .modal-content {
+        background-color: #fff;
+        margin: auto;
+        padding: 25px 30px;
+        border-radius: 12px;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        position: relative;
+        animation: fadeIn 0.25s ease;
+    }
+
+    #editModal h3 {
+        color: #1976d2;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 1.3rem;
+    }
+
+    /* Campos dentro del modal */
+    #editModal label {
+        display: block;
+        margin-top: 10px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    #editModal input,
+    #editModal select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: all 0.3s;
+    }
+
+        #editModal input:focus,
+        #editModal select:focus {
+            border-color: #1976d2;
+            box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
+            outline: none;
+        }
+
+/* Botones dentro del modal */
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+    .modal-buttons .btn-confirm {
+        background-color: #2ecc71;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+
+        .modal-buttons .btn-confirm:hover {
+            background-color: #27ae60;
+        }
+
+    .modal-buttons .btn-cancel {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+
+        .modal-buttons .btn-cancel:hover {
+            background-color: #c0392b;
+        }
+
+/* ===== Animaciones ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+    #editModal .modal-content {
+        width: 90%;
+        padding: 20px;
+    }
+}
+
+/* ===== Toast de confirmación ===== */
+.toast {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    background-color: #4caf50; /* verde éxito */
+    color: white;
+    padding: 14px 22px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-size: 0.95rem;
+    font-weight: 500;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 2000;
+}
+
+    /* Cuando se muestra */
+    .toast.show {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+
+/* Animación opcional (fade out) */
+@keyframes fadeOutToast {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+/* Variante de error (si quisieras usarla más adelante) */
+.toast.error {
+    background-color: #e53935;
+}
+
+/* Variante de advertencia */
+.toast.warning {
+    background-color: #ff9800;
+}
+
+/* Responsive: un poco más chico en pantallas pequeñas */
+@media (max-width: 600px) {
+    .toast {
+        right: 10px;
+        left: 10px;
+        font-size: 0.9rem;
+        text-align: center;
     }
 }

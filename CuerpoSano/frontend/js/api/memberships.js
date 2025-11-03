@@ -35,6 +35,18 @@ export const MembershipsAPI = {
         if (!response.ok) throw new Error("Error al eliminar membresía");
     },
 
+    async update(id, membershipDate) {
+        const response = await fetch(`${API_BASE_URL}/Membresias/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(membershipDate),
+        });
+        if (!response.ok) throw new Error("Error al actualizar miembro");
+        return await response.json();
+    },
+
     /** Pausar membresía */
     async pause(id, inicioPausa) {
         const response = await fetch(
