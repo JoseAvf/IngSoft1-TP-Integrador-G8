@@ -37,7 +37,7 @@ export async function loadMemberList() {
                 <td>${m.tipoMembresia || "Sin membresía"}</td>
                 <td>${m.codigoCarnet || "-"}</td>
                 <td>
-                <button class="btn-delete" data-id="${m.id}">🗑️</button>
+                <button class="btn-delete" data-id="${m.id}">Eliminar</button>
                 </td>
                 `;
             tableBody.appendChild(row);

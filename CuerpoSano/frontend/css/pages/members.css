@@ -523,6 +523,112 @@ main {
     #assignTrainerModal .btn-cancel:hover {
         background-color: #c0392b;
     }
+.btn-delete {
+    background-color: #e91e1e;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color
+}
 
-/* Reutiliza animación fadeIn que ya tenés */
+/* ===== Botón de impresión ===== */
+.btn-print {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    margin: 7px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
 
+    .btn-print:hover {
+        background-color: #0056b3;
+    }
+
+/* ===== Estilos específicos para impresión ===== */
+@media print {
+    /* Ocultar todo excepto el listado */
+    body * {
+        visibility: hidden;
+    }
+
+    .btn-print,
+    .back-container,
+    .footer,
+    header {
+        display: none !important;
+    }
+
+    .list-section,
+    .list-section * {
+        visibility: visible;
+    }
+
+    .list-section {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100% !important;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        overflow: visible !important;
+    }
+
+    /* Asegurar que el contenedor de tabla no limite el ancho */
+    .table-wrapper {
+        overflow: visible !important;
+        width: 100% !important;
+        display: block;
+    }
+
+    /* Ajustes de tabla para impresión */
+    .list-section table {
+        width: 100% !important;
+        table-layout: fixed !important; /* evita que el contenido fuerce el ancho */
+        border-collapse: collapse;
+        border-spacing: 0;
+        word-wrap: break-word;
+    }
+
+    .list-section th,
+    .list-section td {
+        border: 1px solid #bbb;
+        padding: 6px;
+        font-size: 12px;
+        text-align: left;
+        word-break: break-word;
+    }
+
+        /* Ocultar columna de acciones */
+        .list-section th:last-child,
+        .list-section td:last-child {
+            display: none !important;
+        }
+
+    /* Evitar recortes o divisiones de filas */
+    .list-section table,
+    .list-section tr,
+    .list-section td {
+        page-break-inside: avoid;
+    }
+
+    /* Mantener los colores */
+    .list-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Control de página */
+    @page {
+        size: A4 portrait;
+        margin: 0;
+    }
+}

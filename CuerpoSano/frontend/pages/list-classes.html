@@ -20,7 +20,10 @@
 
     <main class="main-content">
         <section class="list-section">
-            <h2>Listado de Clases</h2>
+            <div class="table-header">
+                <h2>Listado de Clases</h2>
+                <button id="btnPrint" class="btn-print">🖨️ Imprimir</button>
+            </div>
             <div class="table-wrapper">
                 <table id="classesTable">
                     <thead>
@@ -31,8 +34,9 @@
                             <th>Entrenador</th>
                             <th>Hora Inicio</th>
                             <th>Hora Fin</th>
+                            <th>Inscriptos</th>
                             <th>Cupo</th>
-                            <th>Acciones</th>
+                            <th class="acciones-col">Acciones</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -45,6 +49,20 @@
             <a href="./classes.html" class="btn-back">⬅️ Volver atrás</a>
         </div>
     </main>
+
+    <!-- Modal de confirmación de eliminación -->
+    <div id="deleteModal" class="hidden">
+        <div class="modal-content">
+            <span class="closeDeleteModal">&times;</span>
+            <h3>¿Eliminar clase?</h3>
+            <p>Esta acción no se puede deshacer.</p>
+            <div class="modal-actions">
+                <button id="confirmDeleteBtn" class="btn-confirm">Eliminar</button>
+                <button id="cancelDeleteBtn" class="btn-cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
 
     <footer class="footer">
         <p>© 2025 CuerpoSano — Todos los derechos reservados</p>

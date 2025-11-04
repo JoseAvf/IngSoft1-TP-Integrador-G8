@@ -34,7 +34,7 @@ export async function loadMembershipList() {
                 <td>${m.fechaPausaInicio ? new Date(m.fechaPausaInicio).toLocaleDateString() : "-"}</td>
                 <td>${m.fechaPausaFin ? new Date(m.fechaPausaFin).toLocaleDateString() : "-"}</td>
                 <td>
-                    <button class="btn-delete" data-id="${m.id}">🗑️</button>
+                    <button class="btn-delete" data-id="${m.id}">Eliminar</button>
                 </td>
             `;
             tbody.appendChild(row);

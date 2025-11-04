@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </section>
              <section class="class-section inscritos-info">
                 <div class="class-section-header">
-                    <h4>👥 Inscritos</h4>
+                    <h4>👥 Inscriptos</h4>
                     <button id="btnEnrollMember" class="btn-edit">➕ Inscribir Miembro</button>
                 </div>
                 <p><strong>Total inscritos:</strong> ${clase.inscriptosCount}</p>
@@ -160,8 +160,6 @@ document.addEventListener("DOMContentLoaded", () => {
             modal.classList.add("hidden");
             currentClass = { ...currentClass, ...updatedData };
 
-            // Actualizamos la vista de la clase
-            currentClass.inscriptosCount += 1;
             displayClass(currentClass);
             showToast("Clase actualizada ✅");
         } catch (err) {
@@ -192,6 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
             showToast("Miembro inscripto ✅");
         } catch (err) {
             console.error(err);
+            enrollModal.classList.add("hidden");
             alert("Error al inscribir miembro");
         }
     });
