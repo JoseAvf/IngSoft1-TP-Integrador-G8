@@ -177,6 +177,11 @@ namespace CuerpoSano.Application.Services
             return membresia;
         }
 
+        public async Task UpdateAsync(Membresia membresia)
+        {
+            await _membresiaRepository.UpdateAsyncSimple(membresia);
+            await _membresiaRepository.SaveChangesAsync();
+        }
     }
 
 }

@@ -20,6 +20,7 @@ builder.Services.AddScoped<IClaseRepository, ClaseRepository>();
 builder.Services.AddScoped<IEntrenadorRepository, EntrenadorRepository>();
 builder.Services.AddScoped<IMembresiaRepository, MembresiaRepository>();
 builder.Services.AddScoped<IMiembroRepository, MiembroRepository>();
+builder.Services.AddScoped<IPagoRepository, PagoRepository>();
 
 // Servicios
 builder.Services.AddScoped<IActividadService, ActividadService>();
@@ -28,6 +29,7 @@ builder.Services.AddScoped<IClaseService, ClaseService>();
 builder.Services.AddScoped<IEntrenadorService, EntrenadorService>(); 
 builder.Services.AddScoped<IMembresiaService,  MembresiaService>();
 builder.Services.AddScoped<IMiembroService, MiembroService>();
+builder.Services.AddScoped<IPagoService, PagoService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -59,8 +59,12 @@
                         <p><strong>Total a pagar: <span id="totalPagar">-</span></strong></p>
                     </div>
                 </fieldset>
+                <div id="btnPagarContainer" class="hidden">
+                    <button type="button" id="btnPagar" class="btn-pagar">💳 Realizar Pago</button>
+                </div>
 
-                <button type="submit">Registrar Miembro</button>
+                <!-- 🔹 Botón de crear miembro -->
+                <button type="submit" id="btnCrear" disabled>Registrar Miembro</button>
                 <div id="memberFormResult"></div>
             </form>
 
@@ -82,6 +86,31 @@
                     </table>
                 </div>
             </div>
+
+            <!-- ===== Modal de Pago ===== -->
+            <div id="paymentModal" class="modal hidden">
+                <div class="modal-content">
+                    <h2>Confirmar Pago</h2>
+                    <p><strong>Tipo de membresía:</strong> <span id="resumenTipo"></span></p>
+                    <p><strong>Total a pagar:</strong> <span id="resumenTotal"></span></p>
+
+                    <label for="metodoPago"><strong>Método de pago:</strong></label>
+                    <select id="metodoPago" required>
+                        <option value="">Seleccione un método</option>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+                        <option value="Crédito">Crédito</option>
+                        <option value="Débito">Débito</option>
+                        <option value="Mercado Pago">Mercado Pago</option>
+                    </select>
+
+                    <div class="modal-buttons">
+                        <button id="btnConfirmarPago">Confirmar Pago</button>
+                        <button id="btnCancelarPago" class="cancel">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+
         </section>
 
         <!-- 🔙 Botón para volver -->

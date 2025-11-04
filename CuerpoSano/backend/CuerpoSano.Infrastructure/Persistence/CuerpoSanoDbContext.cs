@@ -21,6 +21,7 @@ namespace CuerpoSano.Infrastructure.Persistence
         public DbSet<Entrenador> Entrenadores => Set<Entrenador>();
         public DbSet<Certificado> Certificados => Set<Certificado>();
         public DbSet<Asistencia> Asistencias => Set<Asistencia>();
+        public DbSet<Pago> Pagos => Set<Pago>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -108,6 +109,14 @@ namespace CuerpoSano.Infrastructure.Persistence
                 .WithMany(e => e.Miembros)
                 .HasForeignKey(m => m.EntrenadorId)
                 .OnDelete(DeleteBehavior.NoAction); // Si se elimina el entrenador, los miembros no quedan sin entrenador, pero los elimino manualmente
+
+
+            // Membresia ↔ Pago (1:1 opcional)
+            modelBuilder.Entity<Membresia>()
+                .HasOne(m => m.Pago)
+                .WithOne(p => p.Membresia)
+                .HasForeignKey<Pago>(p => p.MembresiaId)
+                .OnDelete(DeleteBehavior.SetNull);
 
 
             //-------------------------

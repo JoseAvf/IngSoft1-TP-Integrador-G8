@@ -52,6 +52,12 @@ namespace CuerpoSano.Infrastructure.Repositories.Implementations
 
         public async Task SaveChangesAsync() =>
             await _context.SaveChangesAsync();
+
+        public async Task UpdateAsyncSimple(Membresia membresia)
+        {
+            _context.Membresias.Update(membresia);
+            await _context.SaveChangesAsync();
+        }
     }
 
 }

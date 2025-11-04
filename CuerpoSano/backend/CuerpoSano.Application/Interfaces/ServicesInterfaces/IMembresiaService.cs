@@ -1,5 +1,6 @@
 ﻿using CuerpoSano.Domain.Entities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,6 @@ namespace CuerpoSano.Application.Interfaces.ServicesInterfaces
         Task<bool> DeleteAsync(int id);
         Task<Membresia> PausarMembresiaAsync(int id, DateTime inicioPausa);
         Task<Membresia> DespausarMembresiaAsync(int id);
+        Task UpdateAsync(Membresia membresia);
     }
 }
