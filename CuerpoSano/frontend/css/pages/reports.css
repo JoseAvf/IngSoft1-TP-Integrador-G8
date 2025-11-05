@@ -1,0 +1,284 @@
+/* ===== Contenedor principal ===== */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    background-color: #f6f7fb;
+}
+
+/* ===== Sección del listado ===== */
+.list-section {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 25px 35px;
+    width: 100%;
+    max-width: 1000px;
+    margin-bottom: 25px;
+}
+
+    .list-section h2 {
+        color: #1976d2;
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+    }
+
+/* ===== Botón de impresión ===== */
+.btn-print {
+    display: flex;
+    margin: 0 20px 10px 0px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+    .btn-print:hover {
+        background-color: #0056b3;
+    }
+
+/* ===== Tabla ===== */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+/* Ambas tablas comparten estilos */
+#incomeTable,
+#attendanceTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    min-width: 750px;
+}
+
+    #incomeTable th, #incomeTable td,
+    #attendanceTable th, #attendanceTable td {
+        padding: 12px 16px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+    }
+
+    #incomeTable th, #attendanceTable th {
+        background-color: #1976d2;
+        color: white;
+        font-weight: 600;
+    }
+
+    #incomeTable tr:hover, #attendanceTable tr:hover {
+        background-color: #f4f6f8;
+    }
+/* ===== Filtros ===== */
+.filters {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 0px 10px 20px;
+    font-size: 1rem;
+}
+
+    .filters label {
+        font-weight: 500;
+        color: #333;
+    }
+
+#monthSelect {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+    #monthSelect:focus {
+        border-color: #1976d2;
+        outline: none;
+    }
+
+/* ===== Total Recaudado ===== */
+.total-container {
+    background-color: #e3f2fd;
+    border: 1px solid #bbdefb;
+    border-radius: 8px;
+    padding: 15px 25px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 25px;
+}
+
+    .total-container strong {
+        color: #1976d2;
+    }
+
+/* ===== Botón Volver ===== */
+.back-container {
+
+    text-align: center;
+}
+
+.btn-back {
+    display: inline-block;
+    background-color: #1976d2;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+    .btn-back:hover {
+        background-color: #1259a7;
+    }
+
+/* ===== Responsivo ===== */
+@media (max-width: 768px) {
+    .list-section {
+        padding: 20px;
+    }
+
+    #incomeTable th, #incomeTable td,
+    #attendanceTable th, #attendanceTable td {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+
+    .filters {
+        flex-direction: column;
+    }
+
+    .total-container {
+        width: 100%;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .list-section h2 {
+        font-size: 1.4rem;
+    }
+
+    .btn-print, .btn-back {
+        width: 100%;
+        font-size: 0.9rem;
+    }
+}
+
+/* ===== Estilos específicos para impresión ===== */
+@media print {
+    /* Ocultar todo excepto el listado */
+    body * {
+        visibility: hidden;
+    }
+
+    .btn-print,
+    .back-container,
+    .footer,
+    header {
+        display: none !important;
+    }
+
+    .list-section,
+    .list-section * {
+        visibility: visible;
+    }
+
+    .list-section {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100% !important;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        overflow: visible !important;
+    }
+
+    /* Asegurar que el contenedor de tabla no limite el ancho */
+    .table-wrapper {
+        overflow: visible !important;
+        width: 100% !important;
+        display: block;
+    }
+
+    /* Ajustes de tabla para impresión */
+    .list-section table {
+        width: 100% !important;
+        table-layout: fixed !important; /* evita que el contenido fuerce el ancho */
+        border-collapse: collapse;
+        border-spacing: 0;
+        word-wrap: break-word;
+    }
+
+    .list-section th,
+    .list-section td {
+        border: 1px solid #bbb;
+        padding: 6px;
+        font-size: 12px;
+        text-align: left;
+        word-break: break-word;
+    }
+
+
+    /* Evitar recortes o divisiones de filas */
+    .list-section table,
+    .list-section tr,
+    .list-section td {
+        page-break-inside: avoid;
+    }
+
+    /* Mantener los colores */
+    .list-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Control de página */
+    @page {
+        size: A4 portrait;
+        margin: 0;
+    }
+}
+
+/* Mostrar sólo al imprimir */
+.print-only {
+    display: none;
+    font-weight: 500;
+    color: #333;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+@media print {
+    .filters {
+        display: none !important;
+    }
+
+    .print-only {
+        display: block !important;
+        visibility: visible !important;
+    }
+}
+
+
+.income-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* Ocupa todo el ancho disponible */
+}
