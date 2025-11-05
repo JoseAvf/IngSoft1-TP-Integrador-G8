@@ -36,7 +36,7 @@ export const PaymentAPI = {
 
     /** Actualizar un pago */
     async update(id, data) {
-        const res = await fetch(`${API_URL}/${id}`, {
+        const res = await fetch(`${API_BASE_URL}/Pagos/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)

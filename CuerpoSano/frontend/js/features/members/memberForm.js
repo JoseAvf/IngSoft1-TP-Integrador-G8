@@ -29,6 +29,39 @@ export function setupMemberForm() {
     // Inicialmente ocultamos y deshabilitamos
     btnCrear.disabled = true;
 
+
+    // --- Validación de DNI antes de abrir selector de membresía ---
+    btnSelectMembership.addEventListener("click", async () => {
+        const dni = form.dni.value.trim();
+        const fechaNacimiento = form.fechaNacimiento.value;
+
+        if (!dni) {
+            alert("Debe ingresar un DNI antes de seleccionar la membresía.");
+            return;
+        }
+        if (!fechaNacimiento) {
+            alert("Debe ingresar la fecha de nacimiento antes de seleccionar la membresía.");
+            return;
+        }
+
+        try {
+            const miembroExistente = await MembersAPI.getByDni(dni);
+            if (miembroExistente) {
+                alert(`⚠️ Ya existe un miembro registrado con el DNI ${dni}.`);
+                return;
+            }
+        } catch (err) {
+            // Si la API devuelve 404 está bien, significa que no existe
+            if (err.message && !err.message.includes("404")) {
+                console.error("Error verificando DNI:", err);
+                alert("Ocurrió un error al verificar el DNI. Intente nuevamente.");
+                return;
+            }
+        }
+
+        membershipSelector.open();
+    });
+
     // Configuramos el selector de membresía
     const membershipSelector = setupMembershipSelector((membresia) => {
         membresiaSeleccionada = membresia;
@@ -51,13 +84,7 @@ export function setupMemberForm() {
         document.getElementById("btnPagarContainer").classList.remove("hidden");
     });
 
-    btnSelectMembership.addEventListener("click", () => {
-        if (!form.fechaNacimiento.value) {
-            alert("Primero ingrese la fecha de nacimiento para calcular descuentos.");
-            return;
-        }
-        membershipSelector.open();
-    });
+    
 
     // === Paso intermedio: Pago ===
     btnPagar.addEventListener("click", () => {
@@ -146,7 +173,7 @@ export function setupMemberForm() {
             // Reset formulario y resumen
             form.reset();
             membresiaSeleccionada = null;
-            pagoConfirmado = null;
+            pagoRealizado = null;
             btnPagar.disabled = false;
             btnCrear.disabled = true;
             document.getElementById("btnPagarContainer").classList.add("hidden");
