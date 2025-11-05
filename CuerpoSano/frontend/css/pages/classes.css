@@ -87,12 +87,273 @@ main {
 
 /* ===== Sección de listado ===== */
 
-/* ===== Contenedor de tabla para scroll horizontal ===== */
+/* ======== ESTILOS UNIFICADOS CON TRAINERS.CSS ======== */
+
+/* ===== Sección de listado ===== */
+.list-section {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 25px 30px;
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 40px;
+}
+
+    .list-section h2 {
+        color: #1976d2;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+/* ===== Contenedor de tabla ===== */
 .table-wrapper {
     width: 100%;
-    overflow-x: auto; /* permite scroll horizontal en pantallas pequeñas */
-    -webkit-overflow-scrolling: touch; /* suaviza el scroll en móviles */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
+
+#classesTable,
+#miembrosTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    min-width: 700px;
+}
+
+    #classesTable th,
+    #classesTable td,
+    #miembrosTable th,
+    #miembrosTable td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #e0e0e0;
+        text-align: left;
+        font-size: 0.95rem;
+    }
+
+    #classesTable th,
+    #miembrosTable th {
+        background-color: #1976d2;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    #classesTable tr:hover,
+    #miembrosTable tr:hover {
+        background-color: #f5f5f5;
+    }
+
+/* ===== Botones de acción ===== */
+.btn-edit,
+.btn-delete,
+.btn-ver-miembros,
+.btn-asistencia {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.2s;
+    font-weight: 500;
+}
+
+.btn-ver-miembros {
+    background-color: #1976d2;
+    color: white;
+    margin-right: 6px;
+}
+
+    .btn-ver-miembros:hover {
+        background-color: #1259a7;
+    }
+
+.btn-delete {
+    background-color: #d32f2f;
+    color: white;
+}
+
+    .btn-delete:hover {
+        background-color: #b71c1c;
+    }
+
+/* ===== Modales (eliminación y miembros) ===== */
+.modal,
+#deleteModal,
+#miembrosModal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+    .modal.active,
+    #deleteModal:not(.hidden),
+    #miembrosModal:not(.hidden) {
+        display: flex;
+    }
+
+.modal-content {
+    position: relative;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 30px 35px;
+    width: 90%;
+    max-width: 900px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    animation: modalFadeIn 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+#miembrosModal .modal-content {
+    background-color: #fff;
+    padding: 20px 25px;
+    border-radius: 10px;
+    max-width: 800px;
+    width: 90%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* ===== Encabezado de modal ===== */
+.modal-content h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #1976d2;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ===== Botón de cierre ===== */
+.closeDeleteModal,
+.closeMiembrosModal {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #555;
+    background: none;
+    border: none;
+    transition: color 0.2s;
+}
+
+    .closeDeleteModal:hover,
+    .closeMiembrosModal:hover {
+        color: #000;
+    }
+
+/* ===== Cuerpo del modal ===== */
+#miembrosModalBody {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-top: 10px;
+}
+
+    #miembrosModalBody::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #miembrosModalBody::-webkit-scrollbar-thumb {
+        background-color: rgba(25,118,210,0.5);
+        border-radius: 4px;
+    }
+
+    #miembrosModalBody::-webkit-scrollbar-track {
+        background-color: #f1f1f1;
+    }
+
+/* ===== Modal confirmación ===== */
+.modal-actions {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.btn-confirm {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+    .btn-confirm:hover {
+        background-color: #b71c1c;
+    }
+
+.btn-cancel {
+    background-color: #e0e0e0;
+    color: #333;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+    .btn-cancel:hover {
+        background-color: #ccc;
+    }
+
+/* ===== Responsividad ===== */
+@media (max-width: 768px) {
+    #classesTable th,
+    #classesTable td,
+    #miembrosTable th,
+    #miembrosTable td {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+
+    .modal-content {
+        width: 100%;
+        padding: 20px;
+    }
+
+        .modal-content h3 {
+            font-size: 1.2rem;
+        }
+}
+/* =========================== */ 
+    
+/* ===== Contenedor de tabla para scroll horizontal ===== */
+/*.table-wrapper {
+    width: 100%;
+    overflow-x: auto;*/ /* permite scroll horizontal en pantallas pequeñas */
+    /*-webkit-overflow-scrolling: touch;*/ /* suaviza el scroll en móviles */
+/*}
 
 .list-section {
     background-color: #fff;
@@ -117,8 +378,8 @@ main {
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    min-width: 700px; /* evita que las columnas se achiquen demasiado */
-}
+    min-width: 700px;*/ /* evita que las columnas se achiquen demasiado */
+/*}
 
     #classesTable th,
     #classesTable td {
@@ -134,16 +395,16 @@ main {
 
     #classesTable tr:hover {
         background-color: #f1f1f1;
-    }
+    }*/
 
 /* Opcional: celdas adaptables en pantallas muy pequeñas */
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
     #classesTable th,
     #classesTable td {
         padding: 8px 10px;
         font-size: 0.85rem;
     }
-}
+}*/
 
 /* ===== Botón volver ===== */
 .back-container {
@@ -285,7 +546,6 @@ main {
 
     .modal-content h3 {
         margin-top: 0;
-        margin-bottom: 20px;
         color: #1976d2;
         font-size: 1.5rem;
         text-align: center;
@@ -299,7 +559,7 @@ main {
     }
 
     .modal-content input {
-        width: 100%;
+        width: 10%;
         padding: 10px;
         margin-top: 5px;
         border: 1px solid #ccc;
@@ -631,4 +891,105 @@ main {
         size: A4 portrait;
         margin: 0;
     }
+}
+
+/*#miembrosModal {
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+    #miembrosModal:not(.hidden) {
+        display: flex;
+    }
+
+    #miembrosModal .modal-content {
+        background-color: #fff;
+        padding: 20px 25px;
+        border-radius: 10px;
+        max-width: 800px;
+        width: 90%;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    #miembrosModal table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    #miembrosModal th, #miembrosModal td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: center;
+    }
+
+    #miembrosModal th {
+        background-color: #1976d2;
+        color: white;
+    }
+
+*/
+
+/* ===== Botones dentro de la columna Acciones ===== */
+.action-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8px; /* por si en pantallas chicas no entran */
+}
+
+#attendanceModal {
+    display: none;
+    position: fixed;
+    z-index: 2100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+    #attendanceModal:not(.hidden) {
+        display: flex;
+    }
+
+    #attendanceModal .modal-content {
+        background-color: #fff;
+        padding: 25px 30px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        animation: fadeIn 0.25s ease;
+    }
+
+.attendance-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+    .attendance-list label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 6px 0;
+    }
+
+.entrenador-check {
+    margin-bottom: 15px;
 }

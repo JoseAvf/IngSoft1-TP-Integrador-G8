@@ -49,6 +49,10 @@
                         <p><strong>Total a pagar: <span id="totalPagar">-</span></strong></p>
                     </div>
                 </fieldset>
+                <div id="btnPagarContainer" class="hidden">
+                    <button type="button" id="btnPagar" class="btn-pagar">💳 Realizar Pago</button>
+                </div>
+
                 <button type="submit">Asignar Membresía</button>
                 <div id="memberFormResult"></div>
             </form>
@@ -71,6 +75,28 @@
                     </table>
                 </div>
             </div>
+
+            <div id="paymentModal" class="modal hidden">
+                <div class="modal-content">
+                    <h3>Confirmar Pago</h3>
+                    <p>Membresía: <span id="resumenTipo"></span></p>
+                    <p>Total a pagar: <span id="resumenTotal"></span></p>
+                    <label for="metodoPago">Método de pago:</label>
+                    <select id="metodoPago">
+                        <option value="">-- Seleccionar --</option>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+                        <option value="Crédito">Crédito</option>
+                        <option value="Débito">Débito</option>
+                        <option value="Mercado Pago">Mercado Pago</option>
+                    </select>
+                    <div class="modal-buttons">
+                        <button id="btnConfirmarPago" class="btn btn-success">Confirmar Pago</button>
+                        <button id="btnCancelarPago" class="btn btn-secondary">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+
         </section>
 
         <!-- 🔙 Botón para volver -->

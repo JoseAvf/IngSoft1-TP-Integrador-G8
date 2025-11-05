@@ -63,6 +63,47 @@
         </div>
     </div>
 
+    <!-- Modal de miembros inscriptos -->
+    <div id="miembrosModal" class="hidden">
+        <div class="modal-content">
+            <span class="closeMiembrosModal">&times;</span>
+            <h3>👥 Miembros Inscriptos</h3>
+            <div id="miembrosModalBody">
+                <p>Cargando miembros...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de registro asistencia -->
+    <div id="attendanceModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Control de Asistencia</h3>
+
+            <div class="attendance-summary">
+                <p><strong>Clase:</strong> <span id="attendanceClaseNombre"></span></p>
+                <p><strong>Entrenador:</strong> <span id="attendanceEntrenadorNombre"></span></p>
+            </div>
+
+            <h4>Miembros Inscriptos</h4>
+            <div id="attendanceMiembrosList" class="attendance-list">
+                <!-- Se cargan dinámicamente -->
+            </div>
+
+            <div class="entrenador-check">
+                <label>
+                    <input type="checkbox" id="entrenadorAsistio" />
+                    Entrenador presente
+                </label>
+            </div>
+
+            <div class="attendance-buttons">
+                <button id="btnGuardarAsistencia" class="btn-confirm">Guardar</button>
+                <button id="btnCancelarAsistencia" class="btn-cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+
 
     <footer class="footer">
         <p>© 2025 CuerpoSano — Todos los derechos reservados</p>

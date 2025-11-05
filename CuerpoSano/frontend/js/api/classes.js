@@ -94,4 +94,40 @@ export const ClassAPI = {
         if (!response.ok) throw new Error("Error al obtener asistencias de la clase");
         return await response.json();
     },
+
+    // ------------------ ASISTENCIAS ------------------
+
+    /** Registrar asistencia de un miembro */
+    async registrarAsistenciaMiembro(claseId, miembroId, asistio) {
+        const response = await fetch(
+            `${API_BASE_URL}/Asistencias/miembro?claseId=${claseId}&miembroId=${miembroId}&asistio=${asistio}`,
+            { method: "POST" }
+        );
+        const text = await response.text();
+        if (!response.ok) throw new Error(text || "Error al registrar asistencia del miembro");
+        return text;
+    },
+
+    /** Registrar asistencia del entrenador */
+    async registrarAsistenciaEntrenador(claseId, entrenadorId, asistio) {
+        const response = await fetch(
+            `${API_BASE_URL}/Asistencias/entrenador?claseId=${claseId}&entrenadorId=${entrenadorId}&asistio=${asistio}`,
+            { method: "POST" }
+        );
+        const text = await response.text();
+        if (!response.ok) throw new Error(text || "Error al registrar asistencia del entrenador");
+        return text;
+    },
+
+    /** Registrar inasistencias pendientes de la clase */
+    async registrarInasistenciasPendientes(claseId) {
+        const response = await fetch(`${API_BASE_URL}/Asistencias/registrar-inasistencias/${claseId}`, {
+            method: "POST",
+        });
+        const text = await response.text();
+        if (!response.ok) throw new Error(text || "Error al registrar inasistencias pendientes");
+        return text;
+    },
+
+
 };

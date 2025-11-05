@@ -76,6 +76,8 @@ namespace CuerpoSano.Infrastructure.Repositories.Implementations
                      .ThenInclude(mc => mc.Miembro).ThenInclude(m => m.Carnet)
                 .Include(c => c.Miembros)
                     .ThenInclude(mc => mc.Miembro).ThenInclude(m => m.Membresia)
+                 .Include(c => c.Miembros)
+                    .ThenInclude(mc => mc.Miembro).ThenInclude(m => m.Entrenador)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 

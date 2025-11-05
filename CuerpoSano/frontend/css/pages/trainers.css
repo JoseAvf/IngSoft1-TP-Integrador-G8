@@ -328,7 +328,6 @@ main.main-content {
     animation: modalFadeIn 0.3s ease-out;
     display: flex;
     flex-direction: column;
-    gap: 20px;
 }
 
 @keyframes modalFadeIn {
@@ -350,6 +349,7 @@ main.main-content {
     color: #1976d2;
     font-weight: 600;
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 10px;
 }
