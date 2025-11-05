@@ -112,6 +112,7 @@ body {
     flex-wrap: wrap;
     gap: 20px;
     margin-top: 25px;
+    justify-content: center; /* centrado horizontal */
 }
 
 .card {
@@ -119,13 +120,28 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-    width: 280px;
-    flex: 1;
+    flex: 1 1 250px; /* base de 280px, puede crecer un poco */
+    max-width: 320px; /* 🚫 no se estira más de este ancho */
+    min-width: 250px; /* mantiene un ancho mínimo razonable */
+
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease;
 }
+
+    /* efecto sutil al pasar el mouse */
+    .card:hover {
+        transform: translateY(-3px);
+    }
+
 
     .card h3 {
         margin-top: 0;
+        margin-bottom: 0;
     }
+
 
 /* ===== Estilo general de botones ===== */
 .btn,

@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CuerpoSano | Gestión de Miembros</title>
+    
+    <style>body {display: none;}</style>
+    <script src="../js/auth.js"></script>
+    
     <link rel="stylesheet" href="../css/base/style.css" />
 </head>
 <body>
@@ -51,16 +55,14 @@
         <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
     </footer>
 
-    <script>
-        // Simulación de sesión
-        const userRole = localStorage.getItem('userRole') || 'Empleado';
-        document.getElementById('userRole').textContent = `👤 ${userRole}`;
+    
 
+    <script>
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('userRole');
             alert('Sesión cerrada correctamente');
             window.location.href = 'login.html';
         });
-    </script> 
+    </script>
 </body>
 </html>

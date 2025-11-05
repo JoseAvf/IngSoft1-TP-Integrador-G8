@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CuerpoSano | Registrar Entrenador</title>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
     <link rel="stylesheet" href="../css/pages/trainers.css" />
     <link rel="stylesheet" href="../css/components/modal.css" />
     <link rel="stylesheet" href="../css/base/style.css" />
@@ -62,9 +68,7 @@
 
     <script type="module" src="../js/features/trainers/trainerRegistration.js"></script>
     <script>
-        // Simulación de sesión
-        const userRole = localStorage.getItem('userRole') || 'Empleado';
-        document.getElementById('userRole').textContent = `👤 ${userRole}`;
+        
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('userRole');

@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CuerpoSano | Panel Principal</title>
-  <link rel="stylesheet" href="../css/base/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CuerpoSano | Panel Principal</title>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
+    <link rel="stylesheet" href="../css/base/style.css" />
 </head>
 <body>
     <header class="main-header">
@@ -34,7 +40,7 @@
       <h2>Bienvenido al Panel de Gestión</h2>
       <p>
         Desde este panel, el <strong>administrador</strong> y los <strong>empleados</strong> pueden gestionar 
-        todas las operaciones del gimnasio: miembros, membresías, clases, entrenadores y reportes.
+        todas las operaciones del gimnasio: miembros, membresías, entrenadores, actividades, clases y reportes.
       </p>
 
       <div class="cards">
@@ -77,15 +83,12 @@
   </footer>
 
   <script>
-    // Simulación del rol del usuario
-    const userRole = localStorage.getItem('userRole') || 'Empleado';
-    document.getElementById('userRole').textContent = `👤 ${userRole}`;
 
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      localStorage.removeItem('userRole');
-      alert('Sesión cerrada correctamente');
-      // Redirigir a login (si existe)
-      window.location.href = 'login.html';
+      // Cerrar sesión
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+          localStorage.removeItem('userRole');
+          alert('Sesión cerrada correctamente');
+          window.location.href = 'login.html';
     });
   </script>
 </body>
