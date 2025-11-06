@@ -87,8 +87,9 @@
       // Cerrar sesión
       document.getElementById('logoutBtn').addEventListener('click', () => {
           localStorage.removeItem('userRole');
-          alert('Sesión cerrada correctamente');
-          window.location.href = 'login.html';
+          showCloseSession('Sesión cerrada correctamente');
+          setTimeout(() => window.location.href = 'login.html', 2000);
+
     });
   </script>
 </body>

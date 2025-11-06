@@ -46,23 +46,27 @@ export async function loadMemberList() {
         document.querySelectorAll(".btn-delete").forEach((btn) => {
             btn.addEventListener("click", async (e) => {
                 const id = e.target.dataset.id;
-                if (confirm("¿Seguro que deseas eliminar este miembro?")) {
-                    await deleteMember(id);
-                    await loadMemberList(); // refresca lista
-                }
+                // ✅ Usamos showConfirm en lugar de confirm
+                showConfirmDelete(
+                    "¿Seguro que deseas eliminar este miembro? Esta acción no se puede deshacer.",
+                    async () => {
+                        await deleteMember(id);
+                        await loadMemberList(); // refresca lista
+                    }
+                );
             });
         });
     } catch (error) {
         console.error(error);
-        messageBox.textContent = "❌ Error al cargar miembros.";
+        showError("Error al cargar miembros: " + error.message);
     }
 }
 
 async function deleteMember(id) {
     try {
         await MembersAPI.delete(id);
-        alert("Miembro eliminado correctamente.");
+        showSuccess("Miembro eliminado correctamente.");
     } catch (error) {
-        alert("Error al eliminar miembro: " + error.message);
+        showError("Error al eliminar miembro: " + error.message);
     }
 }

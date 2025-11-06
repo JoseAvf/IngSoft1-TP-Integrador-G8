@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputDni = document.getElementById("memberDni");
     const memberDataDiv = document.getElementById("memberData");
 
-    const toast = document.getElementById("toast");
+    /*const toast = document.getElementById("toast");*/
 
     // Modal y formulario de edición
     const modal = document.getElementById("editMemberModal");
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnSearch.addEventListener("click", async () => {
         const dni = inputDni.value.trim();
         if (!dni) {
-            alert("Ingrese un DNI válido");
+            showAlert("Ingrese un DNI válido", "warning");
             return;
         }
 
@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             } catch (err) {
                 console.error(err);
-                alert("Error al cargar entrenadores");
+                showError("Error al cargar entrenadores");
             }
         });
 
@@ -185,25 +185,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (selectedTrainerId === null) {
                     trainerSection.innerHTML = `<h4>🏋️ Entrenador Asignado</h4><p>No hay entrenador asignado</p>`;
+                    showSuccess("Entrenador desasignado ✅");
                 } else {
                     const assignedTrainer = await TrainerAPI.getById(selectedTrainerId);
                     trainerSection.innerHTML = `
-                <h4>🏋️ Entrenador Asignado</h4>
-                <p><strong>Nombre:</strong> ${assignedTrainer.nombre}</p>
-                <p><strong>DNI:</strong> ${assignedTrainer.dni}</p>
-                <p><strong>Teléfono:</strong> ${assignedTrainer.telefono || "-"}</p>
-            `;
+                        <h4>🏋️ Entrenador Asignado</h4>
+                        <p><strong>Nombre:</strong> ${assignedTrainer.nombre}</p>
+                        <p><strong>DNI:</strong> ${assignedTrainer.dni}</p>
+                        <p><strong>Teléfono:</strong> ${assignedTrainer.telefono || "-"}</p>
+                    `;
+                    showSuccess("Entrenador asignado ✅");
                 }
 
                 // Actualizamos el currentMember
                 currentMember.entrenadorId = selectedTrainerId;
-
                 assignTrainerModal.classList.add("hidden");
-                showToast(selectedTrainerId === null ? "Entrenador desasignado ✅" : "Entrenador asignado ✅");
+
+                /*
+                showToast(selectedTrainerId === null ? "Entrenador desasignado ✅" : "Entrenador asignado ✅");*/
 
             } catch (err) {
                 console.error(err);
-                alert("Error al asignar entrenador");
+                showError("Error al asignar entrenador");
             }
         });
 
@@ -229,10 +232,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 currentMember = { ...currentMember, ...updatedData };
                 displayMember(currentMember);
 
-                showToast("Miembro actualizado ✅");
+                showSuccess("Miembro actualizado ✅");
             } catch (err) {
                 console.error(err);
-                alert("Error al actualizar el miembro");
+                showError("Error al actualizar el miembro");
             }
         });
     }

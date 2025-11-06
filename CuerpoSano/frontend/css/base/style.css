@@ -243,3 +243,43 @@ a.btn-light {
     padding: 10px;
     font-size: 0.9rem;
 }
+
+.swal2-popup {
+    font-family: "Segoe UI", sans-serif !important;
+    border-radius: 16px !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+
+.swal2-select {
+    border: 1px solid #ccc !important;
+    border-radius: 8px !important;
+    padding: 6px 10px !important;
+}
+
+/* === Estilo SweetAlert2 personalizado para Cuerpo Sano === */
+/**/
+
+.swal2-title {
+    font-size: 1.4rem !important;
+    margin-top: 8px;
+    font-weight: 700 !important;
+}
+
+/*.swal2-html-container {
+    font-size: 1rem !important;
+    color: #333 !important;
+}*/
+
+.swal2-confirm {
+    
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    padding: 8px 20px !important;
+}
+
+.swal2-cancel {
+    
+    border-radius: 8px !important;
+    padding: 8px 20px !important;
+}

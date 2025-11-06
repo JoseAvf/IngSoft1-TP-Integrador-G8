@@ -94,7 +94,7 @@
             </div>
 
             <!-- ===== Modal de Pago ===== -->
-            <div id="paymentModal" class="modal hidden">
+            <!--<div id="paymentModal" class="modal hidden">
                 <div class="modal-content">
                     <h2>Confirmar Pago</h2>
                     <p><strong>Tipo de membresía:</strong> <span id="resumenTipo"></span></p>
@@ -115,7 +115,7 @@
                         <button id="btnCancelarPago" class="cancel">Cancelar</button>
                     </div>
                 </div>
-            </div>
+            </div>-->
 
         </section>
 
@@ -136,8 +136,8 @@
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('userRole');
-            alert('Sesión cerrada correctamente');
-            window.location.href = 'login.html';
+            showCloseSession('Sesión cerrada correctamente');
+            setTimeout(() => window.location.href = 'login.html', 2000);
         });
     </script>
 
