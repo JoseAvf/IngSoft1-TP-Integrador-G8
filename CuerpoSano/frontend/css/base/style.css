@@ -71,6 +71,8 @@ body {
     .sidebar h2 {
         font-size: 1.2rem;
         margin-bottom: 10px;
+        text-align: left;
+        padding-left: 10px;
     }
 
     .sidebar ul {
@@ -150,9 +152,10 @@ button {
     color: #fff;
     border: none;
     border-radius: 6px;
-    padding: 10px 16px;
+    padding: 5px 10px 5px 10px;
     font-size: 1rem;
     font-weight: bold;
+    margin: 2px 2px 2px 2px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.1s ease;
 }
@@ -282,4 +285,30 @@ a.btn-light {
     
     border-radius: 8px !important;
     padding: 8px 20px !important;
+}
+
+/* === Ajustes visuales de SweetAlert2 === */
+div.swal2-container .swal2-input,
+div.swal2-container .swal2-file,
+div.swal2-container .swal2-textarea,
+div.swal2-container .swal2-select {
+    margin: 0 !important;
+    width: 100% !important;
+    padding: 10px 12px !important;
+    border-radius: 8px !important;
+    border: 1px solid #ccc !important;
+    font-size: 15px !important;
+    transition: all 0.2s ease-in-out;
+}
+
+    div.swal2-container .swal2-input:focus {
+        border-color: #1976d2 !important;
+        box-shadow: 0 0 4px rgba(25, 118, 210, 0.3) !important;
+        outline: none !important;
+    }
+
+div.swal2-popup {
+    width: 420px !important;
+    padding: 1.8em 1.5em !important;
+    border-radius: 16px !important;
 }

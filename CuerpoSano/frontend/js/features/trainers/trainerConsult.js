@@ -6,54 +6,104 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputDni = document.getElementById("trainerDni");
     const trainerDataDiv = document.getElementById("trainerData");
 
-    const toast = document.getElementById("toast");
-
-    // Modal y formulario de edición
-    const modal = document.getElementById("editTrainerModal");
-    const form = document.getElementById("editTrainerForm");
-    const inputNombre = document.getElementById("editTrainerNombre");
-    const inputDireccion = document.getElementById("editTrainerDireccion");
-    const inputTelefono = document.getElementById("editTrainerTelefono");
-    const btnCancel = document.getElementById("btnCancelTrainerEdit");
-
     let currentTrainer = null;
 
-    function showToast(message = "Actualizado con éxito ✅") {
-        toast.textContent = message;
-        toast.classList.add("show");
-        setTimeout(() => toast.classList.remove("show"), 3000);
+    // ======== FUNCIÓN AUXILIAR: FECHAS ========
+    function formatDate(dateString) {
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        return isNaN(date) ? "-" : date.toLocaleDateString("es-AR");
     }
 
+    // ======== MODAL SWEETALERT: EDITAR ENTRENADOR ========
+    async function showEditTrainerModal(trainer) {
+        return Swal.fire({
+            title: "✏️ Editar Entrenador",
+            html: `
+            <div style="
+                display:flex;
+                flex-direction:column;
+                gap:16px;
+                padding:10px;
+            ">
+                <div>
+                   <label style="display:flex;font-weight:600;margin-bottom:6px;color:#374151;font-size:0.95rem; text-align: center;">Nombre</label>
+                    <input id="swal-trainer-nombre" class="swal2-input" 
+                           value="${trainer.nombre || ""}" 
+                           placeholder="Nombre del entrenador"
+                           style="width:100%;">
+                </div>
 
+                <div>
+                    <label style="display:flex;font-weight:600;margin-bottom:6px;color:#374151;font-size:0.95rem; text-align: center;">Dirección</label>
+                    <input id="swal-trainer-direccion" class="swal2-input" 
+                           value="${trainer.direccion || ""}" 
+                           placeholder="Dirección"
+                           style="width:100%;">
+                </div>
+
+                <div>
+                    <label style="display:flex;font-weight:600;margin-bottom:6px;color:#374151;font-size:0.95rem; text-align: center;">Teléfono</label>
+                    <input id="swal-trainer-telefono" class="swal2-input" 
+                           type="number" 
+                           value="${trainer.telefono || ""}" 
+                           placeholder="Teléfono"
+                           style="width:100%;">
+                </div>
+            </div>
+            `,
+            confirmButtonText: "💾 Guardar cambios",
+            cancelButtonText: "Cancelar",
+            showCancelButton: true,
+            confirmButtonColor: "#1976d2",
+            cancelButtonColor: "#9e9e9e",
+            background: "#ffffff",
+            color: "#333",
+            width: "375px",
+            customClass: {
+                popup: "shadow-xl rounded-2xl",
+                title: "text-lg font-semibold text-gray-800",
+                confirmButton: "text-white font-medium py-2 px-4 rounded-lg",
+                cancelButton: "font-medium py-2 px-4 rounded-lg"
+            },
+            preConfirm: () => {
+                const nombre = document.getElementById("swal-trainer-nombre").value.trim();
+                const direccion = document.getElementById("swal-trainer-direccion").value.trim();
+                const telefono = document.getElementById("swal-trainer-telefono").value.trim();
+
+                if (!nombre || !direccion || !telefono) {
+                    Swal.showValidationMessage("⚠️ Complete todos los campos antes de guardar");
+                    return false;
+                }
+
+                return { nombre, direccion, telefono: parseInt(telefono) };
+            }
+        });
+    }
+
+    // ======== BUSCAR ENTRENADOR ========
     btnSearch.addEventListener("click", async () => {
-        const dni = inputDni.value.trim(); // obtiene el DNI ingresado en forma de cadena
+        const dni = inputDni.value.trim();
         if (!dni) {
-            alert("Ingrese un DNI válido");
+            showError("Ingrese un DNI válido");
             return;
         }
 
         try {
-            const trainer = await TrainerAPI.getByDni(dni); 
+            const trainer = await TrainerAPI.getByDni(dni);
             if (!trainer) throw new Error("Entrenador no encontrado");
             displayTrainer(trainer);
         } catch (error) {
             console.error(error);
-            trainerDataDiv.innerHTML = `<p style="color:red;">No se encontró el entrenador con DNI ${dni}</p>`;
-            trainerDataDiv.classList.remove("hidden");
+            showError(`No se encontró el entrenador con DNI ${dni}`);
+            trainerDataDiv.innerHTML = "";
+            trainerDataDiv.classList.add("hidden");
         }
     });
 
-    function formatDate(dateString) {
-        if (!dateString) return "-";
-        const date = new Date(dateString);
-        if (isNaN(date)) return "-";
-        return date.toLocaleDateString("es-AR");
-    }
-
+    // ======== MOSTRAR DATOS DEL ENTRENADOR ========
     async function displayTrainer(trainer) {
-
-        currentTrainer = trainer; // importante para edición
-
+        currentTrainer = trainer;
         const container = trainerDataDiv;
         container.classList.remove("hidden");
 
@@ -79,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <section class="trainer-section certificate-info">
             <h4>📄 Certificado</h4>
             <p><strong>Código:</strong> ${trainer.codigoCertificado || "No asignado"}</p>
-            <p><strong>Vigencia:</strong> ${trainer.vigencia ? "Vigente" : "No vigente" || "-"}</p>
+            <p><strong>Vigencia:</strong> ${trainer.vigencia ? "Vigente" : "No vigente"}</p>
             <p><strong>Fecha de Emisión:</strong> ${formatDate(trainer.fechaEmision)}</p>
             <p><strong>Fecha de Vencimiento:</strong> ${formatDate(trainer.fechaVencimiento)}</p>
         </section>
@@ -111,8 +161,15 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
 
             trainer.clases.forEach(clase => {
-                const horaInicio = new Date(clase.horaInicio).toLocaleString('es-AR', { hour12: false, day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-                const horaFin = new Date(clase.horaFin).toLocaleString('es-AR', { hour12: false, day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                const horaInicio = new Date(clase.horaInicio).toLocaleString('es-AR', {
+                    hour12: false, day: '2-digit', month: '2-digit', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
+                });
+                const horaFin = new Date(clase.horaFin).toLocaleString('es-AR', {
+                    hour12: false, day: '2-digit', month: '2-digit', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
+                });
+
                 html += `
                     <tr>
                         <td>${clase.id}</td>
@@ -131,13 +188,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         </tbody>
                     </table>
                 </div>
-            
             `;
         } else {
             html += `<p>No tiene clases asignadas</p>`;
         }
 
-        html += `</section>`; // cierra la sección
+        html += `</section>`;
 
         // --- Miembros asignados ---
         try {
@@ -189,54 +245,32 @@ document.addEventListener("DOMContentLoaded", () => {
                 html += `<p>No tiene miembros asignados</p>`;
             }
 
-            html += `</section>`; // cierra la sección
-
+            html += `</section>`;
         } catch (error) {
             console.error(error);
             html += `<p style="color:red;">❌ Error al obtener miembros asignados: ${error.message}</p>`;
         }
-        
+
         container.innerHTML = html;
 
-        // Botón de edición
+        // === Evento de edición ===
         const btnEdit = document.getElementById("btnEditTrainer");
-        btnEdit.addEventListener("click", () => {
-            inputNombre.value = currentTrainer.nombre || "";
-            inputDireccion.value = currentTrainer.direccion || "";
-            inputTelefono.value = currentTrainer.telefono || "";
-            modal.classList.add("active");
+        btnEdit.addEventListener("click", async () => {
+            const result = await showEditTrainerModal(currentTrainer);
 
+            if (result.isConfirmed) {
+                const updatedData = result.value;
+
+                try {
+                    await TrainerAPI.update(currentTrainer.id, updatedData);
+                    currentTrainer = { ...currentTrainer, ...updatedData };
+                    showSuccess("Entrenador actualizado correctamente ✅");
+                    displayTrainer(currentTrainer);
+                } catch (err) {
+                    console.error(err);
+                    showError("Error al actualizar el entrenador");
+                }
+            }
         });
-
     }
-    // Cancelar edición
-    btnCancel.addEventListener("click", () => {
-        modal.classList.remove("active");
-
-    });
-
-    // Guardar cambios
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        if (!currentTrainer) return;
-
-        const updatedData = {
-            nombre: inputNombre.value.trim(),
-            direccion: inputDireccion.value.trim(),
-            telefono: parseInt(inputTelefono.value)
-        };
-
-        try {
-            await TrainerAPI.update(currentTrainer.id, updatedData);
-            currentTrainer = { ...currentTrainer, ...updatedData };
-
-            modal.classList.remove("active");
-
-            displayTrainer(currentTrainer);
-            showToast("Entrenador actualizado ✅");
-        } catch (err) {
-            console.error(err);
-            alert("Error al actualizar el entrenador");
-        }
-    });
 });

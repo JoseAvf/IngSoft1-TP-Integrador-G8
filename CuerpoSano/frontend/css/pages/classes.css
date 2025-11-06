@@ -469,7 +469,7 @@ main {
 
 /* ===== Secciones internas de información de clase ===== */
 .class-section {
-    background-color: #e6f2ff; /* color suave para diferenciar secciones */
+    background-color: #b1d8ff; /* color suave para diferenciar secciones */
     border-left: 4px solid #1976d2; /* barra lateral azul */
     padding: 15px 20px;
     border-radius: 8px;
@@ -984,4 +984,8 @@ main {
 
 .entrenador-check {
     margin-bottom: 15px;
+}
+
+div:where(.swal2-container) input:where(.swal2-input), div:where(.swal2-container) input:where(.swal2-file), div:where(.swal2-container) textarea:where(.swal2-textarea), div:where(.swal2-container) select:where(.swal2-select), div:where(.swal2-container) div:where(.swal2-radio), div:where(.swal2-container) label:where(.swal2-checkbox) {
+    margin: 0;
 }

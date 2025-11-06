@@ -55,7 +55,7 @@ async function loadClasses() {
                 <td>${c.cupo}</td>
                 <td>
                     <div class="action-buttons">
-                        <button class="btn-ver-miembros" data-id="${c.id}" style="background-color:#1976d2; color:white;">👥 Miembros Inscriptos</button>
+                        <button class="btn-ver-miembros" data-id="${c.id}" style="background-color:#1976d2; color:white;">👥 Inscriptos</button>
                         <button class="btn-asistencia" data-id="${c.id}" style="background-color:#1976d2; color:white;">📋 Asistencia</button>
                         <button class="btn-delete" data-id="${c.id}" style="background-color:#d32f2f; color:white;"> Eliminar</button>
                     </div>
