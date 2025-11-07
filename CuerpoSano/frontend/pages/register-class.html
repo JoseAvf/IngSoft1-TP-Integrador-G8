@@ -34,26 +34,58 @@
                 <fieldset>
                     <legend>Datos de la clase</legend>
                     <label>Nombre de la Clase:</label>
-                    <input type="text" name="nombre" required>
+                    <input type="text"
+                           name="nombre"
+                           id="nombre"
+                           placeholder="Ej: Spinning, CrossFit, Zumba..."
+                           required
+                           pattern="[A-Za-z0-9ÁÉÍÓÚáéíóúÑñ\s]+"
+                           title="Solo letras, números y espacios">
 
                     <label>Hora de Inicio:</label>
-                    <input type="time" name="horaInicio" required>
+                    <input type="time"
+                           name="horaInicio"
+                           id="horaInicio"
+                           required
+                           min="07:00"
+                           max="21:00"
+                           step="1800"
+                           title="Seleccione entre 07:00 y 21:00">
 
                     <label>Hora de Fin:</label>
-                    <input type="time" name="horaFin" required>
+                    <input type="time"
+                           name="horaFin"
+                           id="horaFin"
+                           required
+                           min="07:00"
+                           max="21:00"
+                           step="1800"
+                           title="Seleccione entre 07:00 y 21:00">
 
                     <label>Fecha de la Clase:</label>
-                    <input type="date" name="fecha" required>
-
+                    <input type="date"
+                           name="fecha"
+                           id="fecha"
+                           required>
 
                     <label>Cupo Máximo:</label>
-                    <input type="number" name="cupo" min="1" max="20" required>
+                    <input type="number"
+                           name="cupo"
+                           id="cupo"
+                           placeholder="1 - 20"
+                           min="1"
+                           max="20"
+                           required>
 
                     <label>Actividad:</label>
-                    <select name="actividadId" id="actividadSelect" required></select>
+                    <select name="actividadId" id="actividadSelect" required>
+                        <option value="">Seleccione una actividad...</option>
+                    </select>
 
                     <label>Entrenador:</label>
-                    <select name="entrenadorId" id="entrenadorSelect" required></select>
+                    <select name="entrenadorId" id="entrenadorSelect" required>
+                        <option value="">Seleccione un entrenador...</option>
+                    </select>
                 </fieldset>
 
                 <button type="submit">Registrar Clase</button>

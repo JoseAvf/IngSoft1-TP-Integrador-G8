@@ -125,22 +125,34 @@ function setupActivityConsult() {
     // 🧩 Modal dinámico con inputs para editar
     function showEditModal(activity) {
         Swal.fire({
-            title: "Editar actividad",
-            html: `
-                <label>Nombre:</label>
-                <input id="swal-nombre" class="swal2-input" value="${activity.nombre}">
-                <label>Activa:</label>
-                <select id="swal-activa" class="swal2-select">
-                    <option value="true" ${activity.activa ? "selected" : ""}>Activa</option>
-                    <option value="false" ${!activity.activa ? "selected" : ""}>Inactiva</option>
-                </select>
+            title: "✏️ Editar actividad",
+            html: `<div class="swal-edit-container">
+                <div class="swal-field">
+                    <label for="swal-nombre">Nombre:</label>
+                    <input id="swal-nombre" class="swal2-input custom-swal-input" value="${activity.nombre}">
+                </div>
+
+                <div class="swal-field">
+                    <label for="swal-activa">Activa:</label>
+                    <select id="swal-activa" class="swal2-select custom-swal-select">
+                        <option value="true" ${activity.activa ? "selected" : ""}>Activa</option>
+                        <option value="false" ${!activity.activa ? "selected" : ""}>Inactiva</option>
+                    </select>
+                </div>
+            </div>
             `,
             showCancelButton: true,
-            confirmButtonText: "Guardar cambios",
+            confirmButtonText: "💾 Guardar cambios",
             cancelButtonText: "Cancelar",
-            confirmButtonColor: "#2e7d32",
+            confirmButtonColor: "#1976d2",
             cancelButtonColor: "#9e9e9e",
             focusConfirm: false,
+            background: "#f9fafb",
+            color: "#333",
+            customClass: {
+                popup: "custom-swal-popup-edit",
+                title: "custom-swal-title"
+            },
             preConfirm: () => {
                 const nombre = document.getElementById("swal-nombre").value.trim();
                 const activa = document.getElementById("swal-activa").value === "true";

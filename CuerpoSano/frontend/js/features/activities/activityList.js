@@ -3,20 +3,8 @@ import { ActivityAPI } from "../../api/activities.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     loadActivities();
-    setupModals();
 });
 
-// ---------- Modales ----------
-const classesModal = document.getElementById("classesModal");
-const classesModalContent = document.getElementById("modalBody");
-const closeClassesModalBtn = document.querySelector(".closeModal");
-
-const deleteModal = document.getElementById("deleteModal");
-const closeDeleteBtn = document.querySelector(".closeDeleteModal");
-const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
-const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
-
-let activityIdToDelete = null;
 
 async function loadActivities() {
     const tableBody = document.querySelector("#activitiesTable tbody");
@@ -140,13 +128,17 @@ async function showClassesModal(activityId) {
 
         Swal.fire({
             title: `Clases de ${activity.nombre}`,
-            html: html,
-            width: "80%",
+            html: `<div class="custom-modal-scroll">${html}</div>`,
+            width: "90%",
             background: "#f9fafb",
             color: "#333",
             confirmButtonText: "Cerrar",
             confirmButtonColor: "#1976d2",
+            customClass: {
+                popup: 'custom-swal-popup',
+            },
         });
+
 
     } catch (err) {
         console.error(err);

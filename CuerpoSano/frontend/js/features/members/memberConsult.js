@@ -48,11 +48,105 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    async function showCarnetModal(member) {
+        Swal.fire({
+            title: "Carnet del Miembro",
+            html: `
+      <div id="carnet-card" style="
+        width: 400px;
+        background: linear-gradient(135deg, #1976d2, #42a5f5);
+        border-radius: 12px;
+        color: white;
+        padding: 20px;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+      ">
+        <div style="text-align:center;">
+          <h2 style="margin:0;font-size:1.2rem;">Su Mejor Peso</h2>
+          <p style="margin:0;font-size:0.9rem;">Centro de Entrenamiento</p>
+        </div>
+        <div style="text-align:center;">
+          <h3 style="margin:6px 0;">${member.nombre}</h3>
+          <p style="margin:0;">DNI: ${member.dni}</p>
+          
+        </div>
+        <div style="width: 80%; margin-top: 6px;">
+          <svg id="barcode"></svg>
+        </div>
+        <p style="font-size:0.75rem; opacity:0.9;">${member.codigoCarnet || member.id}</p>
+        <p style="margin:1px 0 5px 0;font-size:0.8rem;">Emitido: ${formatDate(member.fechaEmisionCarnet)}</p>
+      </div>
+    `,
+            showConfirmButton: false,
+            width: "auto",
+            background: "#f0f2f5",
+            customClass: {
+                popup: "no-default-swal-width"
+            },
+            didOpen: () => {
+                const code = member.codigoCarnet || member.id || "0000000000";
+                JsBarcode("#barcode", code, {
+                    format: "CODE128",
+                    lineColor: "#000000",
+                    width: 0.65,
+                    height: 40,
+                    displayValue: false
+                });
+            }
+        });
+    }
+
+
     function formatDate(dateString) {
         if (!dateString) return "-";
         const date = new Date(dateString);
         return isNaN(date) ? "-" : date.toLocaleDateString("es-AR");
     }
+
+    function getEstadoMembresia(member) {
+        if (!member.tipoMembresia) return "-";
+
+        const hoy = new Date();
+        const fechaVencimiento = member.fechaVencimientoMembresia ? new Date(member.fechaVencimientoMembresia) : null;
+
+        // Si hay fecha de vencimiento y ya pasó, está vencida
+        if (fechaVencimiento && fechaVencimiento < hoy) {
+            return `<span style="
+            color: #d32f2f;
+            font-weight: 600;
+            background: #fdecea;
+            padding: 3px 8px;
+            border-radius: 6px;
+            margin-left: 3px;
+        ">Vencida. Debe renovar.</span>`;
+        }
+
+        // Si está pausada
+        if (member.estaPausada) {
+            return `<span style="
+            color: #f9a825;
+            font-weight: 600;
+            background: #fff8e1;
+            padding: 3px 8px;
+            border-radius: 6px;
+            margin-left: 3px;
+        ">Pausada</span>`;
+        }
+
+        // Si está activa
+        return `<span style="
+         color: #2e7d32;
+        font-weight: 600;
+        background: #e8f5e9;
+        padding: 3px 8px;
+        border-radius: 6px;
+        margin-left: 3px;
+    ">Activa</span>`;
+    }
+
 
     async function displayMember(member) {
 
@@ -90,7 +184,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <!-- Datos del carnet -->
         <section class="member-section carnet-info">
+         <div class="member-section-header">    
             <h4>🎫 Carnet</h4>
+            <button id="btnViewCard" class="btn-view">🎫 Ver carnet</button>
+        </div>
             <p><strong>Código:</strong> ${member.codigoCarnet || "No asignado"}</p>
             <p><strong>Fecha de Emisión:</strong> ${formatDate(member.fechaEmisionCarnet)}</p>
         </section>
@@ -102,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <p><strong>Fecha de Emisión:</strong> ${formatDate(member.fechaEmisionMembresia)}</p>
             <p><strong>Fecha de Vencimiento:</strong> ${formatDate(member.fechaVencimientoMembresia)}</p>
             <p><strong>Costo:</strong> ${member.costoMembresia != null ? `$${member.costoMembresia}` : "-"}</p>
-            <p><strong>Estado:</strong> ${member.tipoMembresia ? (member.estaPausada ? "Pausada" : "Activa") : "-"}</p>
+            <p><strong>Estado:</strong> ${getEstadoMembresia(member)}</p>
         </section>
 
         <!-- Entrenador asignado -->
@@ -142,6 +239,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
         });
+
+        document.getElementById("btnViewCard").addEventListener("click", () => {
+            showCarnetModal(member);
+        });
+
 
         // Agregar entrenador
         document.getElementById("btnAddTrainer").addEventListener("click", async () => {

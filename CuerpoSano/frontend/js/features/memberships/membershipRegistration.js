@@ -2,16 +2,21 @@
 import { MembershipsAPI } from "../../api/memberships.js";
 import { setupMembershipSelector } from "../members/membershipSelector.js";
 import { calcularDescuentos } from "../members/costCalculator.js";
-import { PaymentAPI } from "../../api/payments.js"; // NUEVO 
+import { PaymentAPI } from "../../api/payments.js"; // NUEVO
 
 document.addEventListener("DOMContentLoaded", async () => {
     await membershipRegistration();
+
+    // Solo permitir números en el DNI
+    document.getElementById("dni").addEventListener("input", (e) => {
+        e.target.value = e.target.value.replace(/\D/g, "");
+    });
 });
 
 export async function membershipRegistration() {
     const form = document.getElementById("membershipForm");
     const btnSelectMembership = document.getElementById("btnSelectMembership");
-    const btnPagar = document.getElementById("btnPagar"); // ✅ nuevo botón en el HTML
+    const btnPagar = document.getElementById("btnPagar");
     const btnRegistrar = form.querySelector('button[type="submit"]');
 
     const inputTipo = document.getElementById("membresiaTipo");
@@ -19,54 +24,49 @@ export async function membershipRegistration() {
     const costoBaseSpan = document.getElementById("costoBase");
     const descuentoSpan = document.getElementById("descuento");
     const totalPagarSpan = document.getElementById("totalPagar");
-
-    /*// --- Modal de pago ---
-    const modal = document.getElementById("paymentModal");
-    const btnConfirmarPago = document.getElementById("btnConfirmarPago");
-    const btnCancelarPago = document.getElementById("btnCancelarPago");
-    const resumenTipo = document.getElementById("resumenTipo");
-    const resumenTotal = document.getElementById("resumenTotal");
-    const metodoPagoSelect = document.getElementById("metodoPago");*/
+    const chkEstudiante = document.getElementById("esEstudiante");
 
     let membresiaSeleccionada = null;
     let pagoRealizado = null;
 
+    // 🔒 Bloquear botones al inicio
     btnRegistrar.disabled = true;
+    btnPagar.disabled = true;
 
-    // Configuramos el selector, pero NO lo abrimos automáticamente
+    // Configuramos el selector
     const membershipSelector = setupMembershipSelector(async (membresia) => {
         membresiaSeleccionada = membresia;
 
         const dni = form.dni.value.trim();
         if (!dni) return showAlert("Ingrese el DNI antes de seleccionar una membresía.", "warning");
+
         try {
             const miembro = await MembersAPI.getByDni(dni);
             if (!miembro) throw new Error("Miembro no encontrado");
 
-            // Calculamos descuentos
             const miembroTemp = {
                 fechaNacimiento: miembro.fechaNacimiento,
-                esEstudiante: form.querySelector('input[name="esEstudiante"]')?.checked || false,
+                esEstudiante: chkEstudiante.checked || false,
             };
 
             const { descuento, total } = calcularDescuentos(miembroTemp, membresia);
 
-            // Actualizamos el resumen
             inputTipo.value = membresia.tipo;
             inputId.value = membresia.id || "";
             costoBaseSpan.textContent = `$${membresia.costo}`;
             descuentoSpan.textContent = `${descuento}%`;
             totalPagarSpan.textContent = `$${total.toFixed(2)}`;
 
-            // Mostrar botón de pago
-            document.getElementById("btnPagarContainer").classList.remove("hidden");
+            // ✅ Habilitamos el botón de pagar
+            btnPagar.disabled = false;
+
         } catch (error) {
             console.error("Error al buscar el miembro:", error);
-            showError("Ocurrió un error al obtener el miembro: " + error.message);
+            showError("Ocurrió un error al obtener el miembro: " + error.message);
         }
     });
 
-    // ✅ El modal se abrirá SOLO cuando el usuario haga clic en el botón
+    // Abrir el modal solo cuando el usuario hace clic
     btnSelectMembership.addEventListener("click", async () => {
         const dni = form.dni.value.trim();
 
@@ -79,20 +79,28 @@ export async function membershipRegistration() {
             const miembro = await MembersAPI.getByDni(dni);
 
             if (!miembro) {
-                showAlert("No se encontró ningún miembro con ese DNI. Por favor registre al miembro primero.", "warning");
+                showAlert("No se encontró ningún miembro con ese DNI. Registre al miembro primero.", "warning");
                 return;
             }
 
-            // Ahora sí, abrimos el modal al hacer clic
             membershipSelector.open();
-
         } catch (error) {
-            console.error("Error al buscar el miembro:", error);
+            console.error("Error al verificar el miembro:", error);
             showError("Ocurrió un error al verificar el miembro. Intente nuevamente.");
         }
     });
 
-    // === Pago usando SweetAlert2 ===
+    // 🔄 Recalcular dinámicamente si cambia “esEstudiante”
+    chkEstudiante.addEventListener("change", () => {
+        if (membresiaSeleccionada) {
+            const miembroTemp = { esEstudiante: chkEstudiante.checked };
+            const { descuento, total } = calcularDescuentos(miembroTemp, membresiaSeleccionada);
+            descuentoSpan.textContent = `${descuento}%`;
+            totalPagarSpan.textContent = `$${total.toFixed(2)}`;
+        }
+    });
+
+    // === Pago con SweetAlert2 ===
     btnPagar.addEventListener("click", async () => {
         if (!membresiaSeleccionada) return showAlert("Seleccione una membresía antes de continuar.", "warning");
 
@@ -134,7 +142,7 @@ export async function membershipRegistration() {
             }
         });
 
-        if (!metodo) return; // Si canceló
+        if (!metodo) return; // Cancelado
 
         try {
             const pago = await PaymentAPI.create({
@@ -145,9 +153,19 @@ export async function membershipRegistration() {
             });
 
             pagoRealizado = pago;
-            showSuccess(`Pago realizado correctamente (${metodo}). Ahora puede registrar la membresía.`);
-            btnPagar.disabled = true;
-            btnRegistrar.disabled = false;
+            btnRegistrar.disabled = false; // 👈 permitir auto-click
+
+
+            // 💫 Auto-click con transición de carga
+            await Swal.fire({
+                title: "💳 Pago confirmado",
+                text: "Procesando registro de la membresía...",
+                icon: "success",
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                timer: 1800,
+                willClose: () => btnRegistrar.click()
+            });
 
         } catch (err) {
             pagoRealizado = null;
@@ -155,19 +173,14 @@ export async function membershipRegistration() {
         }
     });
 
-
-    // === Envío final: crear membresía solo si hay pago ===
+    // === Envío final: crear membresía ===
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        if (!membresiaSeleccionada) {
-            showAlert("Debe seleccionar una membresía antes de registrar.", "warning");
-            return;
-        }
-        if (!pagoRealizado) {
-            showAlert("Debe realizar el pago antes de registrar la membresía.", "warning");
-            return;
-        }
+        if (!membresiaSeleccionada)
+            return showAlert("Debe seleccionar una membresía antes de registrar.", "warning");
+        if (!pagoRealizado)
+            return showAlert("Debe realizar el pago antes de registrar la membresía.", "warning");
 
         try {
             const miembro = await MembersAPI.getByDni(form.dni.value);
@@ -176,22 +189,26 @@ export async function membershipRegistration() {
                 MiembroId: miembro.id,
                 Tipo: membresiaSeleccionada.tipo,
                 CostoBase: membresiaSeleccionada.costo,
-                EsEstudiante: form.querySelector('input[name="esEstudiante"]').checked
+                EsEstudiante: chkEstudiante.checked
             });
 
             await PaymentAPI.update(pagoRealizado.id, {
                 membresiaId: nuevaMembresia.id
             });
 
-            showSuccess(`Membresía "${nuevaMembresia.tipo}" registrada correctamente para "${miembro.nombre}".`);
+            await Swal.fire({
+                icon: "success",
+                title: "🎉 Membresía registrada",
+                text: `La membresía "${nuevaMembresia.tipo}" se asignó correctamente a "${miembro.nombre}".`,
+                confirmButtonColor: "#007bff"
+            });
 
             // Reset visual
             form.reset();
             membresiaSeleccionada = null;
             pagoRealizado = null;
             btnRegistrar.disabled = true;
-            btnPagar.disabled = false;
-            document.getElementById("btnPagarContainer").classList.add("hidden");
+            btnPagar.disabled = true;
             inputTipo.value = "";
             inputId.value = "";
             costoBaseSpan.textContent = "-";

@@ -10,23 +10,52 @@ export function setupMemberForm() {
     const btnPagar = document.getElementById("btnPagar");
     const btnCrear = form.querySelector('button[type="submit"]');
 
+    // === Función para validar si todos los campos obligatorios están completos ===
+    function validarCamposCompletos() {
+        // Obtener todos los inputs relevantes dentro del formulario
+        const inputs = form.querySelectorAll("input[required], input:not([type=checkbox])");
+
+        // Verificar que todos estén llenos y sean válidos según HTML5
+        const todosValidos = Array.from(inputs).every(input => {
+            // trim() para evitar solo espacios
+            const valor = input.value.trim();
+            // checkValidity() usa las validaciones nativas (type, pattern, min, max, required, etc.)
+            return valor !== "" && input.checkValidity();
+        });
+
+        // Habilitar solo si los campos son válidos y hay membresía seleccionada
+        btnPagar.disabled = !(todosValidos && membresiaSeleccionada !== null);
+    }
+
+
+
     const inputTipo = document.getElementById("membresiaTipo");
     const inputId = document.getElementById("membresiaId");
     const costoBaseSpan = document.getElementById("costoBase");
     const descuentoSpan = document.getElementById("descuento");
     const totalPagarSpan = document.getElementById("totalPagar");
 
-    /*const modal = document.getElementById("paymentModal");
-    const btnConfirmarPago = document.getElementById("btnConfirmarPago");
-    const btnCancelarPago = document.getElementById("btnCancelarPago");
-    const resumenTipo = document.getElementById("resumenTipo");
-    const resumenTotal = document.getElementById("resumenTotal");
-    const metodoPagoSelect = document.getElementById("metodoPago");*/
+    const fechaInput = document.getElementById("fechaNacimiento");
+    const hoy = new Date();
+    const min = new Date("1915-01-01");
+    const max = new Date("2020-12-31");
+    fechaInput.min = min.toISOString().split("T")[0];
+    fechaInput.max = max.toISOString().split("T")[0];
+
+    // === Inicialmente los botones bloqueados ===
+    btnPagar.disabled = true;
+    btnCrear.disabled = true;
+
+    // Validar en tiempo real los campos
+    document.querySelectorAll("#memberForm input").forEach(input => {
+        input.addEventListener("input", () => {
+            input.reportValidity();
+            validarCamposCompletos();
+        });
+    });
 
     let membresiaSeleccionada = null;
     let pagoRealizado = null;
-
-    btnCrear.disabled = true;
 
     // --- Validación de DNI antes de abrir selector de membresía ---
     btnSelectMembership.addEventListener("click", async () => {
@@ -69,9 +98,23 @@ export function setupMemberForm() {
         descuentoSpan.textContent = `${descuento}%`;
         totalPagarSpan.textContent = `$${total.toFixed(2)}`;
 
-        document.getElementById("btnPagarContainer").classList.remove("hidden");
+        // 🔓 Habilitar botón de pago
+        validarCamposCompletos();
+
     });
 
+    // 🔁 Recalcular automáticamente si cambia "esEstudiante"
+    const estudianteCheck = form.querySelector('input[name="esEstudiante"]');
+    estudianteCheck.addEventListener("change", () => {
+        if (!membresiaSeleccionada) return;
+        const miembroTemp = {
+            fechaNacimiento: form.fechaNacimiento.value,
+            esEstudiante: estudianteCheck.checked,
+        };
+        const { descuento, total } = calcularDescuentos(miembroTemp, membresiaSeleccionada);
+        descuentoSpan.textContent = `${descuento}%`;
+        totalPagarSpan.textContent = `$${total.toFixed(2)}`;
+    });
 
     // === Paso intermedio: Pago con SweetAlert2 ===
     btnPagar.addEventListener("click", async () => {
@@ -81,17 +124,16 @@ export function setupMemberForm() {
         const resumenTipo = membresiaSeleccionada.tipo;
         const resumenTotal = totalPagarSpan.textContent;
 
-        // Mostramos el modal usando SweetAlert2
         const { value: metodo } = await Swal.fire({
             title: "💳 Confirmar Pago",
             html: `
                 <div style="text-align:center;">
-                    <p style="margin:4px 0;"><strong>Membresía:</strong> ${resumenTipo}</p>
-                    <p style="margin:4px 0;"><strong>Total a pagar:</strong> 
+                    <p><strong>Membresía:</strong> ${resumenTipo}</p>
+                    <p><strong>Total a pagar:</strong> 
                         <span style="color:#007bff;font-size:1.2em;">${resumenTotal}</span>
                     </p>
-                    <hr style="margin:12px 0;">
-                    <label for="metodoPagoSelect" style="display:block;margin-bottom:8px;font-weight:500;">Método de Pago:</label>
+                    <hr>
+                    <label for="metodoPagoSelect" style="display:block;margin-bottom:8px;">Método de Pago:</label>
                     <select id="metodoPagoSelect" class="swal2-select" style="width:80%;border-radius:8px;padding:6px;">
                       <option value="">Seleccione...</option>
                       <option value="Efectivo">💵 Efectivo</option>
@@ -120,7 +162,7 @@ export function setupMemberForm() {
             }
         });
 
-        if (!metodo) return; // Si canceló, no hace nada
+        if (!metodo) return;
 
         try {
             const pago = await PaymentAPI.create({
@@ -131,16 +173,30 @@ export function setupMemberForm() {
             });
 
             pagoRealizado = pago;
-            showSuccess(`✅ Pago realizado correctamente (${metodo}). Ahora puede crear el miembro.`);
+
+            // 🔄 Mostrar carga de creación automática
+            await Swal.fire({
+                title: "✅ Pago Realizado",
+                text: "Creando usuario...",
+                icon: "info",
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                timer: 1800,
+                timerProgressBar: true,
+                background: "#f9fafb",
+                color: "#333"
+            });
 
             btnPagar.disabled = true;
             btnCrear.disabled = false;
+
+            // Simular click automático en "Registrar miembro"
+            form.requestSubmit();
 
         } catch (err) {
             showError("Error al procesar el pago: " + err.message);
         }
     });
-
 
     // === Creación del miembro y membresía ===
     form.addEventListener("submit", async (e) => {
@@ -173,20 +229,26 @@ export function setupMemberForm() {
                 membresiaId: nuevaMembresia.id,
             });
 
-            showSuccess(`Miembro "${miembroCreado.nombre}" registrado con membresía "${nuevaMembresia.tipo}" ($${nuevaMembresia.costo}).`);
+            await Swal.fire({
+                icon: "success",
+                title: "Miembro creado correctamente",
+                text: `Miembro "${miembroCreado.nombre}" con membresía "${nuevaMembresia.tipo}" ($${nuevaMembresia.costo}).`,
+                confirmButtonColor: "#007bff"
+            });
 
+            // Reset total
             form.reset();
             membresiaSeleccionada = null;
             pagoRealizado = null;
-            btnPagar.disabled = false;
+            btnPagar.disabled = true;
             btnCrear.disabled = true;
-            document.getElementById("btnPagarContainer").classList.add("hidden");
 
             inputTipo.value = "";
             inputId.value = "";
             costoBaseSpan.textContent = "-";
             descuentoSpan.textContent = "%0";
             totalPagarSpan.textContent = "-";
+            validarCamposCompletos();
 
         } catch (err) {
             showError("Error al registrar miembro o membresía: " + err.message);

@@ -128,7 +128,7 @@ main {
     #classesTable td,
     #miembrosTable th,
     #miembrosTable td {
-        padding: 12px 15px;
+        padding: 10px 12px;
         border-bottom: 1px solid #e0e0e0;
         text-align: left;
         font-size: 0.95rem;
@@ -989,3 +989,136 @@ main {
 div:where(.swal2-container) input:where(.swal2-input), div:where(.swal2-container) input:where(.swal2-file), div:where(.swal2-container) textarea:where(.swal2-textarea), div:where(.swal2-container) select:where(.swal2-select), div:where(.swal2-container) div:where(.swal2-radio), div:where(.swal2-container) label:where(.swal2-checkbox) {
     margin: 0;
 }
+
+div:where(.swal2-container) div:where(.swal2-html-container) {
+    padding: 1em 1em 0em !important;
+}
+    div .swal2-popup {
+    padding: 0 !important;
+    min-width: 400px !important;
+    max-width: 550px !important;
+    width: 500px !important;
+}
+    .asistencia-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    max-width: 450px;
+    font-family: 'Inter', sans-serif;
+    color: #333;
+}
+div:where(.swal2-actions) {
+    margin: 10px 0 10px 0 !important;
+}
+    
+
+    .asistencia-header h3 {
+        margin: 0;
+        font-size: 1.3rem;
+        color: #1976d2;
+    }
+
+    .asistencia-header .label {
+        font-weight: 600;
+    }
+
+.asistencia-miembros {
+    max-height: 280px;
+    overflow-y: auto;
+    margin: 15px 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
+    font-family: 'Inter', sans-serif;
+}
+
+.miembros-header,
+.miembro-item {
+    display: grid;
+    grid-template-columns: 50px 1fr 100px;
+    align-items: center;
+    padding: 10px 12px;
+}
+
+.miembros-header {
+    background: #f1f5f9;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+    border-radius: 8px 8px 0 0;
+}
+
+.miembro-item {
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s;
+}
+
+    .miembro-item:last-child {
+        border-bottom: none;
+    }
+
+    .miembro-item:hover {
+        background: #f9fafb;
+    }
+
+    .miembro-item.asistio-previo {
+        background: #c8e6c9; /* verde más fuerte que el anterior */
+        color: #2e7d32; /* verde oscuro, buen contraste */
+        font-weight: 600;
+        
+    }
+
+        .miembro-item.asistio-previo input {
+            cursor: not-allowed;
+            accent-color: #2ecc71; /* verde vibrante para el check */
+        }
+
+.col-check {
+    display: flex;
+    justify-content: center;
+}
+
+    .col-check input[type="checkbox"] {
+        transform: scale(1.2);
+        accent-color: #1976d2;
+        cursor: pointer;
+    }
+
+.col-nombre {
+    color: #333;
+}
+
+.col-dni {
+    text-align: right;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+
+.asistencia-footer {
+
+    padding-top: 5px;
+    text-align: center;
+}
+
+.entrenador-check {
+    font-weight: 500;
+    color: #333;
+    ;
+}
+
+    .entrenador-check.asistio-previo {
+        background: #c8e6c9;
+        
+        font-weight: 600;
+        padding: 6px 10px;
+        border-radius: 6px;
+        
+    }
+
+        .entrenador-check.asistio-previo input {
+            cursor: not-allowed;
+            accent-color: #2ecc71;
+        }

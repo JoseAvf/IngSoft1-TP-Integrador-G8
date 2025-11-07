@@ -34,20 +34,31 @@
                 <fieldset>
                     <legend>Datos del entrenador</legend>
 
-                    <label>Nombre:</label>
-                    <input type="text" name="nombre" placeholder="Ej: Juan Pérez" required>
+                    <div class="form-row">
+                        <label>Nombre:</label>
+                        <input type="text" name="nombre" placeholder="Ej: Pablo Lopez" id="nombre" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo letras y espacios">
+                    </div>
 
-                    <label>DNI:</label>
-                    <input type="text" name="dni" placeholder="Ej: 40123456" required>
+                    <div class="form-row">
+                        <label>DNI:</label>
+                        <input type="text" name="dni" placeholder="Ej: 38765432" id="dni" required pattern="[0-9]{7,10}" title="Solo números">
+                    </div>
 
-                    <label>Dirección:</label>
-                    <input type="text" name="direccion" placeholder="Ej: Calle Falsa 123" required>
+                    <div class="form-row">
+                        <label>Dirección:</label>
+                        <input type="text" name="direccion" placeholder="Ej: Av. San Martín 2450, Piso 2" id="direccion" required pattern="[A-Za-z0-9ÁÉÍÓÚáéíóúÑñ\s,.-]+" title="Letras, números y comas">
+                    </div>
 
-                    <label>Teléfono:</label>
-                    <input type="tel" name="telefono" placeholder="Ej: 1122334455" required>
+                    <div class="form-row">
+                        <label>Teléfono:</label>
+                        <input type="tel" name="telefono" placeholder="Ej: 1132456789" id="telefono" required pattern="[0-9]{6,15}" title="Solo números">
+                    </div>
 
-                    <label>Fecha de nacimiento:</label>
-                    <input type="date" name="fechaNacimiento" required>
+
+                    <div class="form-row">
+                        <label>Fecha de nacimiento:</label>
+                        <input type="date" name="fechaNacimiento" id="fechaNacimiento" required>
+                    </div>
                 </fieldset>
 
                 <button type="submit">Registrar Entrenador</button>

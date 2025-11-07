@@ -34,10 +34,13 @@
                 <fieldset>
                     <legend>Datos de la actividad</legend>
                     <label>Nombre de la Actividad:</label>
-                    <input type="text" name="nombre" required>
+                    <input type="text" placeholder="Ej: Yoga, Musculatura, etc.." name="nombre" required>
 
-                    <label>¿Activa?</label>
-                    <input type="checkbox" name="activa" checked>
+                    <div class="checkbox-group">
+                        <label for="activa">¿Activa?</label>
+                        <input type="checkbox" id="activa" name="activa" checked>
+                    </div>
+
                 </fieldset>
 
                 <button type="submit">Registrar Actividad</button>

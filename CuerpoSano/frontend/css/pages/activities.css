@@ -7,16 +7,40 @@ main {
     background-color: #f6f7fb;
 }
 
-/* ===== Secci髇 de formulario ===== */
+/* ===== Secci贸n de formulario ===== */
 .form-section {
     background-color: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 30px 40px;
-    max-width: 700px;
+    max-width: 550px;
     width: 100%;
     margin-bottom: 10px;
 }
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding: 6px 0; /* da un poco de aire */
+    gap: 10px; /* separa ligeramente el label del checkbox */
+}
+
+    .checkbox-group label {
+        font-weight: 500;
+        color: #374151;
+        flex: 1; /* hace que el label ocupe el espacio disponible */
+    }
+
+    .checkbox-group input[type="checkbox"] {
+        width: 15px; /* tama帽o controlado */
+        height: 18px; /* mantiene proporci贸n */
+        transform: none; /* eliminamos el scale que desbordaba */
+        cursor: pointer;
+    }
+
+
 
     .form-section h2 {
         color: #1976d2;
@@ -41,13 +65,11 @@ main {
 
 #activityForm label {
     display: block;
-    margin-top: 10px;
     font-weight: 500;
     color: #333;
 }
 
-#activityForm input,
-#activityForm select {
+#activityForm input {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
@@ -58,14 +80,13 @@ main {
     transition: all 0.3s;
 }
 
-    #activityForm input:focus,
-    #activityForm select:focus {
+    #activityForm input:focus {
         border-color: #1976d2;
         box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
         outline: none;
     }
 
-/* ===== Bot髇 de registrar ===== */
+/* ===== Bot贸n de registrar ===== */
 #activityForm button[type="submit"] {
     display: block;
     width: 100%;
@@ -85,13 +106,13 @@ main {
         background-color: #1259a7;
     }
 
-/* ===== Secci髇 de listado ===== */
+/* ===== Secci贸n de listado ===== */
 
 /* ===== Contenedor de tabla para scroll horizontal ===== */
 .table-wrapper {
     width: 100%;
-    overflow-x: auto; /* permite scroll horizontal en pantallas peque馻s */
-    -webkit-overflow-scrolling: touch; /* suaviza el scroll en m髒iles */
+    overflow-x: auto; /* permite scroll horizontal en pantallas peque帽as */
+    -webkit-overflow-scrolling: touch; /* suaviza el scroll en m贸viles */
 }
 
 .list-section {
@@ -136,7 +157,7 @@ main {
         background-color: #f1f1f1;
     }
 
-/* Opcional: celdas adaptables en pantallas muy peque馻s */
+/* Opcional: celdas adaptables en pantallas muy peque帽as */
 @media (max-width: 768px) {
     #activitiesTable th,
     #activitiesTable td {
@@ -145,15 +166,15 @@ main {
     }
 }
 
-/* ===== Bot髇 volver ===== */
+/* ===== Bot贸n volver ===== */
 .back-container {
     text-align: center;
     margin-bottom: 40px;
 }
 
-/* ===== Tarjeta de informaci髇  ===== */
+/* ===== Tarjeta de informaci贸n  ===== */
 
-/* ===== Secci髇 de b鷖queda ===== */
+/* ===== Secci贸n de b煤squeda ===== */
 .search-section {
     background-color: #fff;
     border-radius: 12px;
@@ -211,7 +232,7 @@ main {
 
 /* Cuando tiene contenido */
 .activity-data {
-    display: block; /* se muestra cuando quit醩 la clase hidden */
+    display: block; /* se muestra cuando quit谩s la clase hidden */
     background-color: #b9d8f7;
     padding: 20px 25px;
     border-radius: 12px;
@@ -340,10 +361,10 @@ main {
     }
 }
 
-/* ===== Encabezado de actividad con bot髇 editar ===== */
+/* ===== Encabezado de actividad con bot贸n editar ===== */
 .activity-header {
     display: flex;
-    justify-content: space-between; /* separa t韙ulo y bot髇 */
+    justify-content: space-between; /* separa t铆tulo y bot贸n */
     align-items: center;
     margin-bottom: 10px;
 }
@@ -369,7 +390,7 @@ main {
         background-color: #e53935; /* rojo */
     }
 
-/* Opcional: peque駉 ajuste en mobile */
+/* Opcional: peque帽o ajuste en mobile */
 @media (max-width: 480px) {
     .activity-status {
         font-size: 0.85rem;
@@ -379,7 +400,7 @@ main {
 
 
 
-/* ===== Bot髇 editar actividad ===== */
+/* ===== Bot贸n editar actividad ===== */
 .btn-edit {
     display: inline-block;
     background-color: #1976d2;
@@ -400,7 +421,7 @@ main {
         transform: scale(0.98);
     }
 
-/* ===== Modal edici髇 de actividad ===== */
+/* ===== Modal edici贸n de actividad ===== */
 #editModal {
     display: none; /* por defecto oculto */
     position: fixed;
@@ -525,12 +546,12 @@ main {
     }
 }
 
-/* ===== Toast de confirmaci髇 ===== */
+/* ===== Toast de confirmaci贸n ===== */
 .toast {
     position: fixed;
     top: 25px;
     right: 25px;
-    background-color: #4caf50; /* verde 閤ito */
+    background-color: #4caf50; /* verde 茅xito */
     color: white;
     padding: 14px 22px;
     border-radius: 8px;
@@ -551,7 +572,7 @@ main {
         transform: translateY(0);
     }
 
-/* Animaci髇 opcional (fade out) */
+/* Animaci贸n opcional (fade out) */
 @keyframes fadeOutToast {
     from {
         opacity: 1;
@@ -564,7 +585,7 @@ main {
     }
 }
 
-/* Variante de error (si quisieras usarla m醩 adelante) */
+/* Variante de error (si quisieras usarla m谩s adelante) */
 .toast.error {
     background-color: #e53935;
 }
@@ -574,7 +595,7 @@ main {
     background-color: #ff9800;
 }
 
-/* Responsive: un poco m醩 chico en pantallas peque馻s */
+/* Responsive: un poco m谩s chico en pantallas peque帽as */
 @media (max-width: 600px) {
     .toast {
         right: 10px;
@@ -584,7 +605,7 @@ main {
     }
 }
 
-/* ===== Bot髇 de impresi髇 ===== */
+/* ===== Bot贸n de impresi贸n ===== */
 .btn-print {
     background-color: #007bff;
     color: white;
@@ -601,7 +622,7 @@ main {
         background-color: #0056b3;
     }
 
-/* ===== Estilos espec韋icos para impresi髇 ===== */
+/* ===== Estilos espec铆ficos para impresi贸n ===== */
 @media print {
     /* Ocultar todo excepto el listado */
     body * {
@@ -638,7 +659,7 @@ main {
         display: block;
     }
 
-    /* Ajustes de tabla para impresi髇 */
+    /* Ajustes de tabla para impresi贸n */
     .list-section table {
         width: 100% !important;
         table-layout: fixed !important; /* evita que el contenido fuerce el ancho */
@@ -675,10 +696,140 @@ main {
         print-color-adjust: exact;
     }
 
-    /* Control de p醙ina */
+    /* Control de p谩gina */
     @page {
         size: A4 portrait;
         margin: 0;
     }
 }
 
+/* ===== SweetAlert Modal Personalizado ===== */
+.custom-swal-popup {
+    max-width: 1200px !important; /* permite que se expanda bastante */
+    width: 90% !important;
+    padding: 25px !important;
+}
+
+.custom-modal-scroll {
+    max-height: 70vh; /* ocupa hasta el 70% de la altura visible */
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+    .custom-modal-scroll::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .custom-modal-scroll::-webkit-scrollbar-thumb {
+        background-color: rgba(0,0,0,0.2);
+        border-radius: 4px;
+    }
+
+        .custom-modal-scroll::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(0,0,0,0.35);
+        }
+
+/* Ajuste extra para tabla dentro del modal */
+#modalClassesTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    min-width: 900px;
+}
+
+    #modalClassesTable th,
+    #modalClassesTable td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #eee;
+        text-align: center;
+        white-space: nowrap; /* evita saltos de l铆nea */
+    }
+
+    #modalClassesTable th {
+        background-color: #1976d2;
+        color: white;
+    }
+
+    #modalClassesTable tr:hover {
+        background-color: #f1f1f1;
+    }
+
+@media (max-width: 768px) {
+    .custom-swal-popup {
+        width: 95% !important;
+    }
+
+    .custom-modal-scroll {
+        max-height: 60vh;
+    }
+
+    #modalClassesTable {
+        min-width: 700px;
+    }
+}
+
+/* 馃敼 Sobrescribe la regla global sin eliminarla */
+html body .swal2-popup.custom-swal-popup {
+    width: 90% !important;
+    max-width: 1200px !important;
+    padding: 25px !important;
+}
+
+/* ===== Modal Edici贸n de Actividad (SweetAlert) ===== */
+.custom-swal-popup-edit {
+    width: 420px !important;
+    padding: 2em 2em !important;
+    border-radius: 14px !important;
+}
+
+.custom-swal-title {
+    color: #1976d2 !important;
+    font-weight: 600 !important;
+    margin-bottom: 15px !important;
+}
+
+/* Contenedor interno para orden y espaciado */
+.swal-edit-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: left;
+}
+
+/* Cada campo del formulario */
+.swal-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+    /* Labels */
+    .swal-field label {
+        font-weight: 500;
+        color: #374151;
+        font-size: 0.95rem;
+    }
+
+/* Inputs */
+.custom-swal-input,
+.custom-swal-select {
+    border: 1px solid #ccc !important;
+    border-radius: 6px !important;
+    padding: 10px !important;
+    font-size: 0.95rem !important;
+    color: #333 !important;
+    box-shadow: none !important;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: white !important;
+    transition: border-color 0.2s ease;
+}
+
+    .custom-swal-input:focus,
+    .custom-swal-select:focus {
+        border-color: #1976d2 !important;
+        outline: none;
+    }

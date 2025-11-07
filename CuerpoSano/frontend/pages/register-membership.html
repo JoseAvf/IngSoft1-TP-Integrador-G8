@@ -34,30 +34,38 @@
             <form id="membershipForm">
                 <fieldset>
                     <legend>Datos del miembro</legend>
-                    <label>DNI:</label>
-                    <input type="text" name="dni" required>
-                    <label>
-                        <input type="checkbox" name="esEstudiante">
-                        Estudiante
-                    </label>
+
+                    <div class="form-row">
+                        <label>DNI:</label>
+                        <input type="text" name="dni" id="dni" required pattern="[0-9]{7,10}" title="Solo números">
+                    </div>
+
+                    <div class="form-row checkbox-row">
+                        <label for="esEstudiante">Estudiante</label>
+                        <input type="checkbox" name="esEstudiante" id="esEstudiante">
+                    </div>
                 </fieldset>
 
                 <fieldset>
                     <legend>Membresía</legend>
+
                     <div class="membership-select">
                         <input type="text" id="membresiaTipo" placeholder="Seleccionar tipo..." readonly>
                         <input type="hidden" name="membresiaId" id="membresiaId">
                         <button type="button" id="btnSelectMembership">Elegir Membresía</button>
                     </div>
+
                     <div id="membershipSummary" class="summary-box">
-                        <p>💰 Costo base: <span id="costoBase">-</span></p>
-                        <p>🎓 Descuento aplicado: <span id="descuento">%0</span></p>
-                        <p><strong>Total a pagar: <span id="totalPagar">-</span></strong></p>
+                        <div class="summary-line">
+                            <p>💰 Costo base: <span id="costoBase">-</span></p>
+                            <p>🎓 Descuento aplicado: <span id="descuento">%0</span></p>
+                        </div>
+                        <div class="summary-total">
+                            <strong>Total a pagar: <span id="totalPagar">-</span></strong>
+                            <button type="button" id="btnPagar" class="btn-pagar">💳 Realizar Pago</button>
+                        </div>
                     </div>
                 </fieldset>
-                <div id="btnPagarContainer" class="hidden">
-                    <button type="button" id="btnPagar" class="btn-pagar">💳 Realizar Pago</button>
-                </div>
 
                 <button type="submit">Asignar Membresía</button>
                 <div id="memberFormResult"></div>
@@ -79,27 +87,6 @@
                         </thead>
                         <tbody></tbody>
                     </table>
-                </div>
-            </div>
-
-            <div id="paymentModal" class="modal hidden">
-                <div class="modal-content">
-                    <h3>Confirmar Pago</h3>
-                    <p>Membresía: <span id="resumenTipo"></span></p>
-                    <p>Total a pagar: <span id="resumenTotal"></span></p>
-                    <label for="metodoPago">Método de pago:</label>
-                    <select id="metodoPago">
-                        <option value="">-- Seleccionar --</option>
-                        <option value="Efectivo">Efectivo</option>
-                        <option value="Transferencia Bancaria">Transferencia Bancaria</option>
-                        <option value="Crédito">Crédito</option>
-                        <option value="Débito">Débito</option>
-                        <option value="Mercado Pago">Mercado Pago</option>
-                    </select>
-                    <div class="modal-buttons">
-                        <button id="btnConfirmarPago" class="btn btn-success">Confirmar Pago</button>
-                        <button id="btnCancelarPago" class="btn btn-secondary">Cancelar</button>
-                    </div>
                 </div>
             </div>
 

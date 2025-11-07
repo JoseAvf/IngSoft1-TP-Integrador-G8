@@ -12,15 +12,65 @@ async function initClassForm() {
     const actividadSelect = document.getElementById("actividadSelect");
     const entrenadorSelect = document.getElementById("entrenadorSelect");
     const resultDiv = document.getElementById("classFormResult");
+    const fechaInput = document.getElementById("fecha");
+    const horaInicioInput = document.getElementById("horaInicio");
+    const horaFinInput = document.getElementById("horaFin");
+    const nombreInput = document.getElementById("nombre");
 
-    // Cargar actividades y entrenadores en los select
+    // 🔒 Fecha mínima: hoy
+    const hoy = new Date();
+    fechaInput.min = hoy.toISOString().split("T")[0];
+
+    // 🔡 Validación en tiempo real: solo letras y números en el nombre
+    nombreInput.addEventListener("input", () => {
+        nombreInput.value = nombreInput.value.replace(/[^A-Za-z0-9ÁÉÍÓÚáéíóúÑñ\s]/g, "");
+    });
+
+    const horaInicio = document.getElementById("horaInicio");
+    const horaFin = document.getElementById("horaFin");
+
+    // Evitar elegir fuera del rango permitido
+    [horaInicio, horaFin].forEach(input => {
+        input.addEventListener("input", () => {
+            const valor = input.value;
+            if (valor < "07:00" || valor > "21:00") {
+                input.value = ""; // resetea si elige algo fuera del rango
+            }
+        });
+    });
+
+    // Actualizar hora mínima de fin según la de inicio
+    horaInicio.addEventListener("change", () => {
+        horaFin.min = horaInicio.value;
+        if (horaFin.value && horaFin.value < horaInicio.value) {
+            horaFin.value = "";
+        }
+    });
+
+
+    // 🕑 Restricción de horario y sincronización de inicio/fin
+    horaInicioInput.addEventListener("change", () => {
+        const horaInicio = horaInicioInput.value;
+        if (horaInicio) {
+            horaFinInput.min = horaInicio; // no permitir menor que inicio
+        }
+    });
+
+    // 🕒 Reforzar límites horarios 7:00 - 21:00
+    [horaInicioInput, horaFinInput].forEach(input => {
+        input.addEventListener("input", () => {
+            if (input.value < "07:00") input.value = "07:00";
+            if (input.value > "21:00") input.value = "21:00";
+        });
+    });
+
+    // 📋 Cargar actividades y entrenadores
     try {
         const [actividades, entrenadores] = await Promise.all([
             ActivityAPI.getAll(),
             TrainerAPI.getAll()
         ]);
 
-        // Llenar select de actividades
         actividades.forEach(act => {
             const option = document.createElement("option");
             option.value = act.id;
@@ -28,53 +78,60 @@ async function initClassForm() {
             actividadSelect.appendChild(option);
         });
 
-        // Llenar select de entrenadores
         entrenadores.forEach(ent => {
             const option = document.createElement("option");
             option.value = ent.id;
             option.textContent = ent.nombre;
             entrenadorSelect.appendChild(option);
         });
-
     } catch (err) {
         console.error("Error cargando actividades o entrenadores:", err);
-        resultDiv.textContent = "❌ No se pudieron cargar actividades o entrenadores.";
-        resultDiv.style.color = "red";
+        return showError("No se pudieron cargar actividades o entrenadores.");
     }
 
-    // Manejar submit del formulario
+    // 📩 Envío del formulario
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
         resultDiv.textContent = "";
 
         const formData = new FormData(form);
 
-        // Leer fecha y horas
-        const fecha = formData.get("fecha"); // 'YYYY-MM-DD'
-        const horaInicio = formData.get("horaInicio"); // 'HH:mm'
-        const horaFin = formData.get("horaFin");       // 'HH:mm'
+        const nombre = formData.get("nombre").trim();
+        const fecha = formData.get("fecha");
+        const horaInicio = formData.get("horaInicio");
+        const horaFin = formData.get("horaFin");
+        const cupo = parseInt(formData.get("cupo"));
 
-        if (!fecha || !horaInicio || !horaFin) {
-            resultDiv.textContent = "❌ Debe ingresar fecha, hora de inicio y hora de fin.";
-            resultDiv.style.color = "red";
-            return;
+        // 🧾 Validaciones previas
+        if (!/^[A-Za-z0-9ÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre)) {
+            return showAlert("El nombre de la clase solo puede contener letras, números y espacios.", "warning");
         }
 
-        let cupo = parseInt(formData.get("cupo"));
+        if (!fecha || !horaInicio || !horaFin) {
+            return showAlert("Debe ingresar fecha, hora de inicio y hora de fin.", "warning");
+        }
 
+        const hoyISO = new Date().toISOString().split("T")[0];
+        if (fecha < hoyISO) {
+            return showAlert("La fecha de la clase no puede ser anterior al día actual.", "warning");
+        }
 
-        // Armar DateTime completos
         const horaInicioDate = new Date(`${fecha}T${horaInicio}`);
         const horaFinDate = new Date(`${fecha}T${horaFin}`);
 
-        if (horaFinDate <= horaInicioDate) {
-            resultDiv.textContent = "❌ La hora de fin debe ser mayor que la hora de inicio.";
-            resultDiv.style.color = "red";
-            return;
+        // ⏰ Validar que la hora de fin sea al menos 1 hora después
+        const diferenciaHoras = (horaFinDate - horaInicioDate) / (1000 * 60 * 60); // diferencia en horas
+        if (diferenciaHoras < 1) {
+            return showAlert("La hora de fin debe ser al menos 1 hora después de la hora de inicio.", "warning");
+        }
+
+
+        if (horaInicio < "07:00" || horaFin > "21:00") {
+            return showAlert("Los horarios deben estar entre las 07:00 y las 21:00.", "warning");
         }
 
         const claseData = {
-            Nombre: formData.get("nombre"),
+            Nombre: nombre,
             HoraInicio: horaInicioDate.toISOString(),
             HoraFin: horaFinDate.toISOString(),
             Cupo: cupo,
@@ -82,16 +139,13 @@ async function initClassForm() {
             EntrenadorId: parseInt(formData.get("entrenadorId"))
         };
 
-
         try {
             const nuevaClase = await ClassAPI.create(claseData);
-            resultDiv.textContent = `✅ Clase "${nuevaClase.nombre}" registrada correctamente.`;
-            resultDiv.style.color = "green";
+            showSuccess(`✅ Clase "${nuevaClase.nombre}" registrada correctamente.`);
             form.reset();
         } catch (err) {
             console.error("Error registrando clase:", err);
-            resultDiv.textContent = `❌ Error al registrar la clase: ${err.message || err}`;
-            resultDiv.style.color = "red";
+            showError(`Error al registrar la clase: ${err.message || err}`);
         }
     });
 }

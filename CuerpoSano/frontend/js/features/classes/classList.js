@@ -6,16 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setupModals();
 });
 
-// ---------- Referencias ----------
-const deleteModal = document.getElementById("deleteModal");
-const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
-const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
-const closeDeleteBtn = document.querySelector(".closeDeleteModal");
-
-const miembrosModal = document.getElementById("miembrosModal");
-const miembrosModalBody = document.getElementById("miembrosModalBody");
-const closeMiembrosModalBtn = document.querySelector(".closeMiembrosModal");
-
 let classIdToDelete = null;
 
 // ---------- Cargar listado de clases ----------
@@ -65,11 +55,14 @@ async function loadClasses() {
             tableBody.appendChild(row);
         });
 
-        // Asignar eventos a botones
+        // Asignar eventos
         document.querySelectorAll(".btn-delete").forEach(btn => {
             btn.addEventListener("click", e => {
-                classIdToDelete = e.target.dataset.id;
-                deleteModal.classList.remove("hidden"); // ✅ Mostrar modal centrado
+                const id = e.target.dataset.id;
+                showConfirmDelete(
+                    "¿Seguro que deseas eliminar esta clase? Esta acción no se puede deshacer.",
+                    async () => await eliminarClase(id)
+                );
             });
         });
 
@@ -87,18 +80,28 @@ async function loadClasses() {
             }
         });
 
-
-
     } catch (err) {
         console.error(err);
-        tableBody.innerHTML = `<tr><td colspan="8" style="color:red;">❌ Error al cargar clases: ${err.message}</td></tr>`;
+        showError("Error al cargar las clases: " + err.message);
     }
 }
 
-// ---------- Configuración modales ----------
+// ---------- Eliminar clase ----------
+async function eliminarClase(classId) {
+    try {
+        await ClassAPI.delete(classId);
+        showSuccess("Clase eliminada correctamente.");
+        loadClasses();
+    } catch (err) {
+        console.error(err);
+        showError("No se pudo eliminar la clase: " + err.message);
+    }
+}
 
-// ---------- Mostrar modal de miembros ----------
+// ---------- Mostrar miembros ----------
 async function showMiembrosModal(classId) {
+    const miembrosModal = document.getElementById("miembrosModal");
+    const miembrosModalBody = document.getElementById("miembrosModalBody");
     miembrosModalBody.innerHTML = "<p>Cargando miembros...</p>";
     miembrosModal.classList.remove("hidden");
 
@@ -143,118 +146,180 @@ async function showMiembrosModal(classId) {
 
     } catch (err) {
         console.error(err);
-        miembrosModalBody.innerHTML = `<p style="color:red;">❌ Error al obtener miembros: ${err.message}</p>`;
+        showError("Error al obtener los miembros: " + err.message);
     }
 }
 
+// ---------- Modal de asistencia ----------
 async function abrirModalAsistencia(claseId) {
-    const modal = document.getElementById("attendanceModal");
-    const lista = document.getElementById("attendanceMiembrosList");
-    const claseNombre = document.getElementById("attendanceClaseNombre");
-    const entrenadorNombre = document.getElementById("attendanceEntrenadorNombre");
+    try {
+        // Traemos datos de la clase y sus miembros
+        const clase = await ClassAPI.getById(claseId);
+        const miembros = await ClassAPI.getMiembros(claseId);
 
-    // ✅ Usamos ClassAPI
-    const clase = await ClassAPI.getById(claseId);
-    const miembros = await ClassAPI.getMiembros(claseId);
+        if (!miembros || miembros.length === 0) {
+            showAlert("No hay miembros inscriptos en esta clase.", "info", "Sin inscriptos");
+            return;
+        }
 
-    claseNombre.textContent = clase.nombre;
-    entrenadorNombre.textContent = clase.entrenadorNombre || "No asignado";
+        // Traemos asistencias previas (si existen)
+        let asistenciasPrevias = null;
+        try {
+            asistenciasPrevias = await ClassAPI.getAsistencias(claseId);
+        } catch (e) {
+            console.warn("No se encontraron asistencias previas o hubo un error al obtenerlas.");
+        }
 
-    lista.innerHTML = "";
-    miembros.forEach(m => {
-        const div = document.createElement("div");
-        div.innerHTML = `
-      <label>
-        Nombre: ${m.nombre} - DNI: ${m.dni}
-        <input type="checkbox" class="check-miembro" data-miembro-id="${m.id}">
-      </label>
-    `;
-        lista.appendChild(div);
-    });
+        // Mapeamos asistencias previas por miembroId para marcar los checkboxes
+        const asistenciaMap = new Map();
+        if (asistenciasPrevias && asistenciasPrevias.miembros) {
+            asistenciasPrevias.miembros.forEach(a => {
+                asistenciaMap.set(a.miembroId, a.asistio);
+            });
+        }
 
-    modal.classList.remove("hidden");
+        const entrenadorAsistioPrevio =
+            asistenciasPrevias?.entrenador?.asistio || false;
 
-    // Guardar y cancelar
-    document.getElementById("btnGuardarAsistencia").onclick = async () => {
-        await guardarAsistencia(claseId, clase.entrenadorId);
-    };
-    document.getElementById("btnCancelarAsistencia").onclick = () => {
-        modal.classList.add("hidden");
-    };
-}
+        // ====== HTML del modal ======
+        const html = `
+            <div class="asistencia-card">
+                <div class="asistencia-header">
+                    <h3>${clase.nombre}</h3>
+                    <p><span class="label">Entrenador:</span> ${clase.entrenadorNombre || "No asignado"}</p>
+                </div>
 
-async function guardarAsistencia(claseId, entrenadorId) {
-    const miembrosChecks = document.querySelectorAll(".check-miembro");
-    const entrenadorCheck = document.getElementById("entrenadorAsistio").checked;
+                <div class="asistencia-miembros">
+                    <div class="miembros-header">
+                        <div class="col-check"></div>
+                        <div class="col-nombre">Miembro</div>
+                        <div class="col-dni">DNI</div>
+                    </div>
 
-    // Registrar asistencias de miembros
-    for (const chk of miembrosChecks) {
-        const miembroId = chk.dataset.miembroId;
-        const asistio = chk.checked;
-        await ClassAPI.registrarAsistenciaMiembro(claseId, miembroId, asistio);
-    }
+                     ${miembros.map(m => {
+                         const asistioPrevio = asistenciaMap.get(m.id);
+                         const checked = asistioPrevio ? "checked" : "";
+                         const disabled = asistioPrevio ? "disabled" : "";
+                         const itemClass = asistioPrevio ? "miembro-item asistio-previo" : "miembro-item";
 
-    // Registrar asistencia del entrenador
-    if (entrenadorId) {
-        await ClassAPI.registrarAsistenciaEntrenador(claseId, entrenadorId, entrenadorCheck);
-    }
+                         return `
+                            <div class="${itemClass}">
+                                <div class="col-check">
+                                    <input type="checkbox" class="check-miembro" data-id="${m.id}" ${checked} ${disabled}>
+                                </div>
+                                <div class="col-nombre">${m.nombre}</div>
+                                <div class="col-dni">${m.dni}</div>
+                            </div>
+                        `;
+                     }).join("")}
+                </div>
 
-    // Marcar inasistencias restantes
-    await ClassAPI.registrarInasistenciasPendientes(claseId);
+               <div class="asistencia-footer">
+                  <label class="entrenador-check ${entrenadorAsistioPrevio ? "asistio-previo" : ""}">
+                    <input 
+                      type="checkbox" 
+                      id="entrenadorAsistio" 
+                      ${entrenadorAsistioPrevio ? "checked disabled" : ""}
+                    >
+                    Entrenador asistió
+                  </label>
+                </div>
+            </div>
+        `;
 
-    alert("✅ Asistencia registrada correctamente");
-    document.getElementById("attendanceModal").classList.add("hidden");
-}
+        // ====== Modal principal ======
+        Swal.fire({
+            title: "Tomar asistencia",
+            html: html,
+            background: "#f9fafb",
+            color: "#333",
+            width: 700,
+            showCancelButton: true,
+            confirmButtonText: "Guardar",
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: "#1976d2",
+            cancelButtonColor: "#9e9e9e",
+            preConfirm: async () => {
+                const checks = document.querySelectorAll(".check-miembro");
+                const entrenadorCheck = document.getElementById("entrenadorAsistio");
 
+                // Recolectar asistencias
+                const asistencias = Array.from(checks).map(chk => ({
+                    miembroId: chk.dataset.id,
+                    asistio: chk.checked
+                }));
 
+                // 🔹 Confirmación adicional antes de enviar
+                return new Promise((resolve) => {
+                    showConfirm(
+                        "¿Deseás guardar la asistencia con los datos seleccionados? Se sobrescribirán los registros previos.",
+                        async () => {
+                            try {
+                                // Guardar asistencias de miembros
+                                for (const a of asistencias) {
+                                    await ClassAPI.registrarAsistenciaMiembro(
+                                        claseId,
+                                        a.miembroId,
+                                        a.asistio
+                                    );
+                                }
 
+                                // Guardar asistencia del entrenador
+                                if (clase.entrenadorId) {
+                                    await ClassAPI.registrarAsistenciaEntrenador(
+                                        claseId,
+                                        clase.entrenadorId,
+                                        entrenadorCheck.checked
+                                    );
+                                }
 
-function setupModals() {
-    // Modal de eliminación
-    if (deleteModal && closeDeleteBtn && cancelDeleteBtn) {
-        closeDeleteBtn.addEventListener("click", closeDeleteModal);
-        cancelDeleteBtn.addEventListener("click", closeDeleteModal);
-    }
+                                // Registrar inasistencias faltantes
+                                await ClassAPI.registrarInasistenciasPendientes(claseId);
 
-    if (confirmDeleteBtn) {
-        confirmDeleteBtn.addEventListener("click", async () => {
-            if (!classIdToDelete) return;
-            try {
-                await ClassAPI.delete(classIdToDelete);
-                alert("✅ Clase eliminada correctamente.");
-                closeDeleteModal();
-                loadClasses();
-            } catch (err) {
-                console.error(err);
-                alert("❌ Error al eliminar clase: " + err.message);
+                                showSuccess("✅ Asistencia registrada y actualizada correctamente.");
+                                resolve(true);
+                            } catch (err) {
+                                console.error(err);
+                                showError("Error al guardar la asistencia: " + err.message);
+                                resolve(false);
+                            }
+                        },
+                        "Confirmar registro"
+                    );
+                });
+            }
+        }).then(result => {
+            if (result.isConfirmed) {
+                showSuccess("Asistencia registrada correctamente.");
             }
         });
+    } catch (err) {
+        console.error(err);
+        showError("No se pudo registrar la asistencia: " + err.message);
     }
+}
 
-    // Modal de miembros
+
+// ---------- Setup básico ----------
+function setupModals() {
+    const closeMiembrosModalBtn = document.querySelector(".closeMiembrosModal");
+    const miembrosModal = document.getElementById("miembrosModal");
+
     if (miembrosModal && closeMiembrosModalBtn) {
         closeMiembrosModalBtn.addEventListener("click", () => {
             miembrosModal.classList.add("hidden");
         });
     }
 
-    // Cerrar modales al hacer clic fuera
     window.addEventListener("click", (e) => {
-        if (e.target === deleteModal) closeDeleteModal();
         if (e.target === miembrosModal) miembrosModal.classList.add("hidden");
     });
-}
-
-// Cerrar modal
-function closeDeleteModal() {
-    deleteModal.classList.add("hidden");
-    classIdToDelete = null;
 }
 
 // ---------- Botón de impresión ----------
 const printBtn = document.getElementById("btnPrint");
 if (printBtn) {
     printBtn.addEventListener("click", () => {
-        window.print(); // 🖨️ abre el diálogo de impresión del navegador
+        window.print();
     });
 }

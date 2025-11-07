@@ -9,6 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
 function trainerRegistration() {
     const form = document.getElementById("trainerForm");
 
+    const fechaInput = document.getElementById("fechaNacimiento");
+    const hoy = new Date();
+    const min = new Date("1915-01-01");
+    const max = new Date("2015-12-31");
+    fechaInput.min = min.toISOString().split("T")[0];
+    fechaInput.max = max.toISOString().split("T")[0];
+
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -19,6 +26,11 @@ function trainerRegistration() {
             telefono: form.telefono.value.trim(),
             fechaNacimiento: form.fechaNacimiento.value
         };
+
+        // Validar en tiempo real los campos
+        document.querySelectorAll("#trainerForm input").forEach(input => {
+            input.addEventListener("input", () => input.reportValidity());
+        });
 
         // --- Validaciones ---
         if (!trainerData.nombre || !trainerData.dni || !trainerData.direccion || !trainerData.telefono || !trainerData.fechaNacimiento) {
