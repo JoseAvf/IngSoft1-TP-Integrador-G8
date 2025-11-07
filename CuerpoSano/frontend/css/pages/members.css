@@ -16,6 +16,7 @@ main {
     max-width: 700px;
     width: 100%;
     margin-bottom: 10px;
+    position: relative;
 }
 
     .form-section h2 {
@@ -766,3 +767,107 @@ main {
         .payment-buttons .btn-cancel:hover {
             background-color: #c0392b;
         }
+
+        /* ===== Estilos adicionales para el resumen de pago ===== */
+.summary-box {
+    position: relative; /* permite organizar contenido interno */
+}
+
+    .summary-box .total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        gap: 12px;
+    }
+
+        .summary-box .total-row p {
+            margin: 0;
+            font-size: 1rem;
+            flex: 1;
+        }
+
+/* 🔹 Botón de pagar */
+.btnPagar, .btn-pagar {
+    background-color: #5193cf;
+    color: #fff;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* evita salto de línea */
+}
+
+    .btnPagar:hover, .btn-pagar:hover {
+        background-color: #1259a7;
+    }
+
+/* 🔹 Mensaje dinámico de pago */
+.payment-message {
+    text-align: center;
+    color: #1976d2;
+    font-weight: 500;
+    margin-top: 10px;
+    transition: opacity 0.3s ease;
+}
+
+    .payment-message.hidden {
+        display: none;
+    }
+
+    .payment-message.success {
+        color: #28a745;
+    }
+/* 🔹 Checkbox "Estudiante"  */
+.estudiante-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    margin-left: 250px;
+}
+
+.checkbox-label {
+    font-weight: 500;
+    color: #333;
+    margin: 0;
+}
+.checkbox-inline {
+    margin: 0;
+    transform: translateY(3px);
+}
+
+/* =========================================================
+   Alinear botón "Elegir Membresía" junto al campo de seleccion
+   ========================================================= */
+.membership-select {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* espacio entre input y botón */
+    margin-top: 10px;
+}
+
+    .membership-select input[type="text"] {
+        flex: 1; /* el input ocupa el resto del ancho disponible */
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+    }
+
+#btnSelectMembership {
+    background-color: #5193cf;
+    color: #fff;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+    #btnSelectMembership:hover {
+        background-color: #0056b3;
+    }

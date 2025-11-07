@@ -39,11 +39,13 @@
                     <label>Correo electrónico:</label>
                     <input type="email" name="correo" required>
                     <label>Fecha de nacimiento:</label>
-                    <input type="date" name="fechaNacimiento" required>
-                    <label>
-                        <input type="checkbox" name="esEstudiante">
-                        Estudiante
-                    </label>
+
+                    <input type="date" name="fechaNacimiento" id=fechaNacimiento required min=" 1925-01-01" max=" 2007-01-01">
+
+                        <div class="estudiante-inline">
+                            <label for=" esEstudiante" class="checkbox-label">Estudiante</label>
+                            <input type="checkbox" name="esEstudiante" id=" esEstudiante" class=" checkbox-inline">
+                        </div>
                 </fieldset>
 
                 <fieldset>
@@ -56,12 +58,14 @@
                     <div id="membershipSummary" class="summary-box">
                         <p>💰 Costo base: <span id="costoBase">-</span></p>
                         <p>🎓 Descuento aplicado: <span id="descuento">%0</span></p>
-                        <p><strong>Total a pagar: <span id="totalPagar">-</span></strong></p>
+
+                        <div class=" total-row">
+                            <p><strong>Total a pagar: <span id="totalPagar">-</span></strong></p>
+                            <button type="button" id="btnPagar" class=" btnPagar"> Realizar Pago </button>
+                        </div>
                     </div>
+                           <p id="paymentMessage" class="payment-message hidden"> </p>
                 </fieldset>
-                <div id="btnPagarContainer" class="hidden">
-                    <button type="button" id="btnPagar" class="btn-pagar">💳 Realizar Pago</button>
-                </div>
 
                 <!-- 🔹 Botón de crear miembro -->
                 <button type="submit" id="btnCrear" disabled>Registrar Miembro</button>
