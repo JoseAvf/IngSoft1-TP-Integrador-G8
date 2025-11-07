@@ -6,8 +6,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputDni = document.getElementById("memberDni");
     const memberDataDiv = document.getElementById("membershipData");
 
-    // Modales originales eliminados (ya no se usan modales HTML)
+    // Modal y formulario de edición
+    const modal = document.getElementById("editMembershipModal");
+    const form = document.getElementById("editMembershipForm");
+    const selectTipo = document.getElementById("editMembershipTipo");
+    const checkboxEstudiante = document.getElementById("editMembershipEstudiante");
+    const btnCancel = document.getElementById("btnCancelMembershipEdit");
+
+    // Modales nuevos
+    const modalPause = document.getElementById("pauseMembershipModal");
+    const modalUnpause = document.getElementById("unpauseMembershipModal");
+    const btnConfirmPause = document.getElementById("btnConfirmPause");
+    const btnCancelPause = document.getElementById("btnCancelPause");
+    const btnConfirmUnpause = document.getElementById("btnConfirmUnpause");
+    const btnCancelUnpause = document.getElementById("btnCancelUnpause");
+
     let currentMembership = null;
+
+    function showToast(message = "Actualizado con éxito ✅") {
+        toast.textContent = message;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3000);
+    }
 
     const MEMBERSHIP_OPTIONS = [
         { tipo: "Diaria" },
@@ -16,27 +36,36 @@ document.addEventListener("DOMContentLoaded", () => {
         { tipo: "Anual" }
     ];
 
+    function showToast(message = "Actualizado con éxito ✅") {
+        toast.textContent = message;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3000);
+    }
+
+
     btnSearch.addEventListener("click", async () => {
         const dni = inputDni.value.trim();
         if (!dni) {
-            showAlert("Ingrese un DNI válido.", "warning");
+            alert("Ingrese un DNI válido");
             return;
         }
 
         try {
             const member = await MembersAPI.getByDni(dni);
+            console.log(member);
             if (!member) {
-                showError("No se encontró ningún miembro con ese DNI. Regístrelo primero.");
+                alert("❌ No se encontró ningún miembro con ese DNI. Por favor registre al miembro primero.");
                 return;
             }
-
             const membership = await MembershipsAPI.getById(member.membresiaId);
             currentMembership = membership;
+
+
             displayMembership(membership);
 
         } catch (error) {
             console.error(error);
-            memberDataDiv.innerHTML = `<p style="color:red;text-align:center">El miembro con DNI: ${dni} no tiene una membresía asociada.</p>`;
+            memberDataDiv.innerHTML = `<p style="color:red;">No se encontró el miembro con DNI ${dni}</p>`;
             memberDataDiv.classList.remove("hidden");
         }
     });
@@ -50,17 +79,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function displayMembership(membership) {
         const container = memberDataDiv;
+
         container.classList.remove("hidden");
 
         container.innerHTML = `
         <h3>Información de la membresía de ${membership.nombre || "-"}</h3>
+
+        <!-- Datos de la membresía -->
         <section class="membership-section membership-info">
             <div class="membership-section-header">
                 <h4>💳 Membresía</h4>
-                <div class="btns-container">
-                    <button id="btnPauseMembership" class="btn-edit btn-pause">⏸️ Pausar</button>
-                    <button id="btnUnpauseMembership" class="btn-edit btn-unpause">▶️ Reanudar</button>
-                </div>
+                <button id="btnEditMembership" class="btn-edit">✏️ Editar</button>
+                 <button id="btnPauseMembership" class="btn-edit btn-pause">⏸️ Pausar</button>
+                 <button id="btnUnpauseMembership" class="btn-edit btn-unpause">▶️ Despausar</button>
             </div>
             <p><strong>ID:</strong> ${membership.id || "-"}</p>
             <p><strong>Tipo:</strong> ${membership.tipo || "No asignada"}</p>
@@ -71,6 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <p><strong>Fecha de Fin de Pausa:</strong> ${formatDate(membership.fechaPausaFin)}</p>
         </section>
 
+        <!-- Datos personales -->
         <section class="membership-section personal-info">
             <h4>🧑 Datos Personales del miembro</h4>
             <p><strong>ID:</strong> ${membership.idMiembro || "-"}</p>
@@ -80,41 +112,102 @@ document.addEventListener("DOMContentLoaded", () => {
             <p><strong>Correo:</strong> ${membership.correo || "-"}</p>
             <p><strong>Fecha de Nacimiento:</strong> ${formatDate(membership.fechaNacimiento)}</p>
         </section>
-        `;
+    `;
+
+        // Botón editar membresía
+        const btnEdit = document.getElementById("btnEditMembership");
+        btnEdit.addEventListener("click", () => {
+            // Llenar select con opciones
+            selectTipo.innerHTML = MEMBERSHIP_OPTIONS.map(opt => `
+                <option value="${opt.tipo}" ${membership.tipo === opt.tipo ? "selected" : ""}>${opt.tipo}</option>
+            `).join("");
+
+            checkboxEstudiante.checked = membership.esEstudiante || false;
+            modal.classList.remove("hidden"); // ✅ mostrar modal
+
+        });
 
         // Botón pausar
         document.getElementById("btnPauseMembership").addEventListener("click", () => {
-            showConfirm("¿Deseas pausar esta membresía?", async () => {
-                try {
-                    const inicioPausa = new Date().toISOString();
-                    await MembershipsAPI.pause(currentMembership.id, inicioPausa);
-                    const refreshed = await MembershipsAPI.getById(currentMembership.id);
-                    currentMembership = refreshed;
-                    displayMembership(refreshed);
-                    showSuccess("Membresía pausada correctamente ✅");
-                } catch (err) {
-                    console.error(err);
-                    showError("Error al pausar la membresía.");
-                }
-            }, "Pausando membresía..");
+            modalPause.classList.remove("hidden");
         });
-
 
         // Botón despausar
         document.getElementById("btnUnpauseMembership").addEventListener("click", () => {
-            showConfirm("¿Deseas reanudar esta membresía?", async () => {
-                try {
-                    await MembershipsAPI.unpause(currentMembership.id);
-                    const refreshed = await MembershipsAPI.getById(currentMembership.id);
-                    currentMembership = refreshed;
-                    displayMembership(refreshed);
-                    showSuccess("Membresía reanudada correctamente ✅");
-                } catch (err) {
-                    console.error(err);
-                    showError("Error al reanudar la membresía.");
-                }
-            }, "Reanudando membresía..");
+            modalUnpause.classList.remove("hidden");
         });
-
     }
+
+    // Cancelar edición
+    btnCancel.addEventListener("click", () => {
+        modal.classList.add("hidden"); // ✅ ocultar modal
+    });
+
+    // Guardar cambios
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!currentMembership) return;
+
+        const updatedData = {
+            tipo: selectTipo.value,
+            esEstudiante: checkboxEstudiante.checked
+        };
+
+        try {
+            await MembershipsAPI.update(currentMembership.id, updatedData);
+            modal.classList.add("hidden"); // ✅ ocultar modal
+
+            // Traer la membresía completa actualizada
+            const refreshedMembership = await MembershipsAPI.getById(currentMembership.id);
+
+            // Actualizar currentMembership
+            currentMembership = refreshedMembership;
+
+            // Volver a mostrarla en pantalla
+            displayMembership(currentMembership);
+
+            modal.classList.add("hidden"); // ocultar modal
+            showToast("Membresía actualizada ✅");
+        } catch (err) {
+            console.error(err);
+            alert("Error al actualizar la membresía");
+        }
+    });
+
+    // === Confirmar pausa ===
+    btnConfirmPause.addEventListener("click", async () => {
+        try {
+            const inicioPausa = new Date().toISOString();
+            await MembershipsAPI.pause(currentMembership.id, inicioPausa);
+            modalPause.classList.add("hidden");
+
+            const refreshed = await MembershipsAPI.getById(currentMembership.id);
+            currentMembership = refreshed;
+            displayMembership(refreshed);
+            showToast("Membresía pausada ✅");
+        } catch (err) {
+            console.error(err);
+            alert("Error al pausar membresía");
+        }
+    });
+
+    btnCancelPause.addEventListener("click", () => modalPause.classList.add("hidden"));
+
+    // === Confirmar despausa ===
+    btnConfirmUnpause.addEventListener("click", async () => {
+        try {
+            await MembershipsAPI.unpause(currentMembership.id);
+            modalUnpause.classList.add("hidden");
+
+            const refreshed = await MembershipsAPI.getById(currentMembership.id);
+            currentMembership = refreshed;
+            displayMembership(refreshed);
+            showToast("Membresía despausada ✅");
+        } catch (err) {
+            console.error(err);
+            alert("Error al despausar membresía");
+        }
+    });
+
+    btnCancelUnpause.addEventListener("click", () => modalUnpause.classList.add("hidden"));
 });

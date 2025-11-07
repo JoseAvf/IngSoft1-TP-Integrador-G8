@@ -72,7 +72,7 @@ async function showMembersModal(trainerId) {
         const miembrosArray = Array.isArray(miembros) ? miembros : [];
 
         if (miembrosArray.length === 0) {
-            membersModalBody.innerHTML = `<p style="text-align: center;">No hay miembros asignados a este entrenador.</p>`;
+            membersModalBody.innerHTML = `<p>No hay miembros asignados a este entrenador.</p>`;
         } else {
             let html = `
                 <div class="table-wrapper">
@@ -125,7 +125,7 @@ async function showClassesModal(trainerId) {
         const trainer = await TrainerAPI.getById(trainerId);
 
         if (!trainer || !trainer.clases || trainer.clases.length === 0) {
-            classesModalBody.innerHTML = `<p style="text-align: center;">No hay clases asignadas a este entrenador.</p>`;
+            classesModalBody.innerHTML = `<p>No hay clases asignadas a este entrenador.</p>`;
         } else {
             let html = `
                 <div class="table-wrapper">

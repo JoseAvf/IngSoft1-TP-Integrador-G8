@@ -1,12 +1,37 @@
 ﻿import { ClassAPI } from "../../api/classes.js";
 import { MembersAPI } from "../../api/members.js";
 
+
 document.addEventListener("DOMContentLoaded", () => {
     const btnSearch = document.getElementById("btnSearch");
     const inputId = document.getElementById("classId");
     const classDataDiv = document.getElementById("classData");
 
+    const toast = document.getElementById("toast"); // Si querés usar toast
+
+    // Modal y formulario de edición
+    const modal = document.getElementById("editClassModal");
+    const form = document.getElementById("editClassForm");
+    const inputNombre = document.getElementById("editNombre");
+    const inputFechaClase = document.getElementById("editFechaClase");
+    const inputHoraInicio = document.getElementById("editHoraInicio");
+    const inputHoraFin = document.getElementById("editHoraFin");
+    const inputCupo = document.getElementById("editCupo");
+    const btnCancel = document.getElementById("btnCancelClassEdit");
+
+    // Modal de inscripción
+    const enrollModal = document.getElementById("enrollMemberModal");
+    const selectMember = document.getElementById("selectMember");
+    const btnConfirmEnroll = document.getElementById("btnConfirmEnroll");
+    const btnCancelEnroll = document.getElementById("btnCancelEnroll");
+
     let currentClass = null;
+
+    function showToast(message = "Actualizado con éxito ✅") {
+        toast.textContent = message;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3000);
+    }
 
     function formatDateTime(dateString) {
         if (!dateString) return "-";
@@ -18,16 +43,16 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Buscar clase
     btnSearch.addEventListener("click", async () => {
         const id = parseInt(inputId.value.trim());
         if (!id || isNaN(id)) {
-            showAlert("Ingrese un ID válido.", "warning", "Dato inválido");
+            alert("Ingrese un ID válido");
             return;
         }
 
         try {
             const clase = await ClassAPI.getById(id);
+            console.log(clase);
             displayClass(clase);
         } catch (error) {
             console.error(error);
@@ -36,15 +61,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Mostrar clase
     function displayClass(clase) {
         currentClass = clase;
+
         classDataDiv.classList.remove("hidden");
 
         classDataDiv.innerHTML = `
             <h3>Información de la Clase: ${clase.nombre || "-"}</h3>
 
-            <section class="class-section class-info">
+             <section class="class-section class-info">
                 <div class="class-section-header">
                     <h4>📋 Detalles de la Clase</h4>
                     <button id="btnEditClass" class="btn-edit">✏️ Editar</button>
@@ -68,8 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p><strong>ID:</strong> ${clase.entrenadorId || "-"}</p>
                 <p><strong>Nombre:</strong> ${clase.entrenadorNombre || "No asignado"}</p>
             </section>
-
-            <section class="class-section inscritos-info">
+             <section class="class-section inscritos-info">
                 <div class="class-section-header">
                     <h4>👥 Inscriptos</h4>
                     <button id="btnEnrollMember" class="btn-edit">➕ Inscribir Miembro</button>
@@ -78,179 +102,96 @@ document.addEventListener("DOMContentLoaded", () => {
             </section>
         `;
 
-        // === Botón editar clase ===
-        document.getElementById("btnEditClass").addEventListener("click", () => {
-            showEditClassModal(clase);
+        // Abrir modal al hacer click en Editar
+        const btnEdit = document.getElementById("btnEditClass");
+        btnEdit.addEventListener("click", () => {
+            inputNombre.value = clase.nombre || "";
+            const inicio = new Date(clase.horaInicio);
+            const fin = new Date(clase.horaFin);
+            inputFechaClase.value = inicio.toISOString().split("T")[0];
+            inputHoraInicio.value = inicio.toTimeString().slice(0, 5);
+            inputHoraFin.value = fin.toTimeString().slice(0, 5);
+            inputCupo.value = clase.cupo || 1;
+
+            modal.classList.remove("hidden");
         });
 
-        // === Botón inscribir miembro ===
-        document.getElementById("btnEnrollMember").addEventListener("click", () => {
-            showEnrollModal();
-        });
-    }
+        // Botón de inscribir miembro
+        const btnEnroll = document.getElementById("btnEnrollMember");
+        btnEnroll.addEventListener("click", async () => {
+            try {
+                // Traer miembros disponibles
+                const members = await MembersAPI.getAll();
+                selectMember.innerHTML = members.map(m => `
+                    <option value="${m.id}">${m.nombre} (${m.dni})</option>
+                `).join("");
 
-    // ====== MODAL: EDITAR CLASE ======
-    function showEditClassModal(clase) {
-        const inicio = new Date(clase.horaInicio);
-        const fin = new Date(clase.horaFin);
-
-        Swal.fire({
-            title: "✏️ Editar Clase",
-            html: `
-            <div style="
-                display: flex !important;
-                flex-direction: column; 
-                gap: 18px; 
-                margin-top: 8px;
-                padding: 10px 5px;
-                
-            ">
-                <div>
-                    <label style="display:flex;font-weight:600;margin-bottom:6px;color:#374151;font-size:0.95rem; text-align: center;">Nombre de la clase</label>
-                    <input id="swal-nombre" class="swal2-input" 
-                           placeholder="Ej: Funcional Avanzado" 
-                           value="${clase.nombre || ""}" 
-                           style="width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:0.95rem;">
-                </div>
-
-                <div>
-                    <label style="display:flex;font-weight:600;margin-bottom:6px;color:#374151;font-size:0.95rem;">Fecha</label>
-                    <input id="swal-fecha" type="date" class="swal2-input" 
-                           value="${inicio.toISOString().split("T")[0]}"
-                           style="width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:0.95rem;">
-                </div>
-
-                <div style="display:flex;gap:16px;">
-                    <div style="flex:1;">
-                        <label style="display:flex;font-weight:600;margin-bottom:6px;color:#374151;font-size:0.95rem;">Hora inicio</label>
-                        <input id="swal-horaInicio" type="time" class="swal2-input"
-                               value="${inicio.toTimeString().slice(0, 5)}"
-                               style="width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:0.95rem;">
-                    </div>
-                    <div style="flex:1;">
-                        <label style="display:flex;font-weight:600;margin-bottom:6px;color:#374151;font-size:0.95rem;">Hora fin</label>
-                        <input id="swal-horaFin" type="time" class="swal2-input"
-                               value="${fin.toTimeString().slice(0, 5)}"
-                               style="width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:0.95rem;">
-                    </div>
-                </div>
-
-                <div>
-                    <label style="display:flex;font-weight:600;margin-bottom:6px;color:#374151;font-size:0.95rem;">Cupo máximo</label>
-                    <input id="swal-cupo" type="number" class="swal2-input" min="1" 
-                           value="${clase.cupo || 1}"
-                           style="width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:0.95rem;">
-                </div>
-            </div>
-        `,
-            confirmButtonText: "💾 Guardar cambios",
-            cancelButtonText: "Cancelar",
-            showCancelButton: true,
-            confirmButtonColor: "#1976d2",
-            cancelButtonColor: "#9e9e9e",
-            background: "#ffffff",
-            color: "#333",
-            width: "375px", // 🟦 Más ancho, mejora la proporción visual
-            customClass: {
-                popup: "shadow-xl rounded-2xl",
-                title: "text-lg font-semibold text-gray-800",
-                confirmButton: "text-white font-medium py-2 px-4 rounded-lg",
-                cancelButton: "font-medium py-2 px-4 rounded-lg"
-            },
-            focusConfirm: false,
-            preConfirm: () => {
-                const nombre = document.getElementById("swal-nombre").value.trim();
-                const fecha = document.getElementById("swal-fecha").value;
-                const horaInicio = document.getElementById("swal-horaInicio").value;
-                const horaFin = document.getElementById("swal-horaFin").value;
-                const cupo = parseInt(document.getElementById("swal-cupo").value);
-
-                if (!nombre || !fecha || !horaInicio || !horaFin || !cupo) {
-                    Swal.showValidationMessage("⚠️ Complete todos los campos antes de guardar");
-                    return false;
-                }
-
-                return { nombre, fecha, horaInicio, horaFin, cupo };
-            }
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                const { nombre, fecha, horaInicio, horaFin, cupo } = result.value;
-
-                const horaInicioISO = new Date(`${fecha}T${horaInicio}:00`).toISOString();
-                const horaFinISO = new Date(`${fecha}T${horaFin}:00`).toISOString();
-
-                const updatedData = {
-                    nombre,
-                    horaInicio: horaInicioISO,
-                    horaFin: horaFinISO,
-                    cupo
-                };
-
-                try {
-                    await ClassAPI.update(clase.id, updatedData);
-                    currentClass = { ...clase, ...updatedData };
-                    displayClass(currentClass);
-                    showSuccess("Clase actualizada correctamente ✅");
-                } catch (err) {
-                    console.error(err);
-                    showError("Error al actualizar la clase.");
-                }
+                enrollModal.classList.remove("hidden");
+            } catch (err) {
+                console.error(err);
+                alert("Error al cargar miembros");
             }
         });
     }
 
-    // ====== MODAL: INSCRIBIR MIEMBRO ======
-    async function showEnrollModal() {
+    // Cancelar edición
+    btnCancel.addEventListener("click", () => {
+        modal.classList.add("hidden");
+    });
+
+    // Guardar cambios
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!currentClass) return;
+
+        // Armar los DateTime completos
+        const horaInicioISO = new Date(`${inputFechaClase.value}T${inputHoraInicio.value}:00`).toISOString();
+        const horaFinISO = new Date(`${inputFechaClase.value}T${inputHoraFin.value}:00`).toISOString();
+
+        const updatedData = {
+            nombre: inputNombre.value,
+            horaInicio: horaInicioISO,
+            horaFin: horaFinISO,
+            cupo: parseInt(inputCupo.value)
+        };
+
         try {
-            const members = await MembersAPI.getAll();
-            if (!members.length) {
-                showAlert("No hay miembros disponibles para inscribir.", "info");
-                return;
-            }
+            await ClassAPI.update(currentClass.id, updatedData);
+            modal.classList.add("hidden");
+            currentClass = { ...currentClass, ...updatedData };
 
-            const optionsHTML = members
-                .map(m => `<option value="${m.id}">${m.nombre} (${m.dni})</option>`)
-                .join("");
-
-            Swal.fire({
-                title: "➕ Inscribir Miembro",
-                html: `
-                    <select id="swal-member" class="swal2-select">
-                        ${optionsHTML}
-                    </select>
-                `,
-                confirmButtonText: "Inscribir",
-                showCancelButton: true,
-                cancelButtonText: "Cancelar",
-                confirmButtonColor: "#2e7d32",
-                cancelButtonColor: "#9e9e9e",
-                background: "#f9fafb",
-                color: "#333",
-                preConfirm: () => {
-                    const memberId = parseInt(document.getElementById("swal-member").value);
-                    if (!memberId) {
-                        Swal.showValidationMessage("Seleccione un miembro válido");
-                        return false;
-                    }
-                    return memberId;
-                }
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    const memberId = result.value;
-                    try {
-                        await ClassAPI.inscribirMiembro(currentClass.id, memberId);
-                        currentClass.inscriptosCount = (currentClass.inscriptosCount || 0) + 1;
-                        displayClass(currentClass);
-                        showSuccess("Miembro inscripto correctamente ✅");
-                    } catch (err) {
-                        console.error(err);
-                        showError("Error al inscribir miembro.");
-                    }
-                }
-            });
+            displayClass(currentClass);
+            showToast("Clase actualizada ✅");
         } catch (err) {
             console.error(err);
-            showError("Error al cargar miembros.");
+            alert("Error al actualizar la clase");
         }
-    }
+    });
+
+    // Modal de inscripción: cancelar
+    btnCancelEnroll.addEventListener("click", () => enrollModal.classList.add("hidden"));
+
+    // Confirmar inscripción
+    btnConfirmEnroll.addEventListener("click", async () => {
+        const memberId = parseInt(selectMember.value);
+        if (!memberId) {
+            alert("Seleccione un miembro");
+            return;
+        }
+
+        try {
+            await ClassAPI.inscribirMiembro(currentClass.id, memberId); // POST /{id}/inscribir/{miembroId}
+            enrollModal.classList.add("hidden");
+
+            // Actualizamos la cantidad de inscritos en currentClass
+            currentClass.inscriptosCount = (currentClass.inscriptosCount || 0) + 1;
+
+            displayClass(currentClass);
+            showToast("Miembro inscripto ✅");
+        } catch (err) {
+            console.error(err);
+            enrollModal.classList.add("hidden");
+            alert("Error al inscribir miembro");
+        }
+    });
 });

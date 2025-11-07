@@ -3,13 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CuerpoSano | Registrar Membresías</title>
-    <style>
-        body {
-            display: none;
-        }
-    </style>
-    <script src="../js/auth.js"></script>
+    <title>CuerpoSano | Gestión de Miembros</title>
     <link rel="stylesheet" href="../css/pages/memberships.css" />
     <link rel="stylesheet" href="../css/components/modal.css" />
     <link rel="stylesheet" href="../css/base/style.css" />
@@ -118,11 +112,14 @@
 
     <script type="module" src="../js/features/memberships/membershipRegistration.js"></script>
     <script>
+        // Simulación de sesión
+        const userRole = localStorage.getItem('userRole') || 'Empleado';
+        document.getElementById('userRole').textContent = `👤 ${userRole}`;
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('userRole');
-            showCloseSession('Sesión cerrada correctamente');
-            setTimeout(() => window.location.href = 'login.html', 2000);
+            alert('Sesión cerrada correctamente');
+            window.location.href = 'login.html';
         });
     </script>
 

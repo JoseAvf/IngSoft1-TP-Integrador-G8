@@ -24,7 +24,8 @@ function setupActivityConsult() {
 
         // Validación del ID
         if (isNaN(id) || id <= 0) {
-            showAlert("Ingrese un ID válido.", "warning");
+            resultDiv.innerHTML = `<p style="color:red;">⚠️ ID inválido. Debe ser un número mayor que 0.</p>`;
+            resultDiv.classList.remove("hidden");
             return;
         }
 
@@ -32,145 +33,140 @@ function setupActivityConsult() {
             const activity = await ActivityAPI.getById(id);
 
             if (!activity) {
-                showAlert(`No se encontró ninguna actividad con ID ${id}.`, "warning");
+                resultDiv.innerHTML = `<p style="color:red;">❌ No se encontró ninguna actividad con ID ${id}.</p>`;
+                resultDiv.classList.remove("hidden");
                 return;
             }
 
             currentActivity = activity; // guardamos la actual
-            renderActivity(activity);
+
+            // Contenedor principal
+            let html = `
+                 <div class="activity-header">
+                    <h3>Actividad: ${activity.nombre}</h3>
+                    <button id="btnEditActivity" class="btn-edit">✏️ Editar</button>
+                  </div>
+               <p>Estado:
+                    <span class="activity-status ${activity.activa ? "active" : "inactive"}">
+                      ${activity.activa ? "Activa" : "Inactiva"}
+                    </span>
+                  </p>
+            `;
+
+            if (activity.clases && activity.clases.length > 0) {
+                html += `<div class="activity-section">
+                            <h4>Clases asociadas:</h4>
+                            <div class="table-wrapper">
+                                <table id="activitiesTable">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Hora Inicio</th>
+                                            <th>Hora Fin</th>
+                                            <th>Cupo</th>
+                                            <th>Fecha Creación</th>
+                                            <th>Entrenador</th>
+                                            <th>Inscriptos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                `;
+
+                activity.clases.forEach(clase => {
+
+                    const horaInicio = new Date(clase.horaInicio).toLocaleString('es-AR', {
+                        day: '2-digit', month: '2-digit', year: 'numeric',
+                        hour: '2-digit', minute: '2-digit', hour12: false
+                    });
+                    const horaFin = new Date(clase.horaFin).toLocaleString('es-AR', {
+                        day: '2-digit', month: '2-digit', year: 'numeric',
+                        hour: '2-digit', minute: '2-digit', hour12: false
+                    });
+
+                    html += `
+                        <tr>
+                            <td>${clase.id}</td>
+                            <td>${clase.nombre}</td>
+                            <td>${horaInicio}</td>
+                            <td>${horaFin}</td>
+                            <td>${clase.cupo}</td>
+                            <td>${new Date(clase.fechaCreacion).toLocaleDateString()}</td>
+                            <td>${clase.entrenadorNombre}</td>
+                            <td>${clase.inscriptosCount}</td>
+                        </tr>
+                    `;
+                });
+
+                html += `        </tbody>
+                                </table>
+                            </div>
+                         </div>`;
+            } else {
+                html += `<p>No hay clases asignadas a esta actividad.</p>`;
+            }
+
+            resultDiv.innerHTML = html;
+            resultDiv.classList.remove("hidden");
+
+            // 💡 Evento para abrir el modal
+            document.getElementById("btnEditActivity").addEventListener("click", () => {
+                inputNombre.value = currentActivity.nombre;
+                selectActiva.value = currentActivity.activa ? "true" : "false";
+                modal.classList.remove("hidden");
+            });
+
 
         } catch (err) {
             console.error(err);
-            showError("Error al consultar la actividad. Detalle: " + err.message);
+            resultDiv.innerHTML = `<p style="color:red;">❌ Error al consultar la actividad: ${err.message}</p>`;
+            resultDiv.classList.remove("hidden");
         }
     });
-    // 🧩 Renderizar actividad en pantalla
-    function renderActivity(activity) {
-        let html = `
-            <div class="activity-header">
-                <h3>Actividad: ${activity.nombre}</h3>
-                <button id="btnEditActivity" class="btn-edit">✏️ Editar</button>
-            </div>
-            <p>Estado:
-                <span class="activity-status ${activity.activa ? "active" : "inactive"}">
-                    ${activity.activa ? "Activa" : "Inactiva"}
-                </span>
-            </p>
-        `;
 
-        if (activity.clases && activity.clases.length > 0) {
-            html += `
-                <div class="activity-section">
-                    <h4>Clases asociadas:</h4>
-                    <div class="table-wrapper">
-                        <table id="activitiesTable">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nombre</th>
-                                    <th>Hora Inicio</th>
-                                    <th>Hora Fin</th>
-                                    <th>Cupo</th>
-                                    <th>Fecha Creación</th>
-                                    <th>Entrenador</th>
-                                    <th>Inscriptos</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-            `;
+    // 💾 Guardar cambios
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!currentActivity) return;
 
-            activity.clases.forEach(clase => {
-                const horaInicio = new Date(clase.horaInicio).toLocaleString("es-AR", {
-                    day: "2-digit", month: "2-digit", year: "numeric",
-                    hour: "2-digit", minute: "2-digit", hour12: false
-                });
-                const horaFin = new Date(clase.horaFin).toLocaleString("es-AR", {
-                    day: "2-digit", month: "2-digit", year: "numeric",
-                    hour: "2-digit", minute: "2-digit", hour12: false
-                });
+        const updatedData = {
+            id: currentActivity.id,
+            nombre: inputNombre.value.trim(),
+            activa: selectActiva.value === "true"
+        };
 
-                html += `
-                    <tr>
-                        <td>${clase.id}</td>
-                        <td>${clase.nombre}</td>
-                        <td>${horaInicio}</td>
-                        <td>${horaFin}</td>
-                        <td>${clase.cupo}</td>
-                        <td>${new Date(clase.fechaCreacion).toLocaleDateString()}</td>
-                        <td>${clase.entrenadorNombre}</td>
-                        <td>${clase.inscriptosCount}</td>
-                    </tr>
-                `;
-            });
+        try {
+            await ActivityAPI.update(currentActivity.id, updatedData);
+            showToast();
 
-            html += `
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-        } else {
-            html += `<p>No hay clases asignadas a esta actividad.</p>`;
+            // reflejar cambios en pantalla
+            currentActivity.nombre = updatedData.nombre;
+            currentActivity.activa = updatedData.activa;
+
+            // refrescar info
+            document.getElementById("btnSearch").click();
+            modal.classList.add("hidden");
+
+        } catch (error) {
+            console.error(error);
+            alert("❌ Error al actualizar la actividad: " + error.message);
         }
+    });
 
-        resultDiv.innerHTML = html;
-        resultDiv.classList.remove("hidden");
+    // ❌ Cerrar modal
+    btnCancel.addEventListener("click", () => {
+        modal.classList.add("hidden");
+    });
 
-        // ✏️ Abrir modal de edición dinámico con SweetAlert
-        document.getElementById("btnEditActivity").addEventListener("click", () => {
-            showEditModal(activity);
-        });
+    function showToast(message = "Actualizado con éxito ✅") {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+
+        setTimeout(() => {
+            toast.classList.remove("show");
+        }, 3000); // desaparece después de 3s
     }
 
-    // 🧩 Modal dinámico con inputs para editar
-    function showEditModal(activity) {
-        Swal.fire({
-            title: "Editar actividad",
-            html: `
-                <label>Nombre:</label>
-                <input id="swal-nombre" class="swal2-input" value="${activity.nombre}">
-                <label>Activa:</label>
-                <select id="swal-activa" class="swal2-select">
-                    <option value="true" ${activity.activa ? "selected" : ""}>Activa</option>
-                    <option value="false" ${!activity.activa ? "selected" : ""}>Inactiva</option>
-                </select>
-            `,
-            showCancelButton: true,
-            confirmButtonText: "Guardar cambios",
-            cancelButtonText: "Cancelar",
-            confirmButtonColor: "#2e7d32",
-            cancelButtonColor: "#9e9e9e",
-            focusConfirm: false,
-            preConfirm: () => {
-                const nombre = document.getElementById("swal-nombre").value.trim();
-                const activa = document.getElementById("swal-activa").value === "true";
-
-                if (!nombre) {
-                    Swal.showValidationMessage("⚠️ El nombre no puede estar vacío");
-                    return false;
-                }
-
-                return { nombre, activa };
-            }
-        }).then(async (result) => {
-            if (!result.isConfirmed) return;
-
-            const updatedData = {
-                id: activity.id,
-                nombre: result.value.nombre,
-                activa: result.value.activa
-            };
-
-            try {
-                await ActivityAPI.update(activity.id, updatedData);
-                showSuccess("Actividad actualizada correctamente ✅");
-
-                currentActivity = { ...activity, ...updatedData };
-                renderActivity(currentActivity);
-            } catch (error) {
-                console.error(error);
-                showError("Error al actualizar la actividad: " + error.message);
-            }
-        });
-    }
 }
+

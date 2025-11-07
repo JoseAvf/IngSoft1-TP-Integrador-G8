@@ -346,6 +346,65 @@ main {
             font-size: 1.2rem;
         }
 }
+/* =========================== */ 
+    
+/* ===== Contenedor de tabla para scroll horizontal ===== */
+/*.table-wrapper {
+    width: 100%;
+    overflow-x: auto;*/ /* permite scroll horizontal en pantallas pequeñas */
+    /*-webkit-overflow-scrolling: touch;*/ /* suaviza el scroll en móviles */
+/*}
+
+.list-section {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 25px 30px;
+    width: 100%;
+    max-width: 1000px;
+    margin-bottom: 40px;
+}
+
+    .list-section h2 {
+        color: #1976d2;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+#classesTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    min-width: 700px;*/ /* evita que las columnas se achiquen demasiado */
+/*}
+
+    #classesTable th,
+    #classesTable td {
+        padding: 12px 16px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+    }
+
+    #classesTable th {
+        background-color: #1976d2;
+        color: white;
+    }
+
+    #classesTable tr:hover {
+        background-color: #f1f1f1;
+    }*/
+
+/* Opcional: celdas adaptables en pantallas muy pequeñas */
+/*@media (max-width: 768px) {
+    #classesTable th,
+    #classesTable td {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+}*/
 
 /* ===== Botón volver ===== */
 .back-container {
@@ -353,58 +412,7 @@ main {
     margin-bottom: 40px;
 }
 
-/* ===== Tarjeta de información de la clase ===== */
-
-/* ===== Sección de búsqueda ===== */
-.search-section {
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    padding: 25px 30px;
-    width: 100%;
-    max-width: 400px;
-    margin-bottom: 20px;
-}
-
-    .search-section label {
-        font-weight: 500;
-        color: #333;
-        display: block;
-        margin-bottom: 8px;
-    }
-
-    .search-section input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        font-size: 1rem;
-        margin-bottom: 10px;
-        box-sizing: border-box;
-        transition: all 0.3s;
-    }
-
-        .search-section input:focus {
-            border-color: #1976d2;
-            box-shadow: 0 0 5px rgba(25,118,210,0.3);
-            outline: none;
-        }
-
-    .search-section button {
-        background-color: #1976d2;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        padding: 12px;
-        font-weight: bold;
-        cursor: pointer;
-        width: 100%;
-        transition: background-color 0.3s;
-    }
-
-        .search-section button:hover {
-            background-color: #1259a7;
-        }
+/* ===== Tarjeta de información del entrenador ===== */
 
 /* Contenedor por defecto: oculto y sin estilo de tarjeta */
 .class-data.hidden {
@@ -469,7 +477,7 @@ main {
 
 /* ===== Secciones internas de información de clase ===== */
 .class-section {
-    background-color: #b1d8ff; /* color suave para diferenciar secciones */
+    background-color: #e6f2ff; /* color suave para diferenciar secciones */
     border-left: 4px solid #1976d2; /* barra lateral azul */
     padding: 15px 20px;
     border-radius: 8px;
@@ -984,8 +992,4 @@ main {
 
 .entrenador-check {
     margin-bottom: 15px;
-}
-
-div:where(.swal2-container) input:where(.swal2-input), div:where(.swal2-container) input:where(.swal2-file), div:where(.swal2-container) textarea:where(.swal2-textarea), div:where(.swal2-container) select:where(.swal2-select), div:where(.swal2-container) div:where(.swal2-radio), div:where(.swal2-container) label:where(.swal2-checkbox) {
-    margin: 0;
 }

@@ -3,13 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CuerpoSano | Registrar Miembro</title>
-    <style>
-        body {
-            display: none;
-        }
-    </style>
-    <script src="../js/auth.js"></script>
+    <title>CuerpoSano | Gestión de Miembros</title>
     <link rel="stylesheet" href="../css/pages/members.css" />
     <link rel="stylesheet" href="../css/components/modal.css" />
     <link rel="stylesheet" href="../css/base/style.css" />
@@ -45,11 +39,13 @@
                     <label>Correo electrónico:</label>
                     <input type="email" name="correo" required>
                     <label>Fecha de nacimiento:</label>
-                    <input type="date" name="fechaNacimiento" required>
-                    <label>
-                        <input type="checkbox" name="esEstudiante">
-                        Estudiante
-                    </label>
+
+                    <input type="date" name="fechaNacimiento" id=fechaNacimiento required min=" 1925-01-01" max=" 2007-01-01">
+
+                        <div class="estudiante-inline">
+                            <label for=" esEstudiante" class="checkbox-label">Estudiante</label>
+                            <input type="checkbox" name="esEstudiante" id=" esEstudiante" class=" checkbox-inline">
+                        </div>
                 </fieldset>
 
                 <fieldset>
@@ -62,12 +58,14 @@
                     <div id="membershipSummary" class="summary-box">
                         <p>💰 Costo base: <span id="costoBase">-</span></p>
                         <p>🎓 Descuento aplicado: <span id="descuento">%0</span></p>
-                        <p><strong>Total a pagar: <span id="totalPagar">-</span></strong></p>
+
+                        <div class=" total-row">
+                            <p><strong>Total a pagar: <span id="totalPagar">-</span></strong></p>
+                            <button type="button" id="btnPagar" class=" btnPagar"> Realizar Pago </button>
+                        </div>
                     </div>
+                           <p id="paymentMessage" class="payment-message hidden"> </p>
                 </fieldset>
-                <div id="btnPagarContainer" class="hidden">
-                    <button type="button" id="btnPagar" class="btn-pagar">💳 Realizar Pago</button>
-                </div>
 
                 <!-- 🔹 Botón de crear miembro -->
                 <button type="submit" id="btnCrear" disabled>Registrar Miembro</button>
@@ -94,7 +92,7 @@
             </div>
 
             <!-- ===== Modal de Pago ===== -->
-            <!--<div id="paymentModal" class="modal hidden">
+            <div id="paymentModal" class="modal hidden">
                 <div class="modal-content">
                     <h2>Confirmar Pago</h2>
                     <p><strong>Tipo de membresía:</strong> <span id="resumenTipo"></span></p>
@@ -115,7 +113,7 @@
                         <button id="btnCancelarPago" class="cancel">Cancelar</button>
                     </div>
                 </div>
-            </div>-->
+            </div>
 
         </section>
 
@@ -132,12 +130,14 @@
 
     <script type="module" src="../js/pages/members.js"></script>
     <script>
-        
+        // Simulación de sesión
+        const userRole = localStorage.getItem('userRole') || 'Empleado';
+        document.getElementById('userRole').textContent = `👤 ${userRole}`;
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('userRole');
-            showCloseSession('Sesión cerrada correctamente');
-            setTimeout(() => window.location.href = 'login.html', 2000);
+            alert('Sesión cerrada correctamente');
+            window.location.href = 'login.html';
         });
     </script>
 

@@ -20,13 +20,16 @@ export function activityRegistration() {
 
         // Validación final
         if (!/^[a-zA-Z\s]+$/.test(activityData.nombre)) {
-            showAlert("El nombre solo puede contener letras y espacios.", "warning");
+            resultDiv.textContent = "⚠️ Nombre inválido. Ingrese un nombre válido.";
+            resultDiv.style.color = "red";
             return;
         }
 
         try {
             const nuevaActividad = await ActivityAPI.create(activityData);
-            showSuccess(`Actividad ${nuevaActividad.nombre} registrada correctamente con ID ${nuevaActividad.id}`);
+
+            resultDiv.textContent = `✅ Actividad "${nuevaActividad.nombre}" registrada correctamente con ID ${nuevaActividad.id}.`;
+            resultDiv.style.color = "green";
 
             // Limpiamos el formulario
             form.reset();
@@ -40,7 +43,8 @@ export function activityRegistration() {
 
         } catch (err) {
             console.error(err);
-            showError("Error al registrar la actividad.");
+            resultDiv.textContent = `❌ Error al registrar actividad: ${err.message}`;
+            resultDiv.style.color = "red";
         }
     });
 }

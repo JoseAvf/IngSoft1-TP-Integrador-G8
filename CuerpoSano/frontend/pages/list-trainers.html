@@ -3,13 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CuerpoSano | Listado de Entrenadores</title>
-    <style>
-        body {
-            display: none;
-        }
-    </style>
-    <script src="../js/auth.js"></script>
+    <title>CuerpoSano | Gestión de Entrenadores</title>
     <link rel="stylesheet" href="../css/base/style.css" />
     <link rel="stylesheet" href="../css/pages/trainers.css" />
 </head>
@@ -80,11 +74,14 @@
     <!-- Script de la página -->
     <script type="module" src="../js/features/trainers/trainerList.js"></script>
     <script>
-        
+        // Simulación de sesión
+        const userRole = localStorage.getItem('userRole') || 'Empleado';
+        document.getElementById('userRole').textContent = `👤 ${userRole}`;
+
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('userRole');
-            showCloseSession('Sesión cerrada correctamente');
-            setTimeout(() => window.location.href = 'login.html', 2000);
+            alert('Sesión cerrada correctamente');
+            window.location.href = 'login.html';
         });
     </script>
 </body>

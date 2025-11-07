@@ -44,27 +44,20 @@ export async function loadMembershipList() {
         document.querySelectorAll(".btn-delete").forEach((btn) => {
             btn.addEventListener("click", async (e) => {
                 const id = e.target.dataset.id;
-                showConfirmDelete(
-                    "¿Seguro que deseas eliminar esta membresía? Esta acción no se puede deshacer.",
-                    async () => {
-                        await deleteMembership(id);
-                        await loadMembershipList(); // refresca lista
+                if (confirm("¿Eliminar esta membresía?")) {
+                    try {
+                        await MembershipsAPI.delete(id);
+                        alert("Membresía eliminada correctamente.");
+                        await loadMembershipList();
+                    } catch (err) {
+                        alert("Error al eliminar membresía: " + err.message);
                     }
-                );
+                }
             });
         });
 
     } catch (err) {
         console.error(err);
         messageBox.textContent = "❌ Error al cargar membresías.";
-    }
-}
-
-async function deleteMembership(id) {
-    try {
-        await MembershipsAPI.delete(id);
-        showSuccess("Membresia eliminada correctamente.");
-    } catch (error) {
-        showError("Error al eliminar membresia: " + error.message);
     }
 }

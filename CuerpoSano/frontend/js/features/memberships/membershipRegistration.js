@@ -20,13 +20,13 @@ export async function membershipRegistration() {
     const descuentoSpan = document.getElementById("descuento");
     const totalPagarSpan = document.getElementById("totalPagar");
 
-    /*// --- Modal de pago ---
+    // --- Modal de pago ---
     const modal = document.getElementById("paymentModal");
     const btnConfirmarPago = document.getElementById("btnConfirmarPago");
     const btnCancelarPago = document.getElementById("btnCancelarPago");
     const resumenTipo = document.getElementById("resumenTipo");
     const resumenTotal = document.getElementById("resumenTotal");
-    const metodoPagoSelect = document.getElementById("metodoPago");*/
+    const metodoPagoSelect = document.getElementById("metodoPago");
 
     let membresiaSeleccionada = null;
     let pagoRealizado = null;
@@ -38,32 +38,28 @@ export async function membershipRegistration() {
         membresiaSeleccionada = membresia;
 
         const dni = form.dni.value.trim();
-        if (!dni) return showAlert("Ingrese el DNI antes de seleccionar una membresía.", "warning");
-        try {
-            const miembro = await MembersAPI.getByDni(dni);
-            if (!miembro) throw new Error("Miembro no encontrado");
+        if (!dni) return alert("Ingrese el DNI antes de seleccionar una membresía.");
 
-            // Calculamos descuentos
-            const miembroTemp = {
-                fechaNacimiento: miembro.fechaNacimiento,
-                esEstudiante: form.querySelector('input[name="esEstudiante"]')?.checked || false,
-            };
+        const miembro = await MembersAPI.getByDni(dni);
+        if (!miembro) throw new Error("Miembro no encontrado");
 
-            const { descuento, total } = calcularDescuentos(miembroTemp, membresia);
+        // Calculamos descuentos
+        const miembroTemp = {
+            fechaNacimiento: miembro.fechaNacimiento,
+            esEstudiante: form.querySelector('input[name="esEstudiante"]')?.checked || false,
+        };
 
-            // Actualizamos el resumen
-            inputTipo.value = membresia.tipo;
-            inputId.value = membresia.id || "";
-            costoBaseSpan.textContent = `$${membresia.costo}`;
-            descuentoSpan.textContent = `${descuento}%`;
-            totalPagarSpan.textContent = `$${total.toFixed(2)}`;
+        const { descuento, total } = calcularDescuentos(miembroTemp, membresia);
 
-            // Mostrar botón de pago
-            document.getElementById("btnPagarContainer").classList.remove("hidden");
-        } catch (error) {
-            console.error("Error al buscar el miembro:", error);
-            showError("Ocurrió un error al obtener el miembro: " + error.message);
-        }
+        // Actualizamos el resumen
+        inputTipo.value = membresia.tipo;
+        inputId.value = membresia.id || "";
+        costoBaseSpan.textContent = `$${membresia.costo}`;
+        descuentoSpan.textContent = `${descuento}%`;
+        totalPagarSpan.textContent = `$${total.toFixed(2)}`;
+
+        // Mostrar botón de pago
+        document.getElementById("btnPagarContainer").classList.remove("hidden");
     });
 
     // ✅ El modal se abrirá SOLO cuando el usuario haga clic en el botón
@@ -71,7 +67,7 @@ export async function membershipRegistration() {
         const dni = form.dni.value.trim();
 
         if (!dni) {
-            showAlert("Primero ingrese el DNI del miembro a asignar la membresía.", "warning");
+            alert("⚠️ Primero ingrese el DNI del miembro a asignar la membresía.");
             return;
         }
 
@@ -79,7 +75,7 @@ export async function membershipRegistration() {
             const miembro = await MembersAPI.getByDni(dni);
 
             if (!miembro) {
-                showAlert("No se encontró ningún miembro con ese DNI. Por favor registre al miembro primero.", "warning");
+                alert("❌ No se encontró ningún miembro con ese DNI. Por favor registre al miembro primero.");
                 return;
             }
 
@@ -88,72 +84,51 @@ export async function membershipRegistration() {
 
         } catch (error) {
             console.error("Error al buscar el miembro:", error);
-            showError("Ocurrió un error al verificar el miembro. Intente nuevamente.");
+            alert("Ocurrió un error al verificar el miembro. Intente nuevamente.");
         }
     });
 
-    // === Pago usando SweetAlert2 ===
-    btnPagar.addEventListener("click", async () => {
-        if (!membresiaSeleccionada) return showAlert("Seleccione una membresía antes de continuar.", "warning");
+    // === Modal de pago ===
+    btnPagar.addEventListener("click", () => {
+        if (!membresiaSeleccionada) return alert("Seleccione una membresía.");
+        resumenTipo.textContent = membresiaSeleccionada.tipo;
+        resumenTotal.textContent = totalPagarSpan.textContent;
+        modal.classList.remove("hidden");
+    });
 
-        const resumenTipo = membresiaSeleccionada.tipo;
-        const resumenTotal = totalPagarSpan.textContent;
+    btnCancelarPago.addEventListener("click", () => {
+        modal.classList.add("hidden");
+        metodoPagoSelect.value = "";
+    });
 
-        const { value: metodo } = await Swal.fire({
-            title: "💳 Confirmar Pago",
-            html: `
-                <div style="text-align:center;">
-                    <p><strong>Membresía:</strong> ${resumenTipo}</p>
-                    <p><strong>Total a pagar:</strong> <span style="color:#007bff;">${resumenTotal}</span></p>
-                    <hr style="margin:12px 0;">
-                    <label for="metodoPagoSelect" style="display:block;margin-bottom:8px;font-weight:500;">Método de Pago:</label>
-                    <select id="metodoPagoSelect" class="swal2-select" style="width:80%;border-radius:8px;padding:6px;">
-                        <option value="">Seleccione...</option>
-                        <option value="Efectivo">💵 Efectivo</option>
-                        <option value="Mercado Pago">📲 Mercado Pago</option>
-                        <option value="Transferencia Bancaria">🏦 Transferencia Bancaria</option>
-                        <option value="Tarjeta de Crédito">💳 Tarjeta Crédito</option>
-                        <option value="Tarjeta de Débito">💳 Tarjeta Débito</option>
-                    </select>
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: "✅ Confirmar Pago",
-            cancelButtonText: "Cancelar",
-            background: "#f8fafc",
-            color: "#333",
-            confirmButtonColor: "#007bff",
-            cancelButtonColor: "#aaa",
-            preConfirm: () => {
-                const select = document.getElementById("metodoPagoSelect");
-                if (!select.value) {
-                    Swal.showValidationMessage("Debe seleccionar un método de pago");
-                    return false;
-                }
-                return select.value;
-            }
-        });
+    btnConfirmarPago.addEventListener("click", async () => {
 
-        if (!metodo) return; // Si canceló
+        console.log("1");
+        const metodo = metodoPagoSelect.value;
+        if (!metodo) return alert("Seleccione un método de pago.");
 
+        modal.classList.add("hidden");
+        console.log("2");
         try {
+            console.log("3");
             const pago = await PaymentAPI.create({
                 fecha: new Date().toISOString(),
                 monto: parseFloat(totalPagarSpan.textContent.replace("$", "")),
                 metodoPago: metodo,
-                membresiaId: null,
+                membresiaId: null // se asocia luego
             });
-
+            console.log("4");
             pagoRealizado = pago;
-            showSuccess(`Pago realizado correctamente (${metodo}). Ahora puede registrar la membresía.`);
-            btnPagar.disabled = true;
+            alert(`✅ Pago registrado correctamente (${metodo}). Ahora puede registrar la nueva membresía.`);
             btnRegistrar.disabled = false;
+            btnPagar.disabled = true;
 
         } catch (err) {
             pagoRealizado = null;
-            showError("Error al procesar el pago: " + err.message);
+            alert("❌ Error al procesar el pago. No se podrá continuar con el registro.");
         }
     });
+
 
 
     // === Envío final: crear membresía solo si hay pago ===
@@ -161,11 +136,11 @@ export async function membershipRegistration() {
         e.preventDefault();
 
         if (!membresiaSeleccionada) {
-            showAlert("Debe seleccionar una membresía antes de registrar.", "warning");
+            alert("Debe seleccionar una membresía antes de registrar.");
             return;
         }
         if (!pagoRealizado) {
-            showAlert("Debe realizar el pago antes de registrar la membresía.", "warning");
+            alert("Debe realizar el pago antes de registrar la membresía.");
             return;
         }
 
@@ -183,7 +158,7 @@ export async function membershipRegistration() {
                 membresiaId: nuevaMembresia.id
             });
 
-            showSuccess(`Membresía "${nuevaMembresia.tipo}" registrada correctamente para "${miembro.nombre}".`);
+            alert(`✅ Membresía "${nuevaMembresia.tipo}" registrada correctamente para "${miembro.nombre}".`);
 
             // Reset visual
             form.reset();
@@ -199,7 +174,7 @@ export async function membershipRegistration() {
             totalPagarSpan.textContent = "-";
 
         } catch (err) {
-            showError("Error al registrar la membresía: " + err.message);
+            alert("❌ Error al registrar la membresía: " + err.message);
         }
     });
 }
