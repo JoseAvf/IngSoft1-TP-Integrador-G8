@@ -272,6 +272,7 @@ main {
 
 /* ===== Cuerpo del modal ===== */
 #miembrosModalBody {
+    text-align: center !important;
     max-height: 70vh;
     overflow-y: auto;
     padding-top: 10px;

@@ -1,18 +1,11 @@
 import { MembersAPI } from "../../api/members.js";
 import { TrainerAPI } from "../../api/trainers.js";
+import { PaymentAPI } from "../../api/payments.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const btnSearch = document.getElementById("btnSearch");
     const inputDni = document.getElementById("memberDni");
     const memberDataDiv = document.getElementById("memberData");
-
-    const modal = document.getElementById("editMemberModal");
-    const form = document.getElementById("editMemberForm");
-    const inputNombre = document.getElementById("editNombre");
-    const inputDireccion = document.getElementById("editDireccion");
-    const inputTelefono = document.getElementById("editTelefono");
-    const inputCorreo = document.getElementById("editCorreo");
-    const btnCancel = document.getElementById("btnCancelMemberEdit");
 
     let currentMember = null;
 
@@ -48,9 +41,128 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // === NUEVO: Mostrar comprobante de pago ===
+    async function showPaymentReceiptModal(payment, member) {
+        Swal.fire({
+           
+            html: `
+                <div style="
+                    background: #fff;
+                    width: 380px;
+                    border-radius: 12px;
+                    padding: 20px;
+                    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+                    text-align: left;
+                    color: #333;
+                    font-family: 'Segoe UI', sans-serif;
+                ">
+                    <h2 style="text-align:center; margin-bottom:10px;">Su Mejor Peso</h2>
+                    <p style="text-align:center; margin-top:-8px; color:#666;">Centro de Entrenamiento</p>
+                    <hr style="margin:15px 0;">
+                    <p><strong>Cliente:</strong> ${member.nombre}</p>
+                    <p><strong>DNI:</strong> ${member.dni}</p>
+                    <p><strong>Tipo de Membresía:</strong> ${member.tipoMembresia || "-"}</p>
+                    <p><strong>Fecha de Pago:</strong> ${formatDate(payment.fechaPago)}</p>
+                    <p><strong>Monto:</strong> $${payment.monto.toLocaleString("es-AR")}</p>
+                    <p><strong>Método de Pago:</strong> ${payment.metodoPago}</p>
+                    <p><strong>ID de Pago:</strong> #${payment.id}</p>
+                    <hr style="margin:15px 0;">
+                    <p style="text-align:center; font-size:0.85rem; color:#555;">Gracias por su pago 💪</p>
+                </div>
+            `,
+            showConfirmButton: true,
+            confirmButtonText: "📄 Descargar PDF",
+            confirmButtonColor: "#1976d2",
+            background: "#f0f2f5",
+            width: "auto",
+            customClass: {
+                popup: "no-default-swal-width"
+            },
+            preConfirm: async () => {
+                await generatePaymentPDF(payment, member);
+            }
+
+        });
+    }
+
+    // === NUEVA FUNCIÓN: genera el PDF ===
+    async function generatePaymentPDF(payment, member) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+        const marginLeft = 20;
+        let y = 25;
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(18);
+        doc.text("Comprobante de Pago", 105, y, { align: "center" });
+
+        y += 12;
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "normal");
+        doc.text("Su Mejor Peso - Centro de Entrenamiento", 105, y, { align: "center" });
+
+        y += 12;
+        doc.setFontSize(11);
+        doc.text("Fecha de emisión: " + new Date().toLocaleDateString("es-AR"), marginLeft, y);
+
+        // Línea divisoria
+        y += 6;
+        doc.setDrawColor(200, 200, 200);
+        doc.line(marginLeft, y, 190, y);
+
+        // Datos del miembro
+        y += 12;
+        doc.setFont("helvetica", "bold");
+        doc.text("Datos del Cliente:", marginLeft, y);
+        doc.setFont("helvetica", "normal");
+        y += 8;
+        doc.text(`Nombre: ${member.nombre}`, marginLeft, y);
+        y += 6;
+        doc.text(`DNI: ${member.dni}`, marginLeft, y);
+        y += 6;
+        doc.text(`Tipo de Membresía: ${member.tipoMembresia || "-"}`, marginLeft, y);
+
+        // Datos del pago
+        y += 12;
+        doc.setFont("helvetica", "bold");
+        doc.text("Detalles del Pago:", marginLeft, y);
+        doc.setFont("helvetica", "normal");
+        y += 8;
+        doc.text(`Fecha de Pago: ${formatDate(payment.fechaPago)}`, marginLeft, y);
+        y += 6;
+        doc.text(`Monto: $${payment.monto.toLocaleString("es-AR")}`, marginLeft, y);
+        y += 6;
+        doc.text(`Método de Pago: ${payment.metodoPago}`, marginLeft, y);
+        y += 6;
+        doc.text(`ID de Pago: #${payment.id}`, marginLeft, y);
+
+        // Línea divisoria
+        y += 12;
+        doc.setDrawColor(200, 200, 200);
+        doc.line(marginLeft, y, 190, y);
+
+        // Pie del comprobante
+        y += 18;
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        doc.text("Gracias por confiar en nosotros", 105, y, { align: "center" });
+        y += 6;
+        doc.text("Este documento es válido como comprobante de pago.", 105, y, { align: "center" });
+
+        // Mostrar el PDF en una nueva pestaña
+        const pdfBlob = doc.output("blob");
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        window.open(pdfUrl, "_blank"); // abre el PDF en nueva pestaña
+    }
+    // === NUEVO: Mostrar carnet ===
     async function showCarnetModal(member) {
         Swal.fire({
-            title: "Carnet del Miembro",
+            
             html: `
       <div id="carnet-card" style="
         width: 400px;
@@ -154,6 +266,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const container = document.getElementById("memberData");
         container.classList.remove("hidden");
 
+        // Buscamos pago asociado
+        let paymentForMembership = null;
+        try {
+            const payments = await PaymentAPI.getAll();
+            paymentForMembership = payments.find(p => p.membresiaId === member.membresiaId);
+        } catch (err) {
+            console.error("Error al cargar pagos:", err);
+        }
+
         // Obtenemos el entrenador (si existe)
         let assignedTrainer = null;
         if (member.entrenadorId) {
@@ -186,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <section class="member-section carnet-info">
          <div class="member-section-header">    
             <h4>🎫 Carnet</h4>
-            <button id="btnViewCard" class="btn-view">🎫 Ver carnet</button>
+            <button id="btnViewCard" class="btn-edit">🎫 Ver carnet</button>
         </div>
             <p><strong>Código:</strong> ${member.codigoCarnet || "No asignado"}</p>
             <p><strong>Fecha de Emisión:</strong> ${formatDate(member.fechaEmisionCarnet)}</p>
@@ -194,7 +315,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <!-- Datos de la membresía -->
         <section class="member-section membership-info">
-            <h4>💳 Membresía</h4>
+        <div class="member-section-header">
+                <h4>💳 Membresía</h4>
+                <button id="btnPaymentReceipt" class="btn-edit" ${!paymentForMembership ? "disabled style='opacity:0.5;cursor:not-allowed;'" : ""}>
+                    🧾 Comprobante de Pago
+                </button>
+            </div>
+
             <p><strong>Tipo:</strong> ${member.tipoMembresia || "No asignada"}</p>
             <p><strong>Fecha de Emisión:</strong> ${formatDate(member.fechaEmisionMembresia)}</p>
             <p><strong>Fecha de Vencimiento:</strong> ${formatDate(member.fechaVencimientoMembresia)}</p>
@@ -244,35 +371,65 @@ document.addEventListener("DOMContentLoaded", () => {
             showCarnetModal(member);
         });
 
+        const btnReceipt = document.getElementById("btnPaymentReceipt");
+        if (paymentForMembership && btnReceipt) {
+            btnReceipt.addEventListener("click", () => showPaymentReceiptModal(paymentForMembership, member));
+        }
+
 
         // Agregar entrenador
         document.getElementById("btnAddTrainer").addEventListener("click", async () => {
             try {
                 const trainers = await TrainerAPI.getAll();
+                // ===== NUEVO MODAL DE SELECCIÓN =====
                 const { value: selectedTrainerId } = await Swal.fire({
-                    title: "Asignar Entrenador",
+                    title: "🏋️ Asignar Entrenador",
                     html: `
-                        <div style="text-align:left;max-height:300px;overflow-y:auto;">
-                            <label><input type="radio" name="trainerRadio" value="" ${!currentMember.entrenadorId ? "checked" : ""}> ❌ Ninguno (desasignar)</label><br>
-                            ${trainers.map(tr => `
-                                <label style="display:block;margin:4px 0;">
-                                    <input type="radio" name="trainerRadio" value="${tr.id}" ${currentMember.entrenadorId === tr.id ? "checked" : ""}>
-                                    ${tr.nombre} (${tr.dni})
-                                </label>
-                            `).join("")}
-                        </div>
-                    `,
+                <div class="trainer-select-modal">
+                    <div class="trainer-list">
+                        <label class="trainer-item none-option">
+                            <input type="radio" name="trainerRadio" value="" ${!currentMember.entrenadorId ? "checked" : ""}>
+                            <div class="trainer-card">
+                                <div class="trainer-info">
+                                    <h4>❌ Sin entrenador</h4>
+                                    <p>Quitar asignación actual</p>
+                                </div>
+                            </div>
+                        </label>
+                        ${trainers.map(tr => `
+                            <label class="trainer-item">
+                                <input type="radio" name="trainerRadio" value="${tr.id}" ${currentMember.entrenadorId === tr.id ? "checked" : ""}>
+                                <div class="trainer-card">
+                                    <div class="trainer-info">
+                                        <h4>${tr.nombre}</h4>
+                                        <p>DNI: ${tr.dni}</p>
+                                        <p>Teléfono: ${tr.telefono || "-"}</p>
+                                    </div>
+                                </div>
+                            </label>
+                        `).join("")}
+                    </div>
+                </div>
+            `,
+                    background: "#f9fafb",
+                    color: "#333",
+                    width: 650,
                     showCancelButton: true,
-                    confirmButtonText: "Guardar",
+                    confirmButtonText: "💾 Guardar",
                     cancelButtonText: "Cancelar",
+                    confirmButtonColor: "#1976d2",
+                    cancelButtonColor: "#9e9e9e",
+                    customClass: {
+                        popup: "no-default-swal-width-trainer shadow-xl rounded-2xl",
+                        title: "text-lg font-semibold text-gray-800"
+                          
+                    },
                     preConfirm: () => {
                         const checked = document.querySelector('input[name="trainerRadio"]:checked');
                         return checked ? checked.value || null : null;
-                    },
-                    background: "#f9fafb",
-                    confirmButtonColor: "#1976d2",
-                    cancelButtonColor: "#9e9e9e",
+                    }
                 });
+                // ===== FIN NUEVO MODAL =====
 
                 if (selectedTrainerId === undefined) return;
 
