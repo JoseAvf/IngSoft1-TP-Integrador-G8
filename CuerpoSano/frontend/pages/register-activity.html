@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CuerpoSano | Registrar Actividad</title>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
+    <link rel="stylesheet" href="../css/base/style.css" />
+    <link rel="stylesheet" href="../css/pages/activities.css" />
+</head>
+<body>
+
+    <!-- Header unificado -->
+    <header class="main-header">
+        <a href="./index.html" class="logo-link">
+            <h1>🏋️‍♂️ CuerpoSano — Sistema de Gestión de Gimnasio</h1>
+        </a>
+        <nav class="user-nav">
+            <span id="userRole">👤 Empleado</span>
+            <button id="logoutBtn">Cerrar Sesión</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h2>Registrar Nueva Actividad</h2>
+
+            <form id="activityForm">
+                <fieldset>
+                    <legend>Datos de la actividad</legend>
+                    <label>Nombre de la Actividad:</label>
+                    <input type="text" placeholder="Ej: Yoga, Musculatura, etc.." name="nombre" required>
+
+                    <div class="checkbox-group">
+                        <label for="activa">¿Activa?</label>
+                        <input type="checkbox" id="activa" name="activa" checked>
+                    </div>
+
+                </fieldset>
+
+                <button type="submit">Registrar Actividad</button>
+                <div id="activityFormResult"></div>
+            </form>
+        </section>
+
+        <!-- 🔙 Botón para volver -->
+        <div class="back-container">
+            <a href="./activities.html" class="btn-back">⬅️ Volver atrás</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
+    </footer>
+
+    <script type="module" src="../js/features/activities/activityRegistration.js"></script>
+    <script>
+        
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+          localStorage.removeItem('userRole');
+            showCloseSession('Sesión cerrada correctamente');
+            setTimeout(() => window.location.href = 'login.html', 2000);
+        });
+    </script>
+</body>
+</html>

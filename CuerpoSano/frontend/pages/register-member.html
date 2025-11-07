@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CuerpoSano | Gestión de Miembros</title>
+    <title>CuerpoSano | Registrar Miembro</title>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
     <link rel="stylesheet" href="../css/pages/members.css" />
     <link rel="stylesheet" href="../css/components/modal.css" />
     <link rel="stylesheet" href="../css/base/style.css" />
@@ -25,46 +31,120 @@
         <section class="form-section">
             <h2>Registrar Nuevo Miembro</h2>
 
-            <form id="memberForm">
+            <form id="memberForm" novalidate>
+                <!-- 🔸 Datos personales -->
                 <fieldset>
                     <legend>Datos personales</legend>
-                    <label>Nombre:</label>
-                    <input type="text" name="nombre" required>
-                    <label>DNI:</label>
-                    <input type="text" name="dni" required>
-                    <label>Dirección:</label>
-                    <input type="text" name="direccion" required>
-                    <label>Teléfono:</label>
-                    <input type="tel" name="telefono" required>
-                    <label>Correo electrónico:</label>
-                    <input type="email" name="correo" required>
-                    <label>Fecha de nacimiento:</label>
-                    <input type="date" name="fechaNacimiento" required>
-                    <label>
-                        <input type="checkbox" name="esEstudiante">
-                        Estudiante
-                    </label>
+
+                    <div class="form-row">
+                        <label>Nombre:</label>
+                        <input type="text"
+                               name="nombre"
+                               id="nombre"
+                               placeholder="Ej: María Fernández"
+                               required
+                               pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+                               title="Solo letras y espacios">
+                    </div>
+
+                    <div class="form-row">
+                        <label>DNI:</label>
+                        <input type="text"
+                               name="dni"
+                               id="dni"
+                               placeholder="Ej: 40876932"
+                               required
+                               pattern="[0-9]{7,10}"
+                               title="Solo números">
+                    </div>
+
+                    <div class="form-row">
+                        <label>Dirección:</label>
+                        <input type="text"
+                               name="direccion"
+                               id="direccion"
+                               placeholder="Ej: Calle Belgrano 1520, Dpto. 3B"
+                               required
+                               pattern="[A-Za-z0-9ÁÉÍÓÚáéíóúÑñ\s,.-]+"
+                               title="Letras, números y comas">
+                    </div>
+
+                    <div class="form-row">
+                        <label>Teléfono:</label>
+                        <input type="tel"
+                               name="telefono"
+                               id="telefono"
+                               placeholder="Ej: 1165324789"
+                               required
+                               pattern="[0-9]{6,15}"
+                               title="Solo números">
+                    </div>
+
+                    <div class="form-row">
+                        <label>Correo electrónico:</label>
+                        <input type="email"
+                               name="correo"
+                               id="correo"
+                               placeholder="Ej: maria.fernandez@gmail.com"
+                               required
+                               title="Formato válido: ejemplo@dominio.com">
+                    </div>
+
+                    <div class="form-row">
+                        <label>Fecha de nacimiento:</label>
+                        <input type="date"
+                               name="fechaNacimiento"
+                               id="fechaNacimiento"
+                               required>
+                    </div>
+
+                    <div class="form-row checkbox-row">
+                        <label for="esEstudiante">Estudiante</label>
+                        <input type="checkbox" name="esEstudiante" id="esEstudiante">
+                    </div>
+
+                    <div class="form-row pic-row">
+                        <label for="btnFoto">Foto del miembro </label>
+                        <button type="button"
+                                id="btnFoto"
+                                disabled
+                                title="Función no disponible aún">
+                            📷 Tomar Foto
+                        </button>
+                    </div>
+
                 </fieldset>
 
+                <!-- 🔸 Membresía -->
                 <fieldset>
                     <legend>Membresía</legend>
+
                     <div class="membership-select">
-                        <input type="text" id="membresiaTipo" placeholder="Seleccionar tipo..." readonly>
-                        <input type="hidden" name="membresiaId" id="membresiaId">
-                        <button type="button" id="btnSelectMembership">Elegir Membresía</button>
-                    </div>
-                    <div id="membershipSummary" class="summary-box">
-                        <p>💰 Costo base: <span id="costoBase">-</span></p>
-                        <p>🎓 Descuento aplicado: <span id="descuento">%0</span></p>
-                        <p><strong>Total a pagar: <span id="totalPagar">-</span></strong></p>
+                        <div class="membership-row">
+                            <input type="text" id="membresiaTipo" placeholder="Seleccionar tipo..." readonly>
+                            <input type="hidden" name="membresiaId" id="membresiaId">
+                            <button type="button" id="btnSelectMembership">Elegir Membresía</button>
+                        </div>
+
+                        <div id="membershipSummary" class="summary-box">
+                            <div class="summary-line">
+                                <p>💰 Costo base: <span id="costoBase">-</span></p>
+                                <p>🎓 Descuento aplicado: <span id="descuento">%0</span></p>
+                            </div>
+                            <div class="summary-total">
+                                <strong>Total a pagar: <span id="totalPagar">-</span></strong>
+                                <button type="button" id="btnPagar" class="btn-pagar">💳 Realizar Pago</button>
+                            </div>
+                        </div>
                     </div>
                 </fieldset>
 
-                <button type="submit">Registrar Miembro</button>
+                <!-- 🔸 Botón de envío -->
+                <button type="submit" id="btnCrear" disabled>Registrar Miembro</button>
                 <div id="memberFormResult"></div>
             </form>
 
-            <!-- Modal para membresías -->
+            <!-- 🔸 Modal de membresías -->
             <div id="membershipModal" class="modal">
                 <div class="modal-content">
                     <span class="close">&times;</span>
@@ -84,6 +164,7 @@
             </div>
         </section>
 
+
         <!-- 🔙 Botón para volver -->
         <div class="back-container">
             <a href="./members.html" class="btn-back">⬅️ Volver atrás</a>
@@ -97,14 +178,12 @@
 
     <script type="module" src="../js/pages/members.js"></script>
     <script>
-        // Simulación de sesión
-        const userRole = localStorage.getItem('userRole') || 'Empleado';
-        document.getElementById('userRole').textContent = `👤 ${userRole}`;
+        
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('userRole');
-            alert('Sesión cerrada correctamente');
-            window.location.href = 'login.html';
+            showCloseSession('Sesión cerrada correctamente');
+            setTimeout(() => window.location.href = 'login.html', 2000);
         });
     </script>
 

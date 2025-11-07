@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CuerpoSano | Consultar Entrenador</title>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
+    <link rel="stylesheet" href="../css/base/style.css" />
+    <link rel="stylesheet" href="../css/pages/trainers.css" />
+</head>
+<body>
+    <!-- Header unificado -->
+    <header class="main-header">
+        <a href="./index.html" class="logo-link">
+            <h1>🏋️‍♂️ CuerpoSano — Sistema de Gestión de Gimnasio</h1>
+        </a>
+        <nav class="user-nav">
+            <span id="userRole">👤 Empleado</span>
+            <button id="logoutBtn">Cerrar Sesión</button>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <h2>Consultar Entrenador</h2>
+        <div class="search-section">
+            <label for="trainerDni">Ingrese el DNI:</label>
+            <input type="text" id="trainerDni" placeholder="Ej: 40123456">
+            <button id="btnSearchTrainer">Buscar</button>
+        </div>
+
+        <!-- Contenedor donde se mostrará la información del entrenador -->
+        <div id="trainerData" class="trainer-data hidden"></div>
+
+        <!-- 🔙 Botón para volver -->
+        <div class="back-container">
+            <a href="./trainers.html" class="btn-back">⬅️ Volver atrás</a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
+    </footer>
+
+    <!-- Toast de confirmación -->
+    <div id="toast" class="toast">Actualizado con éxito ✅</div>
+
+    <!-- Modal de edición de entrenador -->
+    <div id="editTrainerModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>✏️ Editar Entrenador</h3>
+            <form id="editTrainerForm">
+                <label for="editTrainerNombre">Nombre:</label>
+                <input type="text" id="editTrainerNombre" required />
+
+                <label for="editTrainerDireccion">Dirección:</label>
+                <input type="text" id="editTrainerDireccion" required />
+
+                <label for="editTrainerTelefono">Teléfono:</label>
+                <input type="number" id="editTrainerTelefono" required />
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-confirm">Guardar</button>
+                    <button type="button" id="btnCancelTrainerEdit" class="btn-cancel">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Script de la página -->
+    <script type="module" src="../js/features/trainers/trainerConsult.js"></script>
+    <script>
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('userRole');
+            showCloseSession('Sesión cerrada correctamente');
+            setTimeout(() => window.location.href = 'login.html', 2000);
+        });
+    </script>
+</body>
+</html>

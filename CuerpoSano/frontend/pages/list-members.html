@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CuerpoSano | Gestión de Miembros</title>
+    <title>CuerpoSano | Listado de Miembros</title>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
     <link rel="stylesheet" href="../css/base/style.css" />
     <link rel="stylesheet" href="../css/pages/members.css" />
 </head>
@@ -21,6 +27,7 @@
     <main class="main-content">
         <section class="list-section">
             <h2>Listado de miembros</h2>
+            <button class="btn-print" onclick="window.print()">🖨️ Imprimir</button>
             <p id="membersMessage"></p>
             <div class="table-wrapper">
                 <table id="membersTable">
@@ -51,16 +58,14 @@
     <footer class="footer">
         <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
     </footer>
-    <script type="module" src="../js/features/memberList/memberList.js"></script>
+    <script type="module" src="../js/features/members/memberList.js"></script>
     <script>
-            // Simulación de sesión
-            const userRole = localStorage.getItem('userRole') || 'Empleado';
-            document.getElementById('userRole').textContent = `👤 ${userRole}`;
+           
 
             document.getElementById('logoutBtn').addEventListener('click', () => {
                 localStorage.removeItem('userRole');
-            alert('Sesión cerrada correctamente');
-            window.location.href = 'login.html';
+                showCloseSession('Sesión cerrada correctamente');
+                setTimeout(() => window.location.href = 'login.html', 2000);
             });
     </script>
 </body>

@@ -1,5 +1,5 @@
 
-import { setupMemberForm } from "../features/memberRegistration/memberForm.js";
+import { setupMemberForm } from "../features/members/memberForm.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     await setupMemberForm();

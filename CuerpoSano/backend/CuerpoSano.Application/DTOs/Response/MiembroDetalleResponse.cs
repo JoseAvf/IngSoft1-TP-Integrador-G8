@@ -28,6 +28,13 @@ namespace CuerpoSano.Application.DTOs.Response
         public DateTime? FechaVencimientoMembresia { get; set; }
         public decimal? CostoMembresia { get; set; }
         public bool? EstaPausada { get; set; }
+
+        //Datos de las clases en las que se inscribió:
+        public List<ClasePersonaResponse>? Clases { get; set; }
+
+        // 🔹 Nuevo
+        public int? EntrenadorId { get; set; }
+        public string? EntrenadorNombre { get; set; }
     }
 
 }

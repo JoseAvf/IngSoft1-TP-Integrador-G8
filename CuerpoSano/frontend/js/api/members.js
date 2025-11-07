@@ -18,6 +18,14 @@ export const MembersAPI = {
         return await response.json();
     },
 
+    /** Obtener miembro por ID */
+    async getById(id) {
+        const response = await fetch(`${API_BASE_URL}/Miembros/id/${id}`);
+        if (response.status === 404) return null;
+        if (!response.ok) throw new Error("Error al obtener miembro por ID");
+        return await response.json();
+    },
+
     async create(memberData) {
         const response = await fetch(`${API_BASE_URL}/Miembros`, {
             method: "POST",
@@ -41,7 +49,7 @@ export const MembersAPI = {
             },
             body: JSON.stringify(memberData),
         });
-        if (!response.ok) throw new Error("Error al actualizar miembro");
+        if (!response.ok) throw new Error("Error al actualizar membresia");
         return await response.json();
     },
 
@@ -50,5 +58,23 @@ export const MembersAPI = {
             method: "DELETE",
         });
         if (!response.ok) throw new Error("Error al eliminar miembro");
+    },
+
+    /** Asignar o desasignar un entrenador */
+    async assignTrainer(dni, entrenadorId) {
+        const response = await fetch(`${API_BASE_URL}/Miembros/${dni}/asignar-entrenador`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(entrenadorId),
+        });
+
+        if (!response.ok) {
+            const err = await response.text();
+            throw new Error(err || "Error al asignar entrenador");
+        }
+
+        return await response.json();
     },
 };

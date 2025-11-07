@@ -1,55 +1,16 @@
-<!--<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CuerpoSano | Gesti�n de Membres�as</title>
-    <link rel="stylesheet" href="../css/pages/memberships.css" />
-</head>
-<body>
-    <h1>Gesti�n de Membres�as</h1>
-    <section class="form-section">
-        <h2>Registrar nueva membres�a</h2>
-        <form id="membershipForm">
-            <label>Tipo: <input type="text" name="tipo" required /></label>
-            <label>Costo base: <input type="number" name="costoBase" required /></label>
-            <label>
-                Duraci�n (meses): <input type="number" name="mesesDuracion" required />
-            </label>
-            <label>DNI del miembro: <input type="number" name="miembroId" required /></label>
-            <button type="submit">Registrar Membres�a</button>
-        </form>
-        <p id="membershipFormResult"></p>
-    </section>
-    <section class="list-section">
-        <h2>Listado de membres�as</h2>
-        <p id="membershipsMessage"></p>
-        <table id="membershipsTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tipo</th>
-                    <th>Costo final</th>
-                    <th>Fecha emisi�n</th>
-                    <th>Vencimiento</th>
-                    <th>Miembro asociado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </section>
-    <script type="module" src="../js/pages/memberships.js"></script>
-</body>
-</html>-->
-
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CuerpoSano | Gestión de Miembros</title>
+    <title>CuerpoSano | Gestión de Membresias</title>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
     <link rel="stylesheet" href="../css/base/style.css" />
 </head>
 <body>
@@ -98,14 +59,11 @@
     </footer>
 
     <script>
-        // Simulación de sesión
-        const userRole = localStorage.getItem('userRole') || 'Empleado';
-        document.getElementById('userRole').textContent = `👤 ${userRole}`;
-
+        
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('userRole');
-            alert('Sesión cerrada correctamente');
-            window.location.href = 'login.html';
+            showCloseSession('Sesión cerrada correctamente');
+            setTimeout(() => window.location.href = 'login.html', 2000);
         });
     </script>
 </body>

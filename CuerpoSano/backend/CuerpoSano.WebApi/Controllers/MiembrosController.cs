@@ -49,21 +49,37 @@ namespace CuerpoSano.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<MiembroCreateResponse>> Create([FromBody] MiembroCreateRequest request)
         {
-            var nuevo = await _miembroService.CreateMiembroAsync(request);
-            return CreatedAtAction(nameof(GetById), new { id = nuevo.Id }, nuevo.ToCreateResponse());
+            try
+            {
+                var nuevo = await _miembroService.CreateMiembroAsync(request);
+                return CreatedAtAction(nameof(GetById), new { id = nuevo.Id }, nuevo.ToCreateResponse());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Miembro miembro)
+        public async Task<IActionResult> Update(int id, [FromBody] MiembroUpdateRequest request)
         {
-            if (id != miembro.Id) return BadRequest("El ID no coincide");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             var existente = await _miembroService.GetByIdAsync(id);
-            if (existente == null) return NotFound();
+            if (existente == null)
+                return NotFound($"No se encontró el miembro con ID {id}");
 
-            var updateMiembro = await _miembroService.UpdateAsync(miembro);
+            // Actualizamos los campos
+            existente.Nombre = request.Nombre;
+            existente.Direccion = request.Direccion;
+            existente.Telefono = request.Telefono;
+            existente.Correo = request.Correo;
 
-            return Ok(updateMiembro);
+            // Guardamos los cambios
+            var updateMiembro = await _miembroService.UpdateAsync(existente);
+
+            return Ok(updateMiembro.ToDetalleResponse());
         }
 
         [HttpDelete("{id}")]
@@ -72,6 +88,24 @@ namespace CuerpoSano.WebApi.Controllers
             var eliminado = await _miembroService.DeleteAsync(id); 
             if (!eliminado) return NotFound();
             return NoContent();
+        }
+
+        [HttpPut("{dni}/asignar-entrenador")]
+        public async Task<IActionResult> AsignarEntrenador(string dni, [FromBody] int? entrenadorId)
+        {
+            var miembro = await _miembroService.GetByDniAsync(dni);
+            if (miembro == null)
+                return NotFound("Miembro no encontrado");
+
+            miembro.EntrenadorId = entrenadorId; // puede ser null para desasignar
+            await _miembroService.UpdateAsync(miembro);
+
+            return Ok(new
+            {
+                message = entrenadorId == null ?
+                "Entrenador desasignado" :
+                "Entrenador asignado correctamente"
+            });
         }
     }
 }

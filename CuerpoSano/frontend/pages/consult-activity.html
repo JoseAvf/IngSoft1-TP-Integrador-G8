@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CuerpoSano | Consultar Actividad</title>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
+    <link rel="stylesheet" href="../css/base/style.css" />
+    <link rel="stylesheet" href="../css/pages/activities.css" />
+</head>
+<body>
+    <header class="main-header">
+        <a href="./index.html" class="logo-link">
+            <h1>🏋️‍♂️ CuerpoSano — Sistema de Gestión de Gimnasio</h1>
+        </a>
+        <nav class="user-nav">
+            <span id="userRole">👤 Empleado</span>
+            <button id="logoutBtn">Cerrar Sesión</button>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <h2>Consultar Actividad</h2>
+        <div class="search-section">
+            <label for="activityId">Ingrese el ID de la actividad:</label>
+            <input type="number" id="activityId" placeholder="Ej: 10">
+            <button id="btnSearch">Buscar</button>
+        </div>
+
+        <div id="toast" class="toast">Actualizado con éxito ✅</div>
+
+        <div id="activityData" class="activity-data hidden"></div>
+
+        <!-- 🔙 Botón para volver -->
+        <div class="back-container">
+            <a href="./activities.html" class="btn-back">⬅️ Volver atrás</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
+    </footer>
+
+    <!-- Modal de edición -->
+    <div id="editModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>✏️ Editar Actividad</h3>
+            <form id="editActivityForm">
+                <label for="editNombre">Nombre:</label>
+                <input type="text" id="editNombre" required />
+
+                <label for="editActiva">Estado:</label>
+                <select id="editActiva">
+                    <option value="true">Activa</option>
+                    <option value="false">Inactiva</option>
+                </select>
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-confirm">Guardar</button>
+                    <button type="button" id="btnCancelEdit" class="btn-cancel">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <script type="module" src="../js/features/activities/activityConsult.js"></script>
+    <script>
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('userRole');
+            showCloseSession('Sesión cerrada correctamente');
+            setTimeout(() => window.location.href = 'login.html', 2000);
+        });
+    </script>
+</body>
+</html>

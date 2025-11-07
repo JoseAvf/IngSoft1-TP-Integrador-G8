@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CuerpoSano | Registrar Clase</title>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
+    <link rel="stylesheet" href="../css/base/style.css" />
+    <link rel="stylesheet" href="../css/pages/classes.css" />
+</head>
+<body>
+
+    <!-- Header unificado -->
+    <header class="main-header">
+        <a href="./index.html" class="logo-link">
+            <h1>🏋️‍♂️ CuerpoSano — Sistema de Gestión de Gimnasio</h1>
+        </a>
+        <nav class="user-nav">
+            <span id="userRole">👤 Empleado</span>
+            <button id="logoutBtn">Cerrar Sesión</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h2>Registrar Nueva Clase</h2>
+
+            <form id="classForm">
+                <fieldset>
+                    <legend>Datos de la clase</legend>
+                    <label>Nombre de la Clase:</label>
+                    <input type="text"
+                           name="nombre"
+                           id="nombre"
+                           placeholder="Ej: Spinning, CrossFit, Zumba..."
+                           required
+                           pattern="[A-Za-z0-9ÁÉÍÓÚáéíóúÑñ\s]+"
+                           title="Solo letras, números y espacios">
+
+                    <label>Hora de Inicio:</label>
+                    <input type="time"
+                           name="horaInicio"
+                           id="horaInicio"
+                           required
+                           min="07:00"
+                           max="21:00"
+                           step="1800"
+                           title="Seleccione entre 07:00 y 21:00">
+
+                    <label>Hora de Fin:</label>
+                    <input type="time"
+                           name="horaFin"
+                           id="horaFin"
+                           required
+                           min="07:00"
+                           max="21:00"
+                           step="1800"
+                           title="Seleccione entre 07:00 y 21:00">
+
+                    <label>Fecha de la Clase:</label>
+                    <input type="date"
+                           name="fecha"
+                           id="fecha"
+                           required>
+
+                    <label>Cupo Máximo:</label>
+                    <input type="number"
+                           name="cupo"
+                           id="cupo"
+                           placeholder="1 - 20"
+                           min="1"
+                           max="20"
+                           required>
+
+                    <label>Actividad:</label>
+                    <select name="actividadId" id="actividadSelect" required>
+                        <option value="">Seleccione una actividad...</option>
+                    </select>
+
+                    <label>Entrenador:</label>
+                    <select name="entrenadorId" id="entrenadorSelect" required>
+                        <option value="">Seleccione un entrenador...</option>
+                    </select>
+                </fieldset>
+
+                <button type="submit">Registrar Clase</button>
+                <div id="classFormResult"></div>
+            </form>
+        </section>
+
+        <!-- 🔙 Botón para volver -->
+        <div class="back-container">
+            <a href="./classes.html" class="btn-back">⬅️ Volver atrás</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
+    </footer>
+
+    <script type="module" src="../js/features/classes/classRegistration.js"></script>
+    <script>
+       
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+          localStorage.removeItem('userRole');
+            showCloseSession('Sesión cerrada correctamente');
+            setTimeout(() => window.location.href = 'login.html', 2000);
+        });
+    </script>
+</body>
+</html>

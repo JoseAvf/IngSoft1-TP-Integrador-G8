@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CuerpoSano | Panel Principal</title>
-  <link rel="stylesheet" href="../css/base/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CuerpoSano | Panel Principal</title>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
+    <link rel="stylesheet" href="../css/base/style.css" />
 </head>
 <body>
     <header class="main-header">
@@ -22,11 +28,11 @@
       <h2>📋 Menú Principal</h2>
       <ul>
         <li><a href="./members.html">👥 Gestión de Miembros</a></li>
-        <li><a href="./memberships.html">💳 Gestión de Membresías</a></li>
         <li><a href="./register-member.html">📝 Registro Rápido</a></li>
-        <li><a href="#">📅 Clases y Actividades (Próximamente)</a></li>
-        <li><a href="#">🏋️‍♀️ Entrenadores (Próximamente)</a></li>
-        <li><a href="#">📈 Reportes y Estadísticas (Próximamente)</a></li>
+        <li><a href="./memberships.html">💳 Gestión de Membresías</a></li>
+        <li><a href="./trainers.html">🏋️‍♀️ Entrenadores </a></li>
+        <li><a href="./classAndActivity.html">📅 Clases y Actividades</a></li>
+        <li><a href="./reports.html">📈 Reportes</a></li>
       </ul>
     </aside>
 
@@ -34,25 +40,40 @@
       <h2>Bienvenido al Panel de Gestión</h2>
       <p>
         Desde este panel, el <strong>administrador</strong> y los <strong>empleados</strong> pueden gestionar 
-        todas las operaciones del gimnasio: miembros, membresías, clases, entrenadores y reportes.
+        todas las operaciones del gimnasio: miembros, membresías, entrenadores, actividades, clases y reportes.
       </p>
 
       <div class="cards">
-        <div class="card">
-          <h3>👥 Miembros</h3>
-          <p>Registrar, modificar o eliminar miembros activos.</p>
-          <a href="./members.html" class="btn">Ir a Miembros</a>
-        </div>
-        <div class="card">
-          <h3>💳 Membresías</h3>
-          <p>Gestionar tipos de membresías, costos y descuentos.</p>
-          <a href="./memberships.html" class="btn">Ir a Membresías</a>
-        </div>
-        <div class="card">
-          <h3>📝 Registro rápido</h3>
-          <p>Dar de alta un nuevo miembro con membresía incluida.</p>
-          <a href="./register-member.html" class="btn">Registrar</a>
-        </div>
+          <div class="card">
+              <h3>👥 Miembros</h3>
+              <p>Registrar, modificar o eliminar miembros activos.</p>
+              <a href="./members.html" class="btn">Ir a Miembros</a>
+          </div>
+          <div class="card">
+              <h3>💳 Membresías</h3>
+              <p>Gestionar tipos de membresías, costos y descuentos.</p>
+              <a href="./memberships.html" class="btn">Ir a Membresías</a>
+          </div>
+          <!--<div class="card">
+              <h3>📝 Registro rápido</h3>
+              <p>Dar de alta un nuevo miembro con membresía incluida.</p>
+              <a href="./register-member.html" class="btn">Registrar</a>
+          </div>-->
+          <div class="card">
+              <h3>🏋️‍♀️ Entrenadores</h3>
+              <p>Registrar, modificar o eliminar entrenadores.</p>
+              <a href="./trainers.html" class="btn">Ir a Entrenadores</a>
+          </div>
+          <div class="card">
+              <h3>📅 Clases y Actividades</h3>
+              <p>Registrar, modificar o eliminar clases o actividad.</p>
+              <a href="./classAndActivity.html" class="btn">Ir a Clases y Actividades</a>
+          </div>
+          <div class="card">
+              <h3>📈 Reportes </h3>
+              <p>Ver reportes de ingresos y de asistencia.</p>
+              <a href="./reports.html" class="btn">Ir a Reportes</a>
+          </div>
       </div>
     </section>
   </main>
@@ -62,15 +83,13 @@
   </footer>
 
   <script>
-    // Simulación del rol del usuario
-    const userRole = localStorage.getItem('userRole') || 'Empleado';
-    document.getElementById('userRole').textContent = `👤 ${userRole}`;
 
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      localStorage.removeItem('userRole');
-      alert('Sesión cerrada correctamente');
-      // Redirigir a login (si existe)
-      window.location.href = 'login.html';
+      // Cerrar sesión
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+          localStorage.removeItem('userRole');
+          showCloseSession('Sesión cerrada correctamente');
+          setTimeout(() => window.location.href = 'login.html', 2000);
+
     });
   </script>
 </body>

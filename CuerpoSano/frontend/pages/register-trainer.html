@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CuerpoSano | Registrar Entrenador</title>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
+    <link rel="stylesheet" href="../css/pages/trainers.css" />
+    <link rel="stylesheet" href="../css/components/modal.css" />
+    <link rel="stylesheet" href="../css/base/style.css" />
+</head>
+<body>
+
+    <!-- Header unificado -->
+    <header class="main-header">
+        <a href="./index.html" class="logo-link">
+            <h1>🏋️‍♂️ CuerpoSano — Sistema de Gestión de Gimnasio</h1>
+        </a>
+        <nav class="user-nav">
+            <span id="userRole">👤 Empleado</span>
+            <button id="logoutBtn">Cerrar Sesión</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h2>Registrar Nuevo Entrenador</h2>
+            <form id="trainerForm">
+                <fieldset>
+                    <legend>Datos del entrenador</legend>
+
+                    <div class="form-row">
+                        <label>Nombre:</label>
+                        <input type="text" name="nombre" placeholder="Ej: Pablo Lopez" id="nombre" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo letras y espacios">
+                    </div>
+
+                    <div class="form-row">
+                        <label>DNI:</label>
+                        <input type="text" name="dni" placeholder="Ej: 38765432" id="dni" required pattern="[0-9]{7,10}" title="Solo números">
+                    </div>
+
+                    <div class="form-row">
+                        <label>Dirección:</label>
+                        <input type="text" name="direccion" placeholder="Ej: Av. San Martín 2450, Piso 2" id="direccion" required pattern="[A-Za-z0-9ÁÉÍÓÚáéíóúÑñ\s,.-]+" title="Letras, números y comas">
+                    </div>
+
+                    <div class="form-row">
+                        <label>Teléfono:</label>
+                        <input type="tel" name="telefono" placeholder="Ej: 1132456789" id="telefono" required pattern="[0-9]{6,15}" title="Solo números">
+                    </div>
+
+
+                    <div class="form-row">
+                        <label>Fecha de nacimiento:</label>
+                        <input type="date" name="fechaNacimiento" id="fechaNacimiento" required>
+                    </div>
+                </fieldset>
+
+                <button type="submit">Registrar Entrenador</button>
+                <div id="trainerFormResult"></div>
+            </form>
+        </section>
+
+        <!-- 🔙 Botón para volver -->
+        <div class="back-container">
+            <a href="./trainers.html" class="btn-back">⬅️ Volver atrás</a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
+    </footer>
+
+    <script type="module" src="../js/features/trainers/trainerRegistration.js"></script>
+    <script>
+        
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('userRole');
+            showCloseSession('Sesión cerrada correctamente');
+            setTimeout(() => window.location.href = 'login.html', 2000);
+        });
+    </script>
+</body>
+</html>

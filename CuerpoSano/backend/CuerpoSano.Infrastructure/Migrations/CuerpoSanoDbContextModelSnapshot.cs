@@ -22,6 +22,60 @@ namespace CuerpoSano.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CuerpoSano.Domain.Entities.Actividad", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Activa")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Actividades");
+                });
+
+            modelBuilder.Entity("CuerpoSano.Domain.Entities.Asistencia", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Asistio")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ClaseId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EntrenadorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaRegistro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("MiembroId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClaseId");
+
+                    b.HasIndex("EntrenadorId");
+
+                    b.HasIndex("MiembroId");
+
+                    b.ToTable("Asistencias");
+                });
+
             modelBuilder.Entity("CuerpoSano.Domain.Entities.Carnet", b =>
                 {
                     b.Property<int>("Id")
@@ -48,6 +102,70 @@ namespace CuerpoSano.Infrastructure.Migrations
                     b.ToTable("Carnets");
                 });
 
+            modelBuilder.Entity("CuerpoSano.Domain.Entities.Certificado", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CodCertificado")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaEmision")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaVencimiento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Vigencia")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Certificados");
+                });
+
+            modelBuilder.Entity("CuerpoSano.Domain.Entities.Clase", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActividadId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Cupo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EntrenadorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("HoraFin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("HoraInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActividadId");
+
+                    b.HasIndex("EntrenadorId");
+
+                    b.ToTable("Clases");
+                });
+
             modelBuilder.Entity("CuerpoSano.Domain.Entities.Membresia", b =>
                 {
                     b.Property<int>("Id")
@@ -58,6 +176,9 @@ namespace CuerpoSano.Infrastructure.Migrations
 
                     b.Property<decimal>("Costo")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("EstaPagada")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("FechaEmision")
                         .HasColumnType("datetime2");
@@ -84,6 +205,54 @@ namespace CuerpoSano.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Membresias");
+                });
+
+            modelBuilder.Entity("CuerpoSano.Domain.Entities.MiembroClase", b =>
+                {
+                    b.Property<int>("MiembroId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ClaseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaInscripcion")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("MiembroId", "ClaseId");
+
+                    b.HasIndex("ClaseId");
+
+                    b.ToTable("MiembroClase");
+                });
+
+            modelBuilder.Entity("CuerpoSano.Domain.Entities.Pago", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("MembresiaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MetodoPago")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Monto")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MembresiaId")
+                        .IsUnique()
+                        .HasFilter("[MembresiaId] IS NOT NULL");
+
+                    b.ToTable("Pagos");
                 });
 
             modelBuilder.Entity("CuerpoSano.Domain.Entities.Persona", b =>
@@ -120,6 +289,18 @@ namespace CuerpoSano.Infrastructure.Migrations
                     b.UseTptMappingStrategy();
                 });
 
+            modelBuilder.Entity("CuerpoSano.Domain.Entities.Entrenador", b =>
+                {
+                    b.HasBaseType("CuerpoSano.Domain.Entities.Persona");
+
+                    b.Property<int>("CertificadoId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("CertificadoId");
+
+                    b.ToTable("Entrenadores", (string)null);
+                });
+
             modelBuilder.Entity("CuerpoSano.Domain.Entities.Miembro", b =>
                 {
                     b.HasBaseType("CuerpoSano.Domain.Entities.Persona");
@@ -128,10 +309,40 @@ namespace CuerpoSano.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("EntrenadorId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("MembresiaId")
                         .HasColumnType("int");
 
+                    b.HasIndex("EntrenadorId");
+
                     b.ToTable("Miembros", (string)null);
+                });
+
+            modelBuilder.Entity("CuerpoSano.Domain.Entities.Asistencia", b =>
+                {
+                    b.HasOne("CuerpoSano.Domain.Entities.Clase", "Clase")
+                        .WithMany("Asistencias")
+                        .HasForeignKey("ClaseId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("CuerpoSano.Domain.Entities.Entrenador", "Entrenador")
+                        .WithMany("Asistencias")
+                        .HasForeignKey("EntrenadorId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("CuerpoSano.Domain.Entities.Miembro", "Miembro")
+                        .WithMany("Asistencias")
+                        .HasForeignKey("MiembroId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Clase");
+
+                    b.Navigation("Entrenador");
+
+                    b.Navigation("Miembro");
                 });
 
             modelBuilder.Entity("CuerpoSano.Domain.Entities.Carnet", b =>
@@ -145,6 +356,25 @@ namespace CuerpoSano.Infrastructure.Migrations
                     b.Navigation("Miembro");
                 });
 
+            modelBuilder.Entity("CuerpoSano.Domain.Entities.Clase", b =>
+                {
+                    b.HasOne("CuerpoSano.Domain.Entities.Actividad", "Actividad")
+                        .WithMany("Clases")
+                        .HasForeignKey("ActividadId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CuerpoSano.Domain.Entities.Entrenador", "Entrenador")
+                        .WithMany("Clases")
+                        .HasForeignKey("EntrenadorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Actividad");
+
+                    b.Navigation("Entrenador");
+                });
+
             modelBuilder.Entity("CuerpoSano.Domain.Entities.Membresia", b =>
                 {
                     b.HasOne("CuerpoSano.Domain.Entities.Miembro", "Miembro")
@@ -156,18 +386,101 @@ namespace CuerpoSano.Infrastructure.Migrations
                     b.Navigation("Miembro");
                 });
 
+            modelBuilder.Entity("CuerpoSano.Domain.Entities.MiembroClase", b =>
+                {
+                    b.HasOne("CuerpoSano.Domain.Entities.Clase", "Clase")
+                        .WithMany("Miembros")
+                        .HasForeignKey("ClaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CuerpoSano.Domain.Entities.Miembro", "Miembro")
+                        .WithMany("Clases")
+                        .HasForeignKey("MiembroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Clase");
+
+                    b.Navigation("Miembro");
+                });
+
+            modelBuilder.Entity("CuerpoSano.Domain.Entities.Pago", b =>
+                {
+                    b.HasOne("CuerpoSano.Domain.Entities.Membresia", "Membresia")
+                        .WithOne("Pago")
+                        .HasForeignKey("CuerpoSano.Domain.Entities.Pago", "MembresiaId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Membresia");
+                });
+
+            modelBuilder.Entity("CuerpoSano.Domain.Entities.Entrenador", b =>
+                {
+                    b.HasOne("CuerpoSano.Domain.Entities.Certificado", "Certificado")
+                        .WithMany()
+                        .HasForeignKey("CertificadoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CuerpoSano.Domain.Entities.Persona", null)
+                        .WithOne()
+                        .HasForeignKey("CuerpoSano.Domain.Entities.Entrenador", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Certificado");
+                });
+
             modelBuilder.Entity("CuerpoSano.Domain.Entities.Miembro", b =>
                 {
+                    b.HasOne("CuerpoSano.Domain.Entities.Entrenador", "Entrenador")
+                        .WithMany("Miembros")
+                        .HasForeignKey("EntrenadorId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("CuerpoSano.Domain.Entities.Persona", null)
                         .WithOne()
                         .HasForeignKey("CuerpoSano.Domain.Entities.Miembro", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Entrenador");
+                });
+
+            modelBuilder.Entity("CuerpoSano.Domain.Entities.Actividad", b =>
+                {
+                    b.Navigation("Clases");
+                });
+
+            modelBuilder.Entity("CuerpoSano.Domain.Entities.Clase", b =>
+                {
+                    b.Navigation("Asistencias");
+
+                    b.Navigation("Miembros");
+                });
+
+            modelBuilder.Entity("CuerpoSano.Domain.Entities.Membresia", b =>
+                {
+                    b.Navigation("Pago");
+                });
+
+            modelBuilder.Entity("CuerpoSano.Domain.Entities.Entrenador", b =>
+                {
+                    b.Navigation("Asistencias");
+
+                    b.Navigation("Clases");
+
+                    b.Navigation("Miembros");
                 });
 
             modelBuilder.Entity("CuerpoSano.Domain.Entities.Miembro", b =>
                 {
+                    b.Navigation("Asistencias");
+
                     b.Navigation("Carnet");
+
+                    b.Navigation("Clases");
 
                     b.Navigation("Membresia");
                 });

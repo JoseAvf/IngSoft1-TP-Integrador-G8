@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CuerpoSano | Consultar Clase</title>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
+    <link rel="stylesheet" href="../css/base/style.css" />
+    <link rel="stylesheet" href="../css/pages/classes.css" />
+</head>
+<body>
+    <header class="main-header">
+        <a href="./index.html" class="logo-link">
+            <h1>🏋️‍♂️ CuerpoSano — Sistema de Gestión de Gimnasio</h1>
+        </a>
+        <nav class="user-nav">
+            <span id="userRole">👤 Empleado</span>
+            <button id="logoutBtn">Cerrar Sesión</button>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <h2>Consultar Clase</h2>
+        <div class="search-section">
+            <label for="classId">Ingrese el ID de la clase:</label>
+            <input type="number" id="classId" placeholder="Ej: 101">
+            <button id="btnSearch">Buscar</button>
+        </div>
+
+        <div id="classData" class="class-data hidden"></div>
+
+        <!-- 🔙 Botón para volver -->
+        <div class="back-container">
+            <a href="./classes.html" class="btn-back">⬅️ Volver atrás</a>
+        </div>
+    </main>
+
+    <!-- Modal para editar clase -->
+    <div id="editClassModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Editar Clase</h3>
+            <form id="editClassForm">
+                <label for="editNombre">Nombre de la clase:</label>
+                <input type="text" id="editNombre" name="nombre" required>
+
+                <label for="editFechaClase">Fecha de la clase:</label>
+                <input type="date" id="editFechaClase" name="fechaClase" required>
+
+                <label for="editHoraInicio">Hora de inicio:</label>
+                <input type="time" id="editHoraInicio" name="horaInicio" required>
+
+                <label for="editHoraFin">Hora de fin:</label>
+                <input type="time" id="editHoraFin" name="horaFin" required>
+
+                <label for="editCupo">Cupo:</label>
+                <input type="number" id="editCupo" name="cupo" min="1" max="20" required>
+
+                <div class="modal-buttons">
+                    <button type="submit">Guardar cambios</button>
+                    <button type="button" id="btnCancelClassEdit">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para inscribir miembros -->
+    <div id="enrollMemberModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Inscribir Miembro</h3>
+            <form id="enrollMemberForm">
+                <label for="selectMember">Seleccionar Miembro:</label>
+                <div id="selectMember-wrapper">
+                    <select id="selectMember" required>
+                        <!-- Opciones cargadas dinámicamente -->
+                    </select>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="button" id="btnCancelEnroll" class="btn-cancel">Cancelar</button>
+                    <button type="button" id="btnConfirmEnroll" class="btn-confirm">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <footer class="footer">
+        <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
+    </footer>
+    <!-- Toast de confirmación -->
+    <div id="toast" class="toast">Actualizado con éxito ✅</div>
+
+    <script type="module" src="../js/features/classes/classConsult.js"></script>
+    <script>
+        
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('userRole');
+            showCloseSession('Sesión cerrada correctamente');
+            setTimeout(() => window.location.href = 'login.html', 2000);
+        });
+    </script>
+</body>
+</html>

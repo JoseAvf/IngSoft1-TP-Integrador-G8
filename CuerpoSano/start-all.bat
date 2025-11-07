@@ -31,13 +31,13 @@ timeout /t 5 /nobreak >nul
 REM 4) Iniciar el frontend
 echo ▶ Iniciando frontend en http://localhost:8080 ...
 cd frontend
-start npx http-server -p 8080
+start npx http-server -p 8080 --no-browser
 cd ..
 
 REM 5) Abrir el navegador automáticamente en la página de miembros
 timeout /t 3 /nobreak >nul
 echo 🌐 Abriendo navegador...
-start http://localhost:8080/pages/index.html
+start http://localhost:8080/pages/login.html
 
 start https://localhost:7238/swagger
 

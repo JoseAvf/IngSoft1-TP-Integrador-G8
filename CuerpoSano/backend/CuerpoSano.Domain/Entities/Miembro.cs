@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace CuerpoSano.Domain.Entities
 {
@@ -10,5 +10,12 @@ namespace CuerpoSano.Domain.Entities
         public Membresia? Membresia { get; set; } = null!;//1:1
 
         public Carnet? Carnet { get; set; } = null!;//1:1
+
+        public ICollection<MiembroClase> Clases { get; set; } = new List<MiembroClase>();
+        public ICollection<Asistencia> Asistencias { get; set; } = new List<Asistencia>();
+
+        // 🔹 NUEVO: Relación opcional con Entrenador
+        public int? EntrenadorId { get; set; }   // Puede ser null si no tiene entrenador
+        public Entrenador? Entrenador { get; set; } = null!;
     }
 }

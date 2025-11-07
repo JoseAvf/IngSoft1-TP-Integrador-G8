@@ -1,5 +1,6 @@
 ﻿using CuerpoSano.Domain.Entities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +13,10 @@ namespace CuerpoSano.Application.Interfaces.ServicesInterfaces
         Task<IEnumerable<Membresia>> GetAllAsync();
         Task<Membresia?> GetByIdAsync(int id);
         Task<Membresia> CreateAsync(Membresia membresia, DateTime fechaNacimiento, bool esEstudiante);
-        Task<Membresia?> UpdateAsync(Membresia membresia);
+        Task<Membresia> UpdateTipoAsync(Membresia membresia, string nuevoTipo, DateTime fechaNacimiento, bool esEstudiante);
         Task<bool> DeleteAsync(int id);
         Task<Membresia> PausarMembresiaAsync(int id, DateTime inicioPausa);
+        Task<Membresia> DespausarMembresiaAsync(int id);
+        Task UpdateAsync(Membresia membresia);
     }
 }

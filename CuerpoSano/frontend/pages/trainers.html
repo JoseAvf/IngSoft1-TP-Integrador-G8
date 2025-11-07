@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CuerpoSano | Gestión de Entrenadores</title>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
+    <link rel="stylesheet" href="../css/base/style.css" />
+</head>
+<body>
+    <header class="main-header">
+        <a href="./index.html" class="logo-link">
+            <h1>🏋️‍♂️ CuerpoSano — Sistema de Gestión de Gimnasio</h1>
+        </a>
+        <nav class="user-nav">
+            <span id="userRole">👤 Empleado</span>
+            <button id="logoutBtn">Cerrar Sesión</button>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <h2>Gestión de Entrenadores</h2>
+        <p>Seleccioná la acción que deseás realizar con los entrenadores:</p>
+
+        <div class="cards">
+            <div class="card">
+                <h3>🧑‍🏫 Registrar Entrenador</h3>
+                <p>Dar de alta un nuevo entrenador.</p>
+                <a href="./register-trainer.html" class="btn">Registrar</a>
+            </div>
+
+            <div class="card">
+                <h3>🔍 Consultar Entrenador</h3>
+                <p>Buscar y visualizar información detallada de un entrenador existente.</p>
+                <a href="./consult-trainer.html" class="btn">Consultar</a>
+            </div>
+
+            <div class="card">
+                <h3>📋 Listado de Entrenadores</h3>
+                <p>Ver todos los entrenadores registrados, sus clases y miembros asignados.</p>
+                <a href="./list-trainers.html" class="btn">Ver Listado</a>
+            </div>
+        </div>
+
+        <!-- 🔙 Botón para volver -->
+        <div class="back-container">
+            <a href="./index.html" class="btn-back">⬅️ Volver al menú principal</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+   
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('userRole');
+        showCloseSession('Sesión cerrada correctamente');
+        setTimeout(() => window.location.href = 'login.html', 2000);
+    });
+    </script>
+</body>
+</html>

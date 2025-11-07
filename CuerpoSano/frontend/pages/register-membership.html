@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CuerpoSano | Gestión de Miembros</title>
+    <title>CuerpoSano | Registrar Membresías</title>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
     <link rel="stylesheet" href="../css/pages/memberships.css" />
     <link rel="stylesheet" href="../css/components/modal.css" />
     <link rel="stylesheet" href="../css/base/style.css" />
@@ -28,33 +34,45 @@
             <form id="membershipForm">
                 <fieldset>
                     <legend>Datos del miembro</legend>
-                    <label>DNI:</label>
-                    <input type="text" name="dni" required>
-                    <label>
-                        <input type="checkbox" name="esEstudiante">
-                        Estudiante
-                    </label>
+
+                    <div class="form-row">
+                        <label>DNI:</label>
+                        <input type="text" name="dni" placeholder="Ej: 12345678" id="dni" required pattern="[0-9]{7,10}" title="Solo números">
+                    </div>
+
+                    <div class="form-row checkbox-row">
+                        <label for="esEstudiante">Estudiante</label>
+                        <input type="checkbox" name="esEstudiante" id="esEstudiante">
+                    </div>
                 </fieldset>
 
                 <fieldset>
                     <legend>Membresía</legend>
+
                     <div class="membership-select">
                         <input type="text" id="membresiaTipo" placeholder="Seleccionar tipo..." readonly>
                         <input type="hidden" name="membresiaId" id="membresiaId">
                         <button type="button" id="btnSelectMembership">Elegir Membresía</button>
                     </div>
+
                     <div id="membershipSummary" class="summary-box">
-                        <p>💰 Costo base: <span id="costoBase">-</span></p>
-                        <p>🎓 Descuento aplicado: <span id="descuento">%0</span></p>
-                        <p><strong>Total a pagar: <span id="totalPagar">-</span></strong></p>
+                        <div class="summary-line">
+                            <p>💰 Costo base: <span id="costoBase">-</span></p>
+                            <p>🎓 Descuento aplicado: <span id="descuento">%0</span></p>
+                        </div>
+                        <div class="summary-total">
+                            <strong>Total a pagar: <span id="totalPagar">-</span></strong>
+                            <button type="button" id="btnPagar" class="btn-pagar">💳 Realizar Pago</button>
+                        </div>
                     </div>
                 </fieldset>
+
                 <button type="submit">Asignar Membresía</button>
                 <div id="memberFormResult"></div>
             </form>
 
             <!-- Modal para membresías -->
-            <div id="membershipModal" class="modal">
+            <div id="membershipModal" class="modal hidden">
                 <div class="modal-content">
                     <span class="close">&times;</span>
                     <h3>Seleccionar tipo de membresía</h3>
@@ -71,6 +89,7 @@
                     </table>
                 </div>
             </div>
+
         </section>
 
         <!-- 🔙 Botón para volver -->
@@ -84,16 +103,13 @@
         <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
     </footer>
 
-    <script type="module" src="../js/features/membershipRegistration/membershipRegistration.js"></script>
+    <script type="module" src="../js/features/memberships/membershipRegistration.js"></script>
     <script>
-        // Simulación de sesión
-        const userRole = localStorage.getItem('userRole') || 'Empleado';
-        document.getElementById('userRole').textContent = `👤 ${userRole}`;
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('userRole');
-            alert('Sesión cerrada correctamente');
-            window.location.href = 'login.html';
+            showCloseSession('Sesión cerrada correctamente');
+            setTimeout(() => window.location.href = 'login.html', 2000);
         });
     </script>
 

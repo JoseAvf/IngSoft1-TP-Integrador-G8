@@ -4,7 +4,11 @@ body {
     margin: 0;
     background-color: #f6f7fb;
     color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* altura mínima de toda la ventana */
 }
+
 
 .logo-link {
     text-decoration: none; /* quita subrayado */
@@ -54,7 +58,7 @@ body {
 
 .dashboard-container {
     display: flex;
-    height: calc(100vh - 80px);
+    flex: 1; /* Esto permite que el main + sidebar crezcan y empujen el footer */
 }
 
 /* ===== Menú lateral ===== */
@@ -68,6 +72,8 @@ body {
     .sidebar h2 {
         font-size: 1.2rem;
         margin-bottom: 10px;
+        text-align: left;
+        padding-left: 10px;
     }
 
     .sidebar ul {
@@ -109,6 +115,7 @@ body {
     flex-wrap: wrap;
     gap: 20px;
     margin-top: 25px;
+    justify-content: center; /* centrado horizontal */
 }
 
 .card {
@@ -116,13 +123,28 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-    width: 280px;
-    flex: 1;
+    flex: 1 1 250px; /* base de 280px, puede crecer un poco */
+    max-width: 320px; /* 🚫 no se estira más de este ancho */
+    min-width: 250px; /* mantiene un ancho mínimo razonable */
+
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease;
 }
+
+    /* efecto sutil al pasar el mouse */
+    .card:hover {
+        transform: translateY(-3px);
+    }
+
 
     .card h3 {
         margin-top: 0;
+        margin-bottom: 0;
     }
+
 
 /* ===== Estilo general de botones ===== */
 .btn,
@@ -131,9 +153,10 @@ button {
     color: #fff;
     border: none;
     border-radius: 6px;
-    padding: 10px 16px;
+    padding: 5px 10px 5px 10px;
     font-size: 1rem;
     font-weight: bold;
+    margin: 2px 2px 2px 2px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.1s ease;
 }
@@ -223,4 +246,70 @@ a.btn-light {
     text-align: center;
     padding: 10px;
     font-size: 0.9rem;
+}
+
+.swal2-popup {
+    font-family: "Segoe UI", sans-serif !important;
+    border-radius: 16px !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+
+.swal2-select {
+    border: 1px solid #ccc !important;
+    border-radius: 8px !important;
+    padding: 6px 10px !important;
+}
+
+/* === Estilo SweetAlert2 personalizado para Cuerpo Sano === */
+/**/
+
+.swal2-title {
+    font-size: 1.4rem !important;
+    margin-top: 8px;
+    font-weight: 700 !important;
+}
+
+/*.swal2-html-container {
+    font-size: 1rem !important;
+    color: #333 !important;
+}*/
+
+.swal2-confirm {
+    
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    padding: 8px 20px !important;
+}
+
+.swal2-cancel {
+    
+    border-radius: 8px !important;
+    padding: 8px 20px !important;
+}
+
+/* === Ajustes visuales de SweetAlert2 === */
+div.swal2-container .swal2-input,
+div.swal2-container .swal2-file,
+div.swal2-container .swal2-textarea,
+div.swal2-container .swal2-select {
+    margin: 0 !important;
+    width: 100% !important;
+    padding: 10px 12px !important;
+    border-radius: 8px !important;
+    border: 1px solid #ccc !important;
+    font-size: 15px !important;
+    transition: all 0.2s ease-in-out;
+}
+
+    div.swal2-container .swal2-input:focus {
+        border-color: #1976d2 !important;
+        box-shadow: 0 0 4px rgba(25, 118, 210, 0.3) !important;
+        outline: none !important;
+    }
+
+div.swal2-popup {
+    width: 420px !important;
+    padding: 1.8em 1.5em !important;
+    border-radius: 16px !important;
 }

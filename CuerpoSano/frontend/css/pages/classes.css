@@ -1,0 +1,1125 @@
+/* ===== Contenedor principal ===== */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    background-color: #f6f7fb;
+}
+
+/* ===== Sección de formulario ===== */
+.form-section {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px 40px;
+    max-width: 700px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+    .form-section h2 {
+        color: #1976d2;
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 1.6rem;
+    }
+
+/* ===== Formulario ===== */
+#classForm fieldset {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #fafafa;
+}
+
+#classForm legend {
+    color: #1976d2;
+    font-weight: bold;
+}
+
+#classForm label {
+    display: block;
+    margin-top: 10px;
+    font-weight: 500;
+    color: #333;
+}
+
+#classForm input,
+#classForm select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: all 0.3s;
+}
+
+    #classForm input:focus,
+    #classForm select:focus {
+        border-color: #1976d2;
+        box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
+        outline: none;
+    }
+
+/* ===== Botón de registrar ===== */
+#classForm button[type="submit"] {
+    display: block;
+    width: 100%;
+    background-color: #1976d2;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+}
+
+    #classForm button[type="submit"]:hover {
+        background-color: #1259a7;
+    }
+
+/* ===== Sección de listado ===== */
+
+/* ======== ESTILOS UNIFICADOS CON TRAINERS.CSS ======== */
+
+/* ===== Sección de listado ===== */
+.list-section {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 25px 30px;
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 40px;
+}
+
+    .list-section h2 {
+        color: #1976d2;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+/* ===== Contenedor de tabla ===== */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+#classesTable,
+#miembrosTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    min-width: 700px;
+}
+
+    #classesTable th,
+    #classesTable td,
+    #miembrosTable th,
+    #miembrosTable td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #e0e0e0;
+        text-align: left;
+        font-size: 0.95rem;
+    }
+
+    #classesTable th,
+    #miembrosTable th {
+        background-color: #1976d2;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    #classesTable tr:hover,
+    #miembrosTable tr:hover {
+        background-color: #f5f5f5;
+    }
+
+/* ===== Botones de acción ===== */
+.btn-edit,
+.btn-delete,
+.btn-ver-miembros,
+.btn-asistencia {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.2s;
+    font-weight: 500;
+}
+
+.btn-ver-miembros {
+    background-color: #1976d2;
+    color: white;
+    margin-right: 6px;
+}
+
+    .btn-ver-miembros:hover {
+        background-color: #1259a7;
+    }
+
+.btn-delete {
+    background-color: #d32f2f;
+    color: white;
+}
+
+    .btn-delete:hover {
+        background-color: #b71c1c;
+    }
+
+/* ===== Modales (eliminación y miembros) ===== */
+.modal,
+#deleteModal,
+#miembrosModal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+    .modal.active,
+    #deleteModal:not(.hidden),
+    #miembrosModal:not(.hidden) {
+        display: flex;
+    }
+
+.modal-content {
+    position: relative;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 30px 35px;
+    width: 90%;
+    max-width: 900px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    animation: modalFadeIn 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+#miembrosModal .modal-content {
+    background-color: #fff;
+    padding: 20px 25px;
+    border-radius: 10px;
+    max-width: 800px;
+    width: 90%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* ===== Encabezado de modal ===== */
+.modal-content h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #1976d2;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ===== Botón de cierre ===== */
+.closeDeleteModal,
+.closeMiembrosModal {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #555;
+    background: none;
+    border: none;
+    transition: color 0.2s;
+}
+
+    .closeDeleteModal:hover,
+    .closeMiembrosModal:hover {
+        color: #000;
+    }
+
+/* ===== Cuerpo del modal ===== */
+#miembrosModalBody {
+    text-align: center !important;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-top: 10px;
+}
+
+    #miembrosModalBody::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #miembrosModalBody::-webkit-scrollbar-thumb {
+        background-color: rgba(25,118,210,0.5);
+        border-radius: 4px;
+    }
+
+    #miembrosModalBody::-webkit-scrollbar-track {
+        background-color: #f1f1f1;
+    }
+
+/* ===== Modal confirmación ===== */
+.modal-actions {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.btn-confirm {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+    .btn-confirm:hover {
+        background-color: #b71c1c;
+    }
+
+.btn-cancel {
+    background-color: #e0e0e0;
+    color: #333;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+    .btn-cancel:hover {
+        background-color: #ccc;
+    }
+
+/* ===== Responsividad ===== */
+@media (max-width: 768px) {
+    #classesTable th,
+    #classesTable td,
+    #miembrosTable th,
+    #miembrosTable td {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+
+    .modal-content {
+        width: 100%;
+        padding: 20px;
+    }
+
+        .modal-content h3 {
+            font-size: 1.2rem;
+        }
+}
+
+/* ===== Botón volver ===== */
+.back-container {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* ===== Tarjeta de información de la clase ===== */
+
+/* ===== Sección de búsqueda ===== */
+.search-section {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 25px 30px;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+}
+
+    .search-section label {
+        font-weight: 500;
+        color: #333;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .search-section input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+        transition: all 0.3s;
+    }
+
+        .search-section input:focus {
+            border-color: #1976d2;
+            box-shadow: 0 0 5px rgba(25,118,210,0.3);
+            outline: none;
+        }
+
+    .search-section button {
+        background-color: #1976d2;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 12px;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.3s;
+    }
+
+        .search-section button:hover {
+            background-color: #1259a7;
+        }
+
+/* Contenedor por defecto: oculto y sin estilo de tarjeta */
+.class-data.hidden {
+    display: none;
+}
+
+/* Cuando tiene contenido */
+.class-data {
+    display: block; /* se muestra cuando quitás la clase hidden */
+    background-color: #ffffff;
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-top: 20px;
+    max-width: 700px;
+    width: 100%;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+    .class-data h3 {
+        margin-top: 0;
+        color: #333333;
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+
+    .class-data p {
+        margin: 5px 0;
+    }
+
+    .class-data strong {
+        color: #0f62fe;
+    }
+
+.class-section {
+    background-color: #b1d8ff;
+    border-left: 4px solid #1976d2;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+    .class-section h4 {
+        margin-top: 0;
+        color: #1976d2;
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+
+
+/* Responsive */
+@media (max-width: 768px) {
+    .class-data {
+        padding: 15px 20px;
+    }
+
+        .class-data h3 {
+            font-size: 1.3rem;
+        }
+}
+
+/* ===== Secciones internas de información de clase ===== */
+.class-section {
+    background-color: #b1d8ff; /* color suave para diferenciar secciones */
+    border-left: 4px solid #1976d2; /* barra lateral azul */
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+    .class-section h4 {
+        margin-top: 0;
+        color: #1976d2;
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+
+    /* Resaltar datos clave */
+    .class-section p strong {
+        color: #0f62fe;
+    }
+
+/* Responsive: se adapta a pantallas pequeñas */
+@media (max-width: 768px) {
+    .class-section {
+        padding: 12px 15px;
+    }
+
+        .class-section h4 {
+            font-size: 1rem;
+        }
+
+    .class-data {
+        padding: 15px 20px;
+    }
+
+        .class-data h3 {
+            font-size: 1.3rem;
+        }
+}
+
+/* ===== Modal de edición de clase ===== */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+    .modal.hidden {
+        display: none;
+    }
+
+.modal-content {
+    background-color: #fff;
+    padding: 25px 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+    .modal-content h3 {
+        margin-top: 0;
+        color: #1976d2;
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    .modal-content label {
+        display: block;
+        margin-top: 10px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .modal-content input {
+        width: 10%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: all 0.3s;
+    }
+
+        .modal-content input:focus {
+            border-color: #1976d2;
+            box-shadow: 0 0 5px rgba(25,118,210,0.3);
+            outline: none;
+        }
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+    .modal-buttons button {
+        padding: 10px 15px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+
+        .modal-buttons button[type="submit"] {
+            background-color: #1976d2;
+            color: #fff;
+        }
+
+            .modal-buttons button[type="submit"]:hover {
+                background-color: #1259a7;
+            }
+
+        .modal-buttons button#btnCancelClassEdit {
+            background-color: #ccc;
+            color: #333;
+        }
+
+            .modal-buttons button#btnCancelClassEdit:hover {
+                background-color: #aaa;
+            }
+
+/* ===== Toast de confirmación ===== */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #1976d2;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 1100;
+}
+
+    .toast.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+/* Encabezado de sección con botón editar */
+.class-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Mejor estilo para el select en el modal de inscripción */
+#selectMember {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    background-color: #fff;
+    transition: all 0.3s;
+    appearance: none; /* elimina la flecha por defecto del navegador */
+    cursor: pointer;
+}
+
+    #selectMember:focus {
+        border-color: #1976d2;
+        box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
+        outline: none;
+    }
+
+/* Opcional: agregar flecha personalizada para que se vea más moderno */
+#selectMember-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+    #selectMember-wrapper::after {
+        content: "▾"; /* flecha */
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #1976d2;
+        font-size: 0.9rem;
+    }
+
+/* ======== Estilos adicionales para listado de clases ======== */
+
+/* Botones de acción en tabla */
+.btn-edit,
+.btn-delete {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.btn-edit {
+    background-color: #1976d2;
+    color: white;
+}
+
+    .btn-edit:hover {
+        background-color: #1259a7;
+    }
+
+.btn-delete {
+    background-color: #d32f2f;
+    color: white;
+}
+
+    .btn-delete:hover {
+        background-color: #b71c1c;
+    }
+
+/* ===== Modal de confirmación de eliminación ===== */
+#deleteModal {
+    display: flex; /* <-- clave para centrar el modal */
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1000; /* que esté por encima de todo */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+    #deleteModal.hidden {
+        display: none; /* cuando tiene la clase hidden, se oculta */
+    }
+
+    #deleteModal .modal-content {
+        background-color: white;
+        padding: 25px 30px;
+        border-radius: 12px;
+        text-align: center;
+        width: 350px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        position: relative;
+    }
+
+    #deleteModal h3 {
+        margin-top: 0;
+        color: #1976d2;
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+    }
+
+    #deleteModal p {
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+.modal-actions {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.btn-confirm {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+    .btn-confirm:hover {
+        background-color: #b71c1c;
+    }
+
+.btn-cancel {
+    background-color: #e0e0e0;
+    color: #333;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+    .btn-cancel:hover {
+        background-color: #ccc;
+    }
+
+.closeDeleteModal {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    cursor: pointer;
+    font-size: 1.3rem;
+    color: #666;
+}
+
+    .closeDeleteModal:hover {
+        color: #000;
+    }
+
+/* ===== Botón de impresión ===== */
+.btn-print {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    margin: 7px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-print:hover {
+        background-color: #0056b3;
+    }
+
+/* ===== Estilos específicos para impresión ===== */
+@media print {
+    /* Ocultar todo excepto el listado */
+    body * {
+        visibility: hidden;
+    }
+
+    .btn-print,
+    .back-container,
+    .footer,
+    header {
+        display: none !important;
+    }
+
+    .list-section,
+    .list-section * {
+        visibility: visible;
+    }
+
+    .list-section {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100% !important;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        overflow: visible !important;
+    }
+
+    /* Asegurar que el contenedor de tabla no limite el ancho */
+    .table-wrapper {
+        overflow: visible !important;
+        width: 100% !important;
+        display: block;
+    }
+
+    /* Ajustes de tabla para impresión */
+    .list-section table {
+        width: 100% !important;
+        table-layout: fixed !important; /* evita que el contenido fuerce el ancho */
+        border-collapse: collapse;
+        border-spacing: 0;
+        word-wrap: break-word;
+    }
+
+    .list-section th,
+    .list-section td {
+        border: 1px solid #bbb;
+        padding: 6px;
+        font-size: 12px;
+        text-align: left;
+        word-break: break-word;
+    }
+
+        /* Ocultar columna de acciones */
+        .list-section th:last-child,
+        .list-section td:last-child {
+            display: none !important;
+        }
+
+    /* Evitar recortes o divisiones de filas */
+    .list-section table,
+    .list-section tr,
+    .list-section td {
+        page-break-inside: avoid;
+    }
+
+    /* Mantener los colores */
+    .list-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Control de página */
+    @page {
+        size: A4 portrait;
+        margin: 0;
+    }
+}
+
+/*#miembrosModal {
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+    #miembrosModal:not(.hidden) {
+        display: flex;
+    }
+
+    #miembrosModal .modal-content {
+        background-color: #fff;
+        padding: 20px 25px;
+        border-radius: 10px;
+        max-width: 800px;
+        width: 90%;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    #miembrosModal table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    #miembrosModal th, #miembrosModal td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: center;
+    }
+
+    #miembrosModal th {
+        background-color: #1976d2;
+        color: white;
+    }
+
+*/
+
+/* ===== Botones dentro de la columna Acciones ===== */
+.action-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8px; /* por si en pantallas chicas no entran */
+}
+
+#attendanceModal {
+    display: none;
+    position: fixed;
+    z-index: 2100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+    #attendanceModal:not(.hidden) {
+        display: flex;
+    }
+
+    #attendanceModal .modal-content {
+        background-color: #fff;
+        padding: 25px 30px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        animation: fadeIn 0.25s ease;
+    }
+
+.attendance-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+    .attendance-list label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 6px 0;
+    }
+
+.entrenador-check {
+    margin-bottom: 15px;
+}
+
+div:where(.swal2-container) input:where(.swal2-input), div:where(.swal2-container) input:where(.swal2-file), div:where(.swal2-container) textarea:where(.swal2-textarea), div:where(.swal2-container) select:where(.swal2-select), div:where(.swal2-container) div:where(.swal2-radio), div:where(.swal2-container) label:where(.swal2-checkbox) {
+    margin: 0;
+}
+
+div:where(.swal2-container) div:where(.swal2-html-container) {
+    padding: 1em 1em 0em !important;
+}
+    div .swal2-popup {
+    padding: 0 !important;
+    min-width: 400px !important;
+    max-width: 550px !important;
+    width: 500px !important;
+}
+    .asistencia-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    max-width: 450px;
+    font-family: 'Inter', sans-serif;
+    color: #333;
+}
+div:where(.swal2-actions) {
+    margin: 10px 0 10px 0 !important;
+}
+    
+
+    .asistencia-header h3 {
+        margin: 0;
+        font-size: 1.3rem;
+        color: #1976d2;
+    }
+
+    .asistencia-header .label {
+        font-weight: 600;
+    }
+
+.asistencia-miembros {
+    max-height: 280px;
+    overflow-y: auto;
+    margin: 15px 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
+    font-family: 'Inter', sans-serif;
+}
+
+.miembros-header,
+.miembro-item {
+    display: grid;
+    grid-template-columns: 50px 1fr 100px;
+    align-items: center;
+    padding: 10px 12px;
+}
+
+.miembros-header {
+    background: #f1f5f9;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+    border-radius: 8px 8px 0 0;
+}
+
+.miembro-item {
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s;
+}
+
+    .miembro-item:last-child {
+        border-bottom: none;
+    }
+
+    .miembro-item:hover {
+        background: #f9fafb;
+    }
+
+    .miembro-item.asistio-previo {
+        background: #c8e6c9; /* verde más fuerte que el anterior */
+        color: #2e7d32; /* verde oscuro, buen contraste */
+        font-weight: 600;
+        
+    }
+
+        .miembro-item.asistio-previo input {
+            cursor: not-allowed;
+            accent-color: #2ecc71; /* verde vibrante para el check */
+        }
+
+.col-check {
+    display: flex;
+    justify-content: center;
+}
+
+    .col-check input[type="checkbox"] {
+        transform: scale(1.2);
+        accent-color: #1976d2;
+        cursor: pointer;
+    }
+
+.col-nombre {
+    color: #333;
+}
+
+.col-dni {
+    text-align: right;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+
+.asistencia-footer {
+
+    padding-top: 5px;
+    text-align: center;
+}
+
+.entrenador-check {
+    font-weight: 500;
+    color: #333;
+    ;
+}
+
+    .entrenador-check.asistio-previo {
+        background: #c8e6c9;
+        
+        font-weight: 600;
+        padding: 6px 10px;
+        border-radius: 6px;
+        
+    }
+
+        .entrenador-check.asistio-previo input {
+            cursor: not-allowed;
+            accent-color: #2ecc71;
+        }

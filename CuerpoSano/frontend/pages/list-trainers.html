@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CuerpoSano | Listado de Entrenadores</title>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
+    <link rel="stylesheet" href="../css/base/style.css" />
+    <link rel="stylesheet" href="../css/pages/trainers.css" />
+</head>
+<body>
+    <!-- Header unificado -->
+    <header class="main-header">
+        <a href="./index.html" class="logo-link">
+            <h1>🏋️‍♂️ CuerpoSano — Sistema de Gestión de Gimnasio</h1>
+        </a>
+        <nav class="user-nav">
+            <span id="userRole">👤 Empleado</span>
+            <button id="logoutBtn">Cerrar Sesión</button>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <section class="list-section">
+            <h2>Listado de Entrenadores</h2>
+            <button class="btn-print" onclick="window.print()">🖨️ Imprimir</button>
+            <p id="trainersMessage"></p>
+            <div class="table-wrapper">
+                <table id="trainersTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>DNI</th>
+                            <th>Teléfono</th>
+                            <th>Dirección</th>
+                            <th>Fecha de nacimiento</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 🔙 Botón para volver -->
+        <div class="back-container">
+            <a href="./trainers.html" class="btn-back">⬅️ Volver atrás</a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 CuerpoSano — Todos los derechos reservados</p>
+    </footer>
+
+    <!-- Modal para ver miembros -->
+    <div id="membersModal" class="modal">
+        <div class="modal-content">
+            <span class="closeModal closeMembersModal">&times;</span>
+            <h3>👥 Miembros Asignados</h3>
+            <div id="membersModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Modal para ver clases -->
+    <div id="classesModal" class="modal">
+        <div class="modal-content">
+            <span class="closeModal closeClassesModal">&times;</span>
+            <h3>🏋️ Clases del Entrenador</h3>
+            <div id="classesModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Script de la página -->
+    <script type="module" src="../js/features/trainers/trainerList.js"></script>
+    <script>
+        
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('userRole');
+            showCloseSession('Sesión cerrada correctamente');
+            setTimeout(() => window.location.href = 'login.html', 2000);
+        });
+    </script>
+</body>
+</html>
