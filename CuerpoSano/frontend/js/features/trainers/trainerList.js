@@ -36,6 +36,7 @@ async function loadTrainers() {
                 <td>
                     <button class="btn-view-members" data-id="${trainer.id}">👥 Ver Miembros</button>
                     <button class="btn-view-classes" data-id="${trainer.id}">🏋️ Ver Clases</button>
+                     <button class="btn-delete-trainer" data-id="${trainer.id}"> Eliminar</button>
                 </td>
             `;
 
@@ -54,6 +55,25 @@ async function loadTrainers() {
             btn.addEventListener("click", async (e) => {
                 const trainerId = e.target.dataset.id;
                 await showClassesModal(trainerId);
+            });
+        });
+
+        // Agregar evento a los botones de eliminar entrenador
+        document.querySelectorAll(".btn-delete-trainer").forEach(btn => {
+            btn.addEventListener("click", async (e) => {
+                const trainerId = e.target.dataset.id;
+                showConfirmDelete(
+                    "¿Seguro que deseas eliminar este entrenador? Esta acción no se puede deshacer.",
+                    async () => {
+                        try {
+                            await TrainerAPI.delete(trainerId);
+                            showSuccess("Entrenador eliminado correctamente ✅");
+                            await loadTrainers(); // refresca tabla
+                        } catch (err) {
+                            showError("Error al eliminar entrenador: " + err.message);
+                        }
+                    }
+                );
             });
         });
 

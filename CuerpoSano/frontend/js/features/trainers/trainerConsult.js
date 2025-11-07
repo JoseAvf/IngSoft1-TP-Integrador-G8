@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnSearch.addEventListener("click", async () => {
         const dni = inputDni.value.trim();
         if (!dni) {
-            showError("Ingrese un DNI válido");
+            showAlert("Ingrese un DNI válido", "warning");
             return;
         }
 
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
             displayTrainer(trainer);
         } catch (error) {
             console.error(error);
-            showError(`No se encontró el entrenador con DNI ${dni}`);
+            showAlert(`No se encontró el entrenador con DNI ${dni}`, "warning", "Entrenador no encontrado");
             trainerDataDiv.innerHTML = "";
             trainerDataDiv.classList.add("hidden");
         }

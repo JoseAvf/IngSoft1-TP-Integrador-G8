@@ -9,6 +9,7 @@ body {
     min-height: 100vh; /* altura mínima de toda la ventana */
 }
 
+
 .logo-link {
     text-decoration: none; /* quita subrayado */
     color: white; /* mismo color que el header */

@@ -56,7 +56,10 @@ window.showCloseSession = (msg, icon = "info", title = "Aviso") => {
         color: "#333",
         showConfirmButton: false, // ❌ No mostrar ningún botón
         timer: 2000,              // ⏱ Opcional: se cierra sola en 2 segundos
-        timerProgressBar: true     // Barra de progreso si querés
+        timerProgressBar: true,     // Barra de progreso si querés
+        allowOutsideClick: false, // ❌ No se cierra al hacer click fuera
+        allowEscapeKey: false     // ❌ No se cierra al presionar Esc
+
     });
 };
 

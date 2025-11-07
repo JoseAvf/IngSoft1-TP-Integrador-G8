@@ -273,7 +273,7 @@ main.main-content {
 
     #trainersTable th,
     #trainersTable td {
-        padding: 10px 12px;
+        padding: 10px 7px;
         border-bottom: 1px solid #eee;
         text-align: center;
     }
@@ -307,6 +307,21 @@ main.main-content {
         .back-container .btn-back:hover {
             background-color: #1259a7;
         }
+
+.btn-delete-trainer {
+    background-color: #e91e1e;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color
+}
+
+
+
 
 /* ===== Modales genéricos ===== */
 .modal {
